@@ -1,0 +1,56 @@
+blazeaaaa:
+  setting: manual
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+cavespider:
+  setting: auto
+  manualPerformanceLevel: 130
+  autoPerformanceLevel: 100
+creeper:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 70
+enderman:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+ghast:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+magmacube:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+pigzombie:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+silverfish:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+skeleton:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+slime:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+spider:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+witch:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+witherskeleton:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+zombie:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100

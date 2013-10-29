@@ -1,0 +1,36 @@
+name: DynamicDifficulty
+main: com.cjmcguire.bukkit.dynamic.DynamicDifficulty
+version: 1.0.0
+commands:
+  dynamic:
+    description: The DynamicDifficulty base command
+    usage: Use the command like this "/<command>"
+  dynamic info:
+    description: Lists your difficulty info
+    usage: /<command>
+  dynamic change setting:
+    description: Changes your setting
+    usage: /<command> 
+  dynamic change level:
+    description: Changes your performance level
+    usage: /<command>
+permissions:
+  dynamic.*:
+    description: Gives access to all of the DynamicDifficulty Commands (All players have this by default)
+    children:
+      dynamic.dynamic: true
+      dynamic.info: true
+      dynamic.changelevel: true
+      dynamic.changesetting: true
+  dynamic.dynamic:
+    description: Allows you to use the /dynamic command
+    default: true
+  dynamic.info:
+    description: Allows you to display your mob difficulty settings and performance levels
+    default: true
+  dynamic.changelevel:
+    description: Allows you to change your mob performance levels
+    default: true
+  dynamic.changesetting:
+    description: Allows you to change your mob difficulty settings
+    default: true
