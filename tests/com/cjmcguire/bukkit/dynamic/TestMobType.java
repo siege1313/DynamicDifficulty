@@ -2,7 +2,7 @@ package com.cjmcguire.bukkit.dynamic;
 
 import static org.junit.Assert.*;
 
-import org.bukkit.craftbukkit.v1_6_R2.entity.*;
+import org.bukkit.craftbukkit.v1_6_R3.entity.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.easymock.EasyMock;

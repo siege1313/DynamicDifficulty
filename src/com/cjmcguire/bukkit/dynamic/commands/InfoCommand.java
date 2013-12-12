@@ -163,7 +163,7 @@ public class InfoCommand extends AbstractDDCommand
 		//String paddedSettingName = this.getPadding(settingName,DISABLED_PIXEL_LENGTH) + settingName;
 		
 		//get the auto and manual performance levels as integers
-		int autoPerformanceLevel = (int)(mobInfo.getCurrentPerformanceLevel() + 0.5);
+		int autoPerformanceLevel = (int)(mobInfo.getAutoPerformanceLevel() + 0.5);
 		int manualPerformanceLevel = (int)(mobInfo.getManualPerformanceLevel() + 0.5);
 		
 		// figure out if auto should be padded

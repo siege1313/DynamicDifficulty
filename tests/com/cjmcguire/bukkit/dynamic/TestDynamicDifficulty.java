@@ -117,27 +117,27 @@ public class TestDynamicDifficulty
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		assertEquals(Setting.AUTO, blazeInfo.getSetting());
 		assertEquals(100, blazeInfo.getManualPerformanceLevel(), .001);
-		assertEquals(100, blazeInfo.getCurrentPerformanceLevel(), .001);
+		assertEquals(100, blazeInfo.getAutoPerformanceLevel(), .001);
 		
 		MobInfo caveSpiderInfo = playerInfo.getMobInfo(MobType.CAVE_SPIDER);
 		assertEquals(Setting.DISABLED, caveSpiderInfo.getSetting());
 		assertEquals(100, caveSpiderInfo.getManualPerformanceLevel(), .001);
-		assertEquals(100, caveSpiderInfo.getCurrentPerformanceLevel(), .001);
+		assertEquals(100, caveSpiderInfo.getAutoPerformanceLevel(), .001);
 
 		MobInfo creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
 		assertEquals(Setting.MANUAL, creeperInfo.getSetting());
 		assertEquals(200, creeperInfo.getManualPerformanceLevel(), .001);
-		assertEquals(100, creeperInfo.getCurrentPerformanceLevel(), .001);
+		assertEquals(100, creeperInfo.getAutoPerformanceLevel(), .001);
 
 		MobInfo enderManInfo = playerInfo.getMobInfo(MobType.ENDERMAN);
 		assertEquals(Setting.AUTO, enderManInfo.getSetting());
 		assertEquals(100, enderManInfo.getManualPerformanceLevel(), .001);
-		assertEquals(145, enderManInfo.getCurrentPerformanceLevel(), .001);
+		assertEquals(145, enderManInfo.getAutoPerformanceLevel(), .001);
 
 		MobInfo ghastInfo = playerInfo.getMobInfo(MobType.GHAST);
 		assertEquals(Setting.AUTO, ghastInfo.getSetting());
 		assertEquals(90, ghastInfo.getManualPerformanceLevel(), .001);
-		assertEquals(100, ghastInfo.getCurrentPerformanceLevel(), .001);
+		assertEquals(100, ghastInfo.getAutoPerformanceLevel(), .001);
 	}
 	
 	/**
@@ -164,7 +164,7 @@ public class TestDynamicDifficulty
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		assertEquals(Setting.AUTO, blazeInfo.getSetting());
 		assertEquals(100, blazeInfo.getManualPerformanceLevel(), .0001);
-		assertEquals(100, blazeInfo.getCurrentPerformanceLevel(), .0001);
+		assertEquals(100, blazeInfo.getAutoPerformanceLevel(), .0001);
 	}
 	
 	
@@ -191,7 +191,7 @@ public class TestDynamicDifficulty
 		caveSpiderInfo.setManualPerformanceLevel(130);
 
 		MobInfo creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
-		creeperInfo.setCurrentPerformanceLevel(70);
+		creeperInfo.setAutoPerformanceLevel(70);
 		
 		// add the playerInfo to the plugin
 		plugin.addPlayerInfo(playerInfo);
@@ -213,7 +213,7 @@ public class TestDynamicDifficulty
 		assertEquals(130, caveSpiderInfo.getManualPerformanceLevel(), .0001);
 
 		creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
-		assertEquals(70, creeperInfo.getCurrentPerformanceLevel(), .0001);
+		assertEquals(70, creeperInfo.getAutoPerformanceLevel(), .0001);
 	}
 	
 	/**
@@ -239,7 +239,7 @@ public class TestDynamicDifficulty
 		caveSpiderInfo.setManualPerformanceLevel(130);
 
 		MobInfo creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
-		creeperInfo.setCurrentPerformanceLevel(70);
+		creeperInfo.setAutoPerformanceLevel(70);
 		
 		// add the playerInfo to the plugin
 		plugin.addPlayerInfo(playerInfo);
@@ -265,7 +265,7 @@ public class TestDynamicDifficulty
 		assertEquals(130, caveSpiderInfo.getManualPerformanceLevel(), .001);
 
 		creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
-		assertEquals(70, creeperInfo.getCurrentPerformanceLevel(), .001);
+		assertEquals(70, creeperInfo.getAutoPerformanceLevel(), .001);
 	}
 	
 	/**

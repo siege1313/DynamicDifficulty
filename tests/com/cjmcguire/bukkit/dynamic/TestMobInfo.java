@@ -123,54 +123,54 @@ public class TestMobInfo
 	}
 	
 	/**
-	 * Tests the setCurrentPerformanceLevel() method.
+	 * Tests the setautoPerformanceLevel() method.
 	 */
 	@Test
-	public void testSetCurrentPerformanceLevel() 
+	public void testSetAutoPerformanceLevel() 
 	{
 		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
-		assertEquals(100, zombieInfo.getCurrentPerformanceLevel(), .0001);
+		assertEquals(100, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
-		zombieInfo.setCurrentPerformanceLevel(110);
-		assertEquals(110, zombieInfo.getCurrentPerformanceLevel(), .0001);
+		zombieInfo.setAutoPerformanceLevel(110);
+		assertEquals(110, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
-		zombieInfo.setCurrentPerformanceLevel(30);
-		assertEquals(50, zombieInfo.getCurrentPerformanceLevel(), .0001);
+		zombieInfo.setAutoPerformanceLevel(30);
+		assertEquals(50, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
-		zombieInfo.setCurrentPerformanceLevel(250);
-		assertEquals(200, zombieInfo.getCurrentPerformanceLevel(), .0001);
+		zombieInfo.setAutoPerformanceLevel(250);
+		assertEquals(200, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
-		zombieInfo.updateCurrentPerformanceLevel();
-		assertEquals(200-MobInfo.MAX_INCREMENT, zombieInfo.getCurrentPerformanceLevel(), .0001);
+		zombieInfo.updateAutoPerformanceLevel();
+		assertEquals(200-MobInfo.MAX_INCREMENT, zombieInfo.getAutoPerformanceLevel(), .0001);
 	}
 	
 	/**
-	 * Tests the updateCurrentPerformanceLevel() method.
+	 * Tests the updateAutoPerformanceLevel() method.
 	 */
 	@Test
-	public void testUpdateCurrentPerformanceLevel() 
+	public void testUpdateAutoPerformanceLevel() 
 	{
 		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
-		assertEquals(100, zombieInfo.getCurrentPerformanceLevel(), .0001);
+		assertEquals(100, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
 		zombieInfo.setEstimatedPerformanceLevel(200);
-		zombieInfo.updateCurrentPerformanceLevel();
-		assertEquals(100+MobInfo.MAX_INCREMENT, zombieInfo.getCurrentPerformanceLevel(), .0001);
+		zombieInfo.updateAutoPerformanceLevel();
+		assertEquals(100+MobInfo.MAX_INCREMENT, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
-		zombieInfo.setCurrentPerformanceLevel(100);
+		zombieInfo.setAutoPerformanceLevel(100);
 		zombieInfo.setEstimatedPerformanceLevel(105);
-		zombieInfo.updateCurrentPerformanceLevel();
-		assertEquals(zombieInfo.getEstimatedPerformanceLevel(), zombieInfo.getCurrentPerformanceLevel(), .0001);
+		zombieInfo.updateAutoPerformanceLevel();
+		assertEquals(zombieInfo.getEstimatedPerformanceLevel(), zombieInfo.getAutoPerformanceLevel(), .0001);
 
-		zombieInfo.setCurrentPerformanceLevel(100);
+		zombieInfo.setAutoPerformanceLevel(100);
 		zombieInfo.setEstimatedPerformanceLevel(95);
-		zombieInfo.updateCurrentPerformanceLevel();
-		assertEquals(zombieInfo.getEstimatedPerformanceLevel(), zombieInfo.getCurrentPerformanceLevel(), .0001);
+		zombieInfo.updateAutoPerformanceLevel();
+		assertEquals(zombieInfo.getEstimatedPerformanceLevel(), zombieInfo.getAutoPerformanceLevel(), .0001);
 
-		zombieInfo.setCurrentPerformanceLevel(100);
+		zombieInfo.setAutoPerformanceLevel(100);
 		zombieInfo.setEstimatedPerformanceLevel(50);
-		zombieInfo.updateCurrentPerformanceLevel();
-		assertEquals(100-MobInfo.MAX_INCREMENT, zombieInfo.getCurrentPerformanceLevel(), .0001);
+		zombieInfo.updateAutoPerformanceLevel();
+		assertEquals(100-MobInfo.MAX_INCREMENT, zombieInfo.getAutoPerformanceLevel(), .0001);
 	}
 	
 	/**
@@ -247,7 +247,7 @@ public class TestMobInfo
 	public void testGetPerformanceLevelInUse() 
 	{
 		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
-		zombieInfo.setCurrentPerformanceLevel(150);
+		zombieInfo.setAutoPerformanceLevel(150);
 		zombieInfo.setManualPerformanceLevel(200);
 		
 		zombieInfo.setSetting(Setting.AUTO);

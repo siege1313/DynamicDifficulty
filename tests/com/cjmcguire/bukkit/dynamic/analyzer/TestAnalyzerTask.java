@@ -43,7 +43,7 @@ public class TestAnalyzerTask
 		analyzer.run();
 		
 		assertEquals(200, blazeInfo.getEstimatedPerformanceLevel(), .0001);
-		assertEquals(100 + MobInfo.MAX_INCREMENT, blazeInfo.getCurrentPerformanceLevel(), .0001);
+		assertEquals(100 + MobInfo.MAX_INCREMENT, blazeInfo.getAutoPerformanceLevel(), .0001);
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class TestAnalyzerTask
 		analyzer.updatePlayerData();
 		
 		assertEquals(200, blazeInfo.getEstimatedPerformanceLevel(), .0001);
-		assertEquals(100 + MobInfo.MAX_INCREMENT, blazeInfo.getCurrentPerformanceLevel(), .0001);
+		assertEquals(100 + MobInfo.MAX_INCREMENT, blazeInfo.getAutoPerformanceLevel(), .0001);
 	}
 	
 	/**
@@ -100,6 +100,6 @@ public class TestAnalyzerTask
 		analyzer.updatePlayerData();
 		
 		assertEquals(100, blazeInfo.getEstimatedPerformanceLevel(), .0001);
-		assertEquals(100, blazeInfo.getCurrentPerformanceLevel(), .0001);
+		assertEquals(100, blazeInfo.getAutoPerformanceLevel(), .0001);
 	}
 }

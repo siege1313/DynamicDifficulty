@@ -2,12 +2,12 @@ package com.cjmcguire.bukkit.dynamic.controller;
 
 import java.util.UUID;
 
-import net.minecraft.server.v1_6_R2.EntityInsentient;
-import net.minecraft.server.v1_6_R2.AttributeInstance;
-import net.minecraft.server.v1_6_R2.AttributeModifier;
-import net.minecraft.server.v1_6_R2.GenericAttributes;
+import net.minecraft.server.v1_6_R3.EntityInsentient;
+import net.minecraft.server.v1_6_R3.AttributeInstance;
+import net.minecraft.server.v1_6_R3.AttributeModifier;
+import net.minecraft.server.v1_6_R3.GenericAttributes;
 
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -23,7 +23,6 @@ import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
 import com.cjmcguire.bukkit.dynamic.MobInfo;
 import com.cjmcguire.bukkit.dynamic.MobType;
-import com.cjmcguire.bukkit.dynamic.Setting;
 
 /**
  * The ControllerListener carries out the function of the Controller in the 
@@ -107,16 +106,10 @@ public class ControllerListener implements Listener
 		// get the PlayerInfo's MobData
 		MobInfo mobInfo = plugin.getPlayersMobInfo(playerName, mobType);
 
+		double performanceLevel = mobInfo.getPerformanceLevelInUse();
+		
 		// figure out the altered damage
-		int alteredDamage = baseDamage;
-		if(mobInfo.getSetting() == Setting.AUTO)
-		{
-			alteredDamage = (int) (baseDamage * mobInfo.getCurrentPerformanceLevel()/100.0 + 0.5); // add .5 here so that it rounds correctly
-		}
-		else if(mobInfo.getSetting() == Setting.MANUAL)
-		{
-			alteredDamage = (int) (baseDamage * mobInfo.getManualPerformanceLevel()/100.0 + 0.5); // add .5 here so that it rounds correctly
-		}
+		int alteredDamage = (int) (baseDamage * performanceLevel/100.0 + 0.5); // add .5 here so that it rounds correctly
 		
 		return alteredDamage;
 	}

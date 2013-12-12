@@ -255,13 +255,11 @@ public final class DynamicDifficulty extends JavaPlugin
 		// if the File exists
 		if(playerFile.exists())
 		{
-			this.safeLogInfo(playerName + ".yml exists. Loaded it");
 			// load the YAML config based on it
 			playerConfig = YamlConfiguration.loadConfiguration(playerFile);
 		}
 		else
 		{
-			this.safeLogInfo(playerName + ".yml does not exist. Creating it");
 			// load the YAML config based on the default player.yml File
 			playerConfig = YamlConfiguration.loadConfiguration(this.getResource("player.yml"));
 
@@ -293,8 +291,6 @@ public final class DynamicDifficulty extends JavaPlugin
 	 */
 	public void savePlayerInfo(FileConfiguration playerConfig, File playerFile, String playerName)
 	{
-		this.safeLogInfo("Saving " + playerName + "'s player data to " + playerName + ".yml");
-		
 		// get the PlayerInfo
 		PlayerInfo playerInfo = this.getPlayerInfo(playerName);
 		
@@ -314,7 +310,7 @@ public final class DynamicDifficulty extends JavaPlugin
 			playerConfig.set(mobType.getName() + ".manualPerformanceLevel", manualPerformanceLevel);
 
 			// save the autoPerformanceLevel for the MobType in the player.yml file
-			int autoPerformanceLevel = (int) (mobInfo.getCurrentPerformanceLevel()+.5);
+			int autoPerformanceLevel = (int) (mobInfo.getAutoPerformanceLevel()+.5);
 			playerConfig.set(mobType.getName() + ".autoPerformanceLevel", autoPerformanceLevel);
 		}
 		
@@ -373,7 +369,7 @@ public final class DynamicDifficulty extends JavaPlugin
 	
 		// set the currentPerformanceLevel in the MobInfo
 		int autoPerformanceLevel = playerConfig.getInt(mobInfo.getMobType().getName() + ".autoPerformanceLevel");
-		mobInfo.setCurrentPerformanceLevel(autoPerformanceLevel);
+		mobInfo.setAutoPerformanceLevel(autoPerformanceLevel);
 		// the estimated performance level should start off equal to the current performance level
 		mobInfo.setEstimatedPerformanceLevel(autoPerformanceLevel);
 	}

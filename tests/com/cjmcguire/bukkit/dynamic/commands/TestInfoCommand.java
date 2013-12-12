@@ -32,7 +32,7 @@ public class TestInfoCommand
 		plugin.setRunningWithHead(false);
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		playerInfo.getMobInfo(MobType.BLAZE).setManualPerformanceLevel(.5);
-		playerInfo.getMobInfo(MobType.BLAZE).setCurrentPerformanceLevel(.5);
+		playerInfo.getMobInfo(MobType.BLAZE).setAutoPerformanceLevel(.5);
 		
 		plugin.addPlayerInfo(playerInfo);
 		

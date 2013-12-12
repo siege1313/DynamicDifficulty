@@ -60,7 +60,7 @@ public class AnalyzerTask extends BukkitRunnable
 				if(mobInfo.getSetting() == Setting.AUTO)
 				{
 					mobInfo.updateEstimatedPerformanceLevel();
-					mobInfo.updateCurrentPerformanceLevel();
+					mobInfo.updateAutoPerformanceLevel();
 				}		
 			}
 		}

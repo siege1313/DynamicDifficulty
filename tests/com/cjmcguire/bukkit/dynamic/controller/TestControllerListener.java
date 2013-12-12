@@ -2,9 +2,9 @@ package com.cjmcguire.bukkit.dynamic.controller;
 
 import static org.junit.Assert.*;
 
-import net.minecraft.server.v1_6_R2.AttributeInstance;
-import net.minecraft.server.v1_6_R2.EntityInsentient;
-import net.minecraft.server.v1_6_R2.GenericAttributes;
+import net.minecraft.server.v1_6_R3.AttributeInstance;
+import net.minecraft.server.v1_6_R3.EntityInsentient;
+import net.minecraft.server.v1_6_R3.GenericAttributes;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class TestControllerListener
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
-		blazeInfo.setCurrentPerformanceLevel(200);
+		blazeInfo.setAutoPerformanceLevel(200);
 		
 		plugin.addPlayerInfo(playerInfo);
 		
@@ -88,7 +88,7 @@ public class TestControllerListener
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
-		blazeInfo.setCurrentPerformanceLevel(2);
+		blazeInfo.setAutoPerformanceLevel(2);
 		blazeInfo.setManualPerformanceLevel(2);
 		blazeInfo.setSetting(Setting.DISABLED);
 		
@@ -123,9 +123,9 @@ public class TestControllerListener
 		ControllerListener controller = new ControllerListener(plugin);
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
-		mobInfo.setCurrentPerformanceLevel(2.0);
+		mobInfo.setAutoPerformanceLevel(2.0);
 		
-		controller.makeMobSpeedDynamic(mockIns, mobInfo.getCurrentPerformanceLevel());
+		controller.makeMobSpeedDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.d);
 		
@@ -158,7 +158,7 @@ public class TestControllerListener
 		ControllerListener controller = new ControllerListener(plugin);
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
-		mobInfo.setCurrentPerformanceLevel(2.0);
+		mobInfo.setAutoPerformanceLevel(2.0);
 		
 		assertEquals(.4, mockAttributes.getValue(),.0001);
 				
@@ -195,9 +195,9 @@ public class TestControllerListener
 		ControllerListener controller = new ControllerListener(plugin);
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
-		mobInfo.setCurrentPerformanceLevel(200);
+		mobInfo.setAutoPerformanceLevel(200);
 		
-		controller.makeMobKnockbackDynamic(mockIns, mobInfo.getCurrentPerformanceLevel());
+		controller.makeMobKnockbackDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.c);
 		
@@ -229,9 +229,9 @@ public class TestControllerListener
 		ControllerListener controller = new ControllerListener(plugin);
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
-		mobInfo.setCurrentPerformanceLevel(60);
+		mobInfo.setAutoPerformanceLevel(60);
 		
-		controller.makeMobKnockbackDynamic(mockIns, mobInfo.getCurrentPerformanceLevel());
+		controller.makeMobKnockbackDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.c);
 		
@@ -264,7 +264,7 @@ public class TestControllerListener
 		ControllerListener controller = new ControllerListener(plugin);
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
-		mobInfo.setCurrentPerformanceLevel(2.0);
+		mobInfo.setAutoPerformanceLevel(2.0);
 		
 		assertEquals(1, mockAttributes.getValue(),.0001);
 				
@@ -302,9 +302,9 @@ public class TestControllerListener
 		ControllerListener controller = new ControllerListener(plugin);
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
-		mobInfo.setCurrentPerformanceLevel(200);
+		mobInfo.setAutoPerformanceLevel(200);
 		
-		controller.makeMobFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getCurrentPerformanceLevel());
+		controller.makeMobFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.b);
 		
@@ -337,9 +337,9 @@ public class TestControllerListener
 		ControllerListener controller = new ControllerListener(plugin);
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
-		mobInfo.setCurrentPerformanceLevel(.75);
+		mobInfo.setAutoPerformanceLevel(.75);
 		
-		controller.makeMobFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getCurrentPerformanceLevel());
+		controller.makeMobFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.b);
 		
@@ -372,7 +372,7 @@ public class TestControllerListener
 		ControllerListener controller = new ControllerListener(plugin);
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
-		mobInfo.setCurrentPerformanceLevel(2.0);
+		mobInfo.setAutoPerformanceLevel(2.0);
 		
 		assertEquals(32, mockAttributes.b(),.0001);
 				

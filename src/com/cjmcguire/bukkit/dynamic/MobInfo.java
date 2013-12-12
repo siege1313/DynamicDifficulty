@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 /**
  * Holds all of the dynamic difficulty information for a given mob such as
- * the difficulty setting, current performance level and manual performance
+ * the difficulty setting, auto performance level and manual performance
  * level.
  * @author CJ McGuire
  */
 public class MobInfo 
 {
 	/**
-	 * The maximum number of units that a player's current performance level can 
+	 * The maximum number of units that a player's auto performance level can 
 	 * change in a single update. (10 units)
 	 */
 	public final static int MAX_INCREMENT = 10;
@@ -32,7 +32,7 @@ public class MobInfo
 	private Setting setting;
 	
 	private double estimatedPerformanceLevel;
-	private double currentPerformanceLevel;
+	private double autoPerformanceLevel;
 	private double manualPerformanceLevel;
 	
 	private int damagePlayerGave;
@@ -50,7 +50,7 @@ public class MobInfo
 		this.setting = Setting.AUTO;
 		
 		estimatedPerformanceLevel = 100;
-		currentPerformanceLevel = 100;
+		autoPerformanceLevel = 100;
 		manualPerformanceLevel = 100;
 		
 		damagePlayerGave = 0;
@@ -140,53 +140,53 @@ public class MobInfo
 	}
 
 	/**
-	 * @return the current performance level for this Mob
+	 * @return the auto performance level for this Mob
 	 */
-	public double getCurrentPerformanceLevel() 
+	public double getAutoPerformanceLevel() 
 	{
-		return currentPerformanceLevel;
+		return autoPerformanceLevel;
 	}
 	
 	/**
-	 * Sets currentPerformanceLevel to the given currentPerformanceLevel
-	 * @param currentPerformanceLevel the new value for currentPerformanceLevel
+	 * Sets autoPerformanceLevel to the given autoPerformanceLevel
+	 * @param autoPerformanceLevel the new value for autoPerformanceLevel
 	 */
-	public void setCurrentPerformanceLevel(double currentPerformanceLevel)
+	public void setAutoPerformanceLevel(double autoPerformanceLevel)
 	{
-		this.currentPerformanceLevel = currentPerformanceLevel;
+		this.autoPerformanceLevel = autoPerformanceLevel;
 		
-		if(this.currentPerformanceLevel < MIN_PERFORMANCE_LEVEL)
+		if(this.autoPerformanceLevel < MIN_PERFORMANCE_LEVEL)
 		{
-			this.currentPerformanceLevel = MIN_PERFORMANCE_LEVEL;
+			this.autoPerformanceLevel = MIN_PERFORMANCE_LEVEL;
 		}
 		
-		if(this.currentPerformanceLevel > MAX_PERFORMANCE_LEVEL)
+		if(this.autoPerformanceLevel > MAX_PERFORMANCE_LEVEL)
 		{
-			this.currentPerformanceLevel = MAX_PERFORMANCE_LEVEL;
+			this.autoPerformanceLevel = MAX_PERFORMANCE_LEVEL;
 		}
 	}
 	
 	/**
-	 * Updates the current performance level for this Mob dynamically.
-	 * currentPerformanceLevel will shift toward estimatedPerformanceLevel.
-	 * currentPerformanceLevel cannot shift more than 1/13 in a single update.
+	 * Updates the auto performance level for this Mob dynamically.
+	 * autoPerformanceLevel will shift toward estimatedPerformanceLevel.
+	 * autoPerformanceLevel cannot shift more than 10 in a single update.
 	 */
-	public void updateCurrentPerformanceLevel()
+	public void updateAutoPerformanceLevel()
 	{
-		//estimated vastly greater than current
-		if(estimatedPerformanceLevel > currentPerformanceLevel + MAX_INCREMENT)
+		//estimated vastly greater than auto
+		if(estimatedPerformanceLevel > autoPerformanceLevel + MAX_INCREMENT)
 		{
-			this.setCurrentPerformanceLevel(currentPerformanceLevel + MAX_INCREMENT);
+			this.setAutoPerformanceLevel(autoPerformanceLevel + MAX_INCREMENT);
 		}
-		//estimated close to current
-		else if(estimatedPerformanceLevel <= currentPerformanceLevel + MAX_INCREMENT && estimatedPerformanceLevel >= currentPerformanceLevel - MAX_INCREMENT)
+		//estimated close to auto
+		else if(estimatedPerformanceLevel <= autoPerformanceLevel + MAX_INCREMENT && estimatedPerformanceLevel >= autoPerformanceLevel - MAX_INCREMENT)
 		{
-			this.setCurrentPerformanceLevel(estimatedPerformanceLevel);
+			this.setAutoPerformanceLevel(estimatedPerformanceLevel);
 		}
-		//estimated vastly less than current
-		else if(estimatedPerformanceLevel < currentPerformanceLevel - MAX_INCREMENT)
+		//estimated vastly less than auto
+		else if(estimatedPerformanceLevel < autoPerformanceLevel - MAX_INCREMENT)
 		{
-			this.setCurrentPerformanceLevel(currentPerformanceLevel - MAX_INCREMENT);
+			this.setAutoPerformanceLevel(autoPerformanceLevel - MAX_INCREMENT);
 		}
 	}
 
@@ -220,9 +220,9 @@ public class MobInfo
 	/**
 	 * @return the performance level currently in use based on the player's setting.
 	 * If the player's setting is auto, this method will return the player's
-	 * current performance level. If the player's setting is set to manual, this 
+	 * auto performance level. If the player's setting is set to manual, this 
 	 * method will return the player's manual performance level. If the player's
-	 * setting is disabled, this method will return 1 (100%).
+	 * setting is disabled, this method will return 100.
 	 */
 	public double getPerformanceLevelInUse()
 	{
@@ -230,7 +230,7 @@ public class MobInfo
 		
 		if(setting == Setting.AUTO)
 		{
-			performanceLevel = this.getCurrentPerformanceLevel();
+			performanceLevel = this.getAutoPerformanceLevel();
 		}
 		else if(setting == Setting.MANUAL)
 		{
