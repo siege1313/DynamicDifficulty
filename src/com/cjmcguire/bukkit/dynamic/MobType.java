@@ -1,6 +1,6 @@
 package com.cjmcguire.bukkit.dynamic;
 
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftSkeleton;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton.SkeletonType;

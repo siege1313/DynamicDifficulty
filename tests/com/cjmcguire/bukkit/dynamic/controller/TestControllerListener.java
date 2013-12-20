@@ -2,9 +2,9 @@ package com.cjmcguire.bukkit.dynamic.controller;
 
 import static org.junit.Assert.*;
 
-import net.minecraft.server.v1_6_R3.AttributeInstance;
-import net.minecraft.server.v1_6_R3.EntityInsentient;
-import net.minecraft.server.v1_6_R3.GenericAttributes;
+import net.minecraft.server.v1_7_R1.AttributeInstance;
+import net.minecraft.server.v1_7_R1.EntityInsentient;
+import net.minecraft.server.v1_7_R1.GenericAttributes;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
