@@ -10,6 +10,22 @@ import org.junit.Test;
  */
 public class TestSetting
 {
+	
+	/**
+	 * This test is here mostly to boost code coverage.
+	 */
+	@Test
+	public void boostCoverage()
+	{
+		Setting[] settings = Setting.values();
+		for(int looper = 0; looper < settings.length; looper++)
+		{
+			assertEquals(looper, settings[looper].ordinal());
+		}
+		
+		assertEquals(Setting.AUTO, Setting.valueOf("AUTO"));
+	}
+	
 	/**
 	 * Tests the getSettingName() method
 	 */

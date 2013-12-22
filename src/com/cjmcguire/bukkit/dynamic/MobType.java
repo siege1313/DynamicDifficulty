@@ -41,7 +41,12 @@ public enum MobType
 	/**
 	 * Magma cube Mob. Name: "magmacube". Health: 4. Default Follow Distance: 16
 	 */
-	MAGMACUBE(EntityType.MAGMA_CUBE.getEntityClass().getSimpleName(), 4, 16),
+	MAGMA_CUBE(EntityType.MAGMA_CUBE.getEntityClass().getSimpleName(), 4, 16),
+	
+	/**
+	 * Zombie Pigman Mob. Name: "pigzombie". Health: 20. Default Follow Distance: 40
+	 */
+	PIG_ZOMBIE(EntityType.PIG_ZOMBIE.getEntityClass().getSimpleName(), 20, 40),
 	
 	/**
 	 * Silverfish Mob. Name: "silverfish". Health: 8. Default Follow Distance: 16
@@ -76,12 +81,7 @@ public enum MobType
 	/**
 	 * Zombie Mob. Name: "zombie". Health: 20. Default Follow Distance: 40
 	 */
-	ZOMBIE(EntityType.ZOMBIE.getEntityClass().getSimpleName(), 20, 40),
-	
-	/**
-	 * Zombie Pigman Mob. Name: "pigzombie". Health: 20. Default Follow Distance: 40
-	 */
-	ZOMBIE_PIGMAN(EntityType.PIG_ZOMBIE.getEntityClass().getSimpleName(), 20, 40);
+	ZOMBIE(EntityType.ZOMBIE.getEntityClass().getSimpleName(), 20, 40);
 	
 	
 	private String name;

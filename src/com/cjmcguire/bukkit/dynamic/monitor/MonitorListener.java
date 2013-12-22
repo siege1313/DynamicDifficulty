@@ -1,9 +1,6 @@
 package com.cjmcguire.bukkit.dynamic.monitor;
 
-import java.io.File;
-
 import org.bukkit.GameMode;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -12,8 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
 import com.cjmcguire.bukkit.dynamic.MobInfo;
@@ -38,52 +33,6 @@ public class MonitorListener implements Listener
 	public MonitorListener(DynamicDifficulty plugin)
 	{
 		this.plugin = plugin;
-	}
-
-	/**
-	 * This method triggers whenever a player logs onto a Minecraft Bukkit Server.
-	 * If no player data exists for the player that just logged in, this method
-	 * initializes player data for that player. If player data does exist, this method
-	 * will load in the player data from the player's config.yml file
-	 * @param event the PlayerLoginEvent that just occurred
-	 */
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerLogin(PlayerLoginEvent event)
-	{
-		// get the player
-		Player player = event.getPlayer();
-		// get the player's name
-		String playerName = player.getDisplayName();
-		
-		// get the playerName.yml file from disk
-		File playerFile = new File(plugin.getDataFolder(), playerName + ".yml");
-		// create the FileConfiguration object based on the playerFile.yml
-		FileConfiguration playerConfig = plugin.loadPlayerConfig(playerFile, playerName);
-
-		// load the playerData contained in the FileConfiguration into the plugin
-		plugin.loadPlayerInfo(playerConfig, playerName);
-	}
-
-	/**
-	 * This method triggers whenever a player logs out of a Minecraft Bukkit Server.
-	 * It will clear temporary variables from the player's player data and will save
-	 * permanent variables.
-	 * @param event the PlayerQuitEvent that just occurred
-	 */
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerLogout(PlayerQuitEvent event)
-	{
-		// get the player
-		Player player = event.getPlayer();
-		// get the player's name
-		String playerName = player.getDisplayName();
-		// get the playerName.yml file from disk
-		File playerFile = new File(plugin.getDataFolder(), playerName + ".yml");
-		// create the FileConfiguration object based on the playerFile.yml
-		FileConfiguration playerConfig = plugin.loadPlayerConfig(playerFile, playerName);
-		
-		// save key variables from PlayerInfo to the player.yml file
-		plugin.savePlayerInfo(playerConfig, playerFile, playerName);
 	}
 	
 	/**

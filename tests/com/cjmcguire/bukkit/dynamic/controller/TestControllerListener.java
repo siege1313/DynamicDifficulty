@@ -107,13 +107,12 @@ public class TestControllerListener
 	public void testMakeMoveSpeedDynamic()
 	{
 		AttributeInstance mockAttributes = EasyMock.createNiceMock(AttributeInstance.class);
-		//EasyMock.expect(mockAttributes.b()).andReturn(.32);
 		EasyMock.expect(mockAttributes.getValue()).andReturn(.32+.32/2);
 		EasyMock.replay(mockAttributes);
 		
 		
 		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.d)).andReturn(mockAttributes);
+		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.d)).andReturn(mockAttributes);//TODO: lag here
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.d)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 

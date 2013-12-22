@@ -24,6 +24,7 @@ import com.cjmcguire.bukkit.dynamic.monitor.TestMonitorListener;
 	TestDynamicDifficulty.class,
 	TestMobInfo.class,
 	TestMobType.class,
+	TestPlayerFileHandler.class,
 	TestPlayerInfo.class,
 	TestSetting.class,
 	

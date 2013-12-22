@@ -15,6 +15,22 @@ import org.junit.Test;
 public class TestMobType
 {
 	/**
+	 * This test is here mostly to boost code coverage.
+	 */
+	@Test
+	public void boostCoverage()
+	{
+		MobType[] mobTypes = MobType.values();
+		for(int looper = 0; looper < mobTypes.length; looper++)
+		{
+			assertEquals(looper, mobTypes[looper].ordinal());
+		}
+		
+		assertEquals(MobType.BLAZE, MobType.valueOf("BLAZE"));
+	}
+	
+	
+	/**
 	 * Tests the getNameAsString() method
 	 */
 	@Test
@@ -25,8 +41,8 @@ public class TestMobType
 		assertEquals("creeper", MobType.CREEPER.getName());
 		assertEquals("enderman", MobType.ENDERMAN.getName());
 		assertEquals("ghast", MobType.GHAST.getName());
-		assertEquals("magmacube", MobType.MAGMACUBE.getName());
-		assertEquals("pigzombie", MobType.ZOMBIE_PIGMAN.getName());
+		assertEquals("magmacube", MobType.MAGMA_CUBE.getName());
+		assertEquals("pigzombie", MobType.PIG_ZOMBIE.getName());
 		assertEquals("silverfish", MobType.SILVERFISH.getName());
 		assertEquals("skeleton", MobType.SKELETON.getName());
 		assertEquals("slime", MobType.SLIME.getName());
@@ -47,7 +63,7 @@ public class TestMobType
 		assertEquals(20, MobType.CREEPER.getMaxHealth());
 		assertEquals(40, MobType.ENDERMAN.getMaxHealth());
 		assertEquals(10, MobType.GHAST.getMaxHealth());
-		assertEquals(4, MobType.MAGMACUBE.getMaxHealth());
+		assertEquals(4, MobType.MAGMA_CUBE.getMaxHealth());
 		assertEquals(8, MobType.SILVERFISH.getMaxHealth());
 		assertEquals(20, MobType.SKELETON.getMaxHealth());
 		assertEquals(4, MobType.SLIME.getMaxHealth());
@@ -55,7 +71,7 @@ public class TestMobType
 		assertEquals(26, MobType.WITCH.getMaxHealth());
 		assertEquals(20, MobType.WITHER_SKELETON.getMaxHealth());
 		assertEquals(20, MobType.ZOMBIE.getMaxHealth());
-		assertEquals(20, MobType.ZOMBIE_PIGMAN.getMaxHealth());
+		assertEquals(20, MobType.PIG_ZOMBIE.getMaxHealth());
 	}
 	
 	/**
@@ -69,7 +85,7 @@ public class TestMobType
 		assertEquals(16, MobType.CREEPER.getDefaultFollowDistance());
 		assertEquals(16, MobType.ENDERMAN.getDefaultFollowDistance());
 		assertEquals(100, MobType.GHAST.getDefaultFollowDistance());
-		assertEquals(16, MobType.MAGMACUBE.getDefaultFollowDistance());
+		assertEquals(16, MobType.MAGMA_CUBE.getDefaultFollowDistance());
 		assertEquals(16, MobType.SILVERFISH.getDefaultFollowDistance());
 		assertEquals(16, MobType.SKELETON.getDefaultFollowDistance());
 		assertEquals(16, MobType.SLIME.getDefaultFollowDistance());
@@ -77,7 +93,7 @@ public class TestMobType
 		assertEquals(16, MobType.WITCH.getDefaultFollowDistance());
 		assertEquals(16, MobType.WITHER_SKELETON.getDefaultFollowDistance());
 		assertEquals(40, MobType.ZOMBIE.getDefaultFollowDistance());
-		assertEquals(40, MobType.ZOMBIE_PIGMAN.getDefaultFollowDistance());
+		assertEquals(40, MobType.PIG_ZOMBIE.getDefaultFollowDistance());
 	}
 	
 	/**
@@ -91,7 +107,7 @@ public class TestMobType
 		assertEquals(MobType.CREEPER, MobType.getMobType("creeper"));
 		assertEquals(MobType.ENDERMAN, MobType.getMobType("enderman"));
 		assertEquals(MobType.GHAST, MobType.getMobType("ghast"));
-		assertEquals(MobType.MAGMACUBE, MobType.getMobType("magmacube"));
+		assertEquals(MobType.MAGMA_CUBE, MobType.getMobType("magmacube"));
 		assertEquals(MobType.SILVERFISH, MobType.getMobType("silverfish"));
 		assertEquals(MobType.SKELETON, MobType.getMobType("skeleton"));
 		assertEquals(MobType.SLIME, MobType.getMobType("slime"));
@@ -99,7 +115,7 @@ public class TestMobType
 		assertEquals(MobType.WITCH, MobType.getMobType("witch"));
 		assertEquals(MobType.WITHER_SKELETON, MobType.getMobType("witherskeleton"));
 		assertEquals(MobType.ZOMBIE, MobType.getMobType("zombie"));
-		assertEquals(MobType.ZOMBIE_PIGMAN, MobType.getMobType("pigzombie"));
+		assertEquals(MobType.PIG_ZOMBIE, MobType.getMobType("pigzombie"));
 	}
 	
 	/**
