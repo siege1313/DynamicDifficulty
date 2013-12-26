@@ -28,7 +28,7 @@ public class MobInfo
 	
 	private final static double MAX_PLAYER_HEALTH = 20.0;
 	
-	private MobType mobType;
+	private final MobType mobType;
 	private Setting setting;
 	
 	private double estimatedPerformanceLevel;

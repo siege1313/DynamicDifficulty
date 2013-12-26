@@ -9,9 +9,9 @@ import java.util.HashMap;
  */
 public class PlayerInfo 
 {
-	private String playerName;
+	private final String playerName;
 	
-	private HashMap<MobType, MobInfo> mobData;
+	private final HashMap<MobType, MobInfo> mobData;
 	
 	/**
 	 * Initializes this PlayerInfo

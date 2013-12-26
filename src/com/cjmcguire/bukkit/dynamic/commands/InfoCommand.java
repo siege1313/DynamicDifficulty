@@ -123,6 +123,7 @@ public class InfoCommand extends AbstractDDCommand
 	 * @return true if the player had permission to use this command, 
 	 * false the sender did not have permission.
 	 */
+	@Override
 	protected boolean commandAction(CommandSender sender, String playerName, String [] args)
 	{
 		boolean validCommand = false;

@@ -30,7 +30,8 @@ import com.cjmcguire.bukkit.dynamic.monitor.MonitorListener;
 
 /**
  * DynamicDifficulty core Bukkit plugin class. This plugin implements 
- * dynamic difficulty on a Minecraft Bukkit Server.
+ * dynamic difficulty on a Minecraft Bukkit Server. This class holds 
+ * all of the player data for logged in players.
  * @author CJ McGuire
  */
 public final class DynamicDifficulty extends JavaPlugin
@@ -57,6 +58,7 @@ public final class DynamicDifficulty extends JavaPlugin
 		
 		if(this.isRunningWithHead())
 		{
+			// register the fileHandler to handle events that deal with files
 			this.getServer().getPluginManager().registerEvents(fileHandler, this);
 			
 			// set up the monitor
@@ -72,6 +74,8 @@ public final class DynamicDifficulty extends JavaPlugin
 			// register the commands
 			this.getCommand(DynamicCommandExecutor.NAME).setExecutor(new DynamicCommandExecutor(this));
 				
+			fileHandler.createDefaultPlayerFile();
+			fileHandler.createPlayersFolder();
 			// if a reload occurs, load the PlayerInfo for any players that
 			// are currently logged in
 			fileHandler.reloadInfoForLoggedInPlayers();
@@ -89,7 +93,7 @@ public final class DynamicDifficulty extends JavaPlugin
 	}
 	
 	/**
-	 * @return true if this pluggin is running with its head, false if
+	 * @return true if this plugin is running with its head, false if
 	 * it running headless.
 	 */
 	public boolean isRunningWithHead()
@@ -142,14 +146,22 @@ public final class DynamicDifficulty extends JavaPlugin
 	}
 	
 	/**
-	 * Gets a player's player info.
-	 * @param playerName the name of the player whose PlayerInfo
-	 * you want to get
-	 * @return the PlayerInfo of the player with the given player name or 
-	 * null if this plugin contains no PlayerInfo for the given player name
+	 * Gets a player's PlayerInfo. If no PlayerInfo currently exists for the 
+	 * player when this method is called, then it will generate new PlayerInfo
+	 * for the player before returning it.
+	 * @param playerName the name of the player whose PlayerInfo you want to get
+	 * @return the PlayerInfo of the player with the given player name
 	 */
 	public PlayerInfo getPlayerInfo(String playerName) 
 	{
+		if(!playerData.containsKey(playerName))
+		{
+			this.safeLogInfo(playerName + "'s PlayerInfo DID NOT EXIST");
+			fileHandler.loadPlayerDataFromFile(playerName);
+		}
+
+		this.safeLogInfo(playerData.get(playerName) + " EXISTS NOW. GETTING IT");
+		
 		return playerData.get(playerName);
 	}
 

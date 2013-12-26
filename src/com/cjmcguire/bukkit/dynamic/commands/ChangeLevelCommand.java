@@ -46,6 +46,7 @@ public class ChangeLevelCommand extends AbstractDDCommand
 	 * @return true if the player's performance level was changed. false if the 
 	 * level change could not be completed
 	 */
+	@Override
 	protected boolean commandAction(CommandSender sender, String playerName, String[] args)
 	{
 		boolean levelChanged = false;

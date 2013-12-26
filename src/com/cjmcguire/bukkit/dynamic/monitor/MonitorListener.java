@@ -23,7 +23,7 @@ import com.cjmcguire.bukkit.dynamic.Setting;
  */
 public class MonitorListener implements Listener
 {
-	private DynamicDifficulty plugin;
+	private final DynamicDifficulty plugin;
 
 	/**
 	 * Initializes the MonitorListener.
@@ -102,7 +102,7 @@ public class MonitorListener implements Listener
 	 * @param damager the living entity that did the damage
 	 * @param damage the damage the damager caused
 	 */
-	public void updateDamagePlayerReceived(String playerName, Entity damager, int damage)
+	protected void updateDamagePlayerReceived(String playerName, Entity damager, int damage)
 	{
 		MobType mobType = MobType.getEntitysMobType(damager);
 
@@ -129,7 +129,7 @@ public class MonitorListener implements Listener
 	 * @param playerName the name of the player that did damage
 	 * @param damage the damage the player causes
 	 */
-	public void updateDamagePlayerGave(Entity damaged, String playerName, int damage)
+	protected void updateDamagePlayerGave(Entity damaged, String playerName, int damage)
 	{
 		MobType mobType = MobType.getEntitysMobType(damaged);
 		

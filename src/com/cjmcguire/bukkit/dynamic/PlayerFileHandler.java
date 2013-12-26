@@ -23,9 +23,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerFileHandler implements Listener
 {
 	private final static String DEFAULT_PLAYER_FILE_NAME = "default_player.yml";
-	private final static String PLAYERS_FOLDER = "players/";
+	private final static String PLAYERS_FOLDER = "players";
 	
-	private DynamicDifficulty plugin;
+	private final DynamicDifficulty plugin;
 	
 	/**
 	 * Initializes the PlayerFileHandler.
@@ -35,6 +35,42 @@ public class PlayerFileHandler implements Listener
 	protected PlayerFileHandler(DynamicDifficulty plugin)
 	{
 		this.plugin = plugin;
+	}
+	
+	/**
+	 * Creates the default_player.yml file in the plugin data folder if it does not exist.
+	 */
+	protected void createDefaultPlayerFile()
+	{
+		File dataDefaultFile = new File(plugin.getDataFolder(), DEFAULT_PLAYER_FILE_NAME);
+		
+		if(!dataDefaultFile.exists())
+		{
+			InputStream jarDefaultFile = plugin.getResource(DEFAULT_PLAYER_FILE_NAME);
+			FileConfiguration defaultPlayerConfig = YamlConfiguration.loadConfiguration(jarDefaultFile);
+			
+			try 
+			{
+				defaultPlayerConfig.save(dataDefaultFile);
+			} 
+			catch (IOException e) 
+			{
+				plugin.safeLogInfo("Could not create default_player.yml");
+			}
+		}
+	}
+	
+	/**
+	 * Creates the players folder if it does not exist.
+	 */
+	protected void createPlayersFolder()
+	{
+		File playersFolder = new File(plugin.getDataFolder(), PLAYERS_FOLDER);
+		if(!playersFolder.exists())
+		{
+			plugin.safeLogInfo("players FOLDER DOES NOT EXIST");
+			playersFolder.mkdirs();
+		}
 	}
 	
 	/**
@@ -52,6 +88,7 @@ public class PlayerFileHandler implements Listener
 		// get the player's name
 		String playerName = player.getDisplayName();
 
+		plugin.safeLogInfo(playerName + " LOGGED IN");
 		// load the playerData contained in the FileConfiguration into the plugin
 		this.loadPlayerDataFromFile(playerName);
 	}
@@ -70,6 +107,8 @@ public class PlayerFileHandler implements Listener
 		// get the player's name
 		String playerName = player.getDisplayName();
 
+		plugin.safeLogInfo(playerName + " LOGGED OUT");
+		
 		// save key variables from PlayerInfo to the player.yml file
 		this.savePlayerDataToFile(playerName);
 
@@ -133,7 +172,7 @@ public class PlayerFileHandler implements Listener
 	}
 	
 	/**
-	 * Loads the info from the <player name>.yml file to the plugin's PlayerData.
+	 * Loads the info from the <player name>.yml file to the plugin's player data.
 	 * @param playerName the name of the player whose player info you want to load into
 	 * the plugin's memory
 	 */
@@ -201,7 +240,7 @@ public class PlayerFileHandler implements Listener
 			this.saveMobInfoToConfig(mobInfo, playerConfig);
 		}
 		
-		File playerFile = new File(plugin.getDataFolder(), PLAYERS_FOLDER + playerName + ".yml");
+		File playerFile = new File(plugin.getDataFolder(), PLAYERS_FOLDER + File.separator + playerName + ".yml");
 			
 		try 
 		{
@@ -266,7 +305,7 @@ public class PlayerFileHandler implements Listener
 		FileConfiguration playerConfig = null;
 		
 		// get the playerName.yml file from disk
-		File playerFile = new File(plugin.getDataFolder(), PLAYERS_FOLDER + playerName + ".yml");
+		File playerFile = new File(plugin.getDataFolder(), PLAYERS_FOLDER + File.separator  + playerName + ".yml");
 		
 		// if the File exists
 		if(playerFile.exists())

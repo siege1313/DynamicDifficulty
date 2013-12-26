@@ -11,7 +11,7 @@ import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
  */
 public abstract class AbstractDDCommand
 {
-	private DynamicDifficulty plugin;
+	private final DynamicDifficulty plugin;
 	
 	/**
 	 * Initializes the DynamicDifficulty Command.

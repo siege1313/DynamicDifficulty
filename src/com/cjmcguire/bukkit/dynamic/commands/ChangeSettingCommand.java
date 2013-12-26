@@ -43,6 +43,7 @@ public class ChangeSettingCommand extends AbstractDDCommand
 	 * @return true if the setting change was valid. false if the setting change
 	 * could not be completed
 	 */
+	@Override
 	protected boolean commandAction(CommandSender sender, String playerName, String[] args)
 	{
 		boolean valid = false;

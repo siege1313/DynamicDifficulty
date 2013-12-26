@@ -20,7 +20,7 @@ import com.cjmcguire.bukkit.dynamic.Setting;
 public class AnalyzerTask extends BukkitRunnable
 {
 	
-	private DynamicDifficulty plugin;
+	private final DynamicDifficulty plugin;
 	
 	/**
 	 * Initializes the AnalyzerTask.
@@ -46,7 +46,7 @@ public class AnalyzerTask extends BukkitRunnable
 	 * Updates the current performance level and estimated performance level of all mob types
 	 * for all players as long as the player's performance level is set to auto.
 	 */
-	public void updatePlayerData()
+	protected void updatePlayerData()
 	{
 		Collection<PlayerInfo> playerCollection = plugin.getPlayerData();
 		

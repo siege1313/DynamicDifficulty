@@ -33,7 +33,7 @@ import com.cjmcguire.bukkit.dynamic.MobType;
  */
 public class ControllerListener implements Listener
 {
-	private DynamicDifficulty plugin;
+	private final DynamicDifficulty plugin;
 
 	private static final UUID movementSpeedUID = UUID.fromString("206a89dc-be78-4c4d-b42c-3b31db3f5a7c");
 	
@@ -101,7 +101,7 @@ public class ControllerListener implements Listener
 	 * @param baseDamage the base damage that was done to the player
 	 * @return the new damage done by the mob
 	 */
-	public int manipulateDamagePlayerReceived(String playerName, MobType mobType, int baseDamage)
+	protected int manipulateDamagePlayerReceived(String playerName, MobType mobType, int baseDamage)
 	{
 		// get the PlayerInfo's MobData
 		MobInfo mobInfo = plugin.getPlayersMobInfo(playerName, mobType);
@@ -176,7 +176,7 @@ public class ControllerListener implements Listener
 	 * @param insEntity the EntityInsentient whose speed you want to change
 	 * @param performanceLevel the performance level of the player
 	 */
-	public void makeMobSpeedDynamic(EntityInsentient insEntity, double performanceLevel)
+	protected void makeMobSpeedDynamic(EntityInsentient insEntity, double performanceLevel)
 	{
 		// get the mob speed attribute
 		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.d);
@@ -204,7 +204,7 @@ public class ControllerListener implements Listener
 	 * to change the follow distance
 	 * @param performanceLevel the performance level of the player
 	 */
-	public void makeMobFollowDistanceDynamic(EntityInsentient insEntity, MobInfo mobInfo, double performanceLevel)
+	protected void makeMobFollowDistanceDynamic(EntityInsentient insEntity, MobInfo mobInfo, double performanceLevel)
 	{
 		// The player's performance level must be greater than 100 because if it is less 
 		// than 100 and we try to decrease the mob's view distance, the mob will just 
@@ -228,7 +228,7 @@ public class ControllerListener implements Listener
 	 * @param insEntity the EntityInsentient whose speed you want to change
 	 * @param performanceLevel the performance level of the player
 	 */
-	public void makeMobKnockbackDynamic(EntityInsentient insEntity, double performanceLevel)
+	protected void makeMobKnockbackDynamic(EntityInsentient insEntity, double performanceLevel)
 	{
 		// The player's performance level must be greater than 100 because if it is less 
 		// than 100, we are trying to reduce knockback resistance but Bukkit does not allow
@@ -263,7 +263,7 @@ public class ControllerListener implements Listener
 	 * Resets the speed of the given EntityInsentient back to its default move speed.
 	 * @param insEntity the EntityInsentient whose speed you want to reset
 	 */
-	public void resetMobSpeed(EntityInsentient insEntity)
+	protected void resetMobSpeed(EntityInsentient insEntity)
 	{
 		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.d);
 		AttributeModifier modifier = new AttributeModifier(movementSpeedUID, "DynamicDifficulty movement speed reset", 0, 1);
@@ -276,7 +276,7 @@ public class ControllerListener implements Listener
 	 * @param insEntity the EntityInsentient whose follow distance you want to reset
 	 * @param mobType the mob type of the entity insentient
 	 */
-	public void resetMobFollowDistance(EntityInsentient insEntity, MobType mobType)
+	protected void resetMobFollowDistance(EntityInsentient insEntity, MobType mobType)
 	{
 		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.b);
 		attribute.setValue(mobType.getDefaultFollowDistance());
@@ -287,7 +287,7 @@ public class ControllerListener implements Listener
 	 * default move knockback resistance.
 	 * @param insEntity the EntityInsentient whose knockback resistance you want to reset
 	 */
-	public void resetMobKnockback(EntityInsentient insEntity)
+	protected void resetMobKnockback(EntityInsentient insEntity)
 	{
 		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.c);
 		attribute.setValue(0);

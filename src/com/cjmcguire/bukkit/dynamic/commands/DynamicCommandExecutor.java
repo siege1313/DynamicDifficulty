@@ -20,13 +20,13 @@ public class DynamicCommandExecutor implements CommandExecutor
 	 */
 	public static final String NAME = "dynamic";
 	
-	private DynamicCommand dynamicCommand;
-	private InfoCommand infoCommand;
-	private ChangeLevelCommand changeLevelCommand;
-	private ChangeSettingCommand changeSettingCommand;
+	private final DynamicCommand dynamicCommand;
+	private final InfoCommand infoCommand;
+	private final ChangeLevelCommand changeLevelCommand;
+	private final ChangeSettingCommand changeSettingCommand;
 	
 	/**
-	 * Initializes this DynamicCommand.
+	 * Initializes this DynamicCommandExecutor.
 	 * @param plugin a reference to the DynamicDifficulty plugin
 	 */
 	public DynamicCommandExecutor(DynamicDifficulty plugin)
