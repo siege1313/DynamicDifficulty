@@ -2,6 +2,7 @@ package com.cjmcguire.bukkit.dynamic.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
 import com.cjmcguire.bukkit.dynamic.MobInfo;
@@ -14,83 +15,92 @@ import com.cjmcguire.bukkit.dynamic.Setting;
  * prints out a message describing what the DynamicDifficulty plugin does.
  * @author CJ McGuire
  */
-public class ChangeSettingCommand extends AbstractDDCommand
+public class ChangeSettingCommand extends PlayerTargetableCommand
 {
 	/**
-	 * The name of this command. ("change setting")
+	 * The name of this command. ("changesetting")
 	 */
-	public static final String NAME = "change setting";
+	public static final String NAME = "changesetting";
+	
+	private static final int SELF_ARGS_LENGTH = 3;
+	private static final int OTHER_ARGS_LENGTH = 4;
+
+	private static final String SELF_PERMISSION = "dynamic.changesetting.self";
+	private static final String OTHER_PERMISSION = "dynamic.changesetting.other";
+	
+	private static final String SELF_DENY_PERMISSION_MESSAGE = "You do not have permission to change your own DynamicDifficulty settings";
+	private static final String OTHER_DENY_PERMISSION_MESSAGE = "You do not have permission to change other players' DynamicDifficulty settings";
+	
+	private static final String SELF_DENY_CONSOLE_MESSAGE = "You must be a player to change your own DynamicDifficulty settings";
+	
+	private static final String INCORRECT_ARGS_MESSAGE = "Incorrect number of arguments. Use the command like this: " +
+			ChatColor.GOLD + "/dynamic changesetting <mob-name | 'all'> <'auto' | 'manual' | 'disabled'> [player-name]";
 	
 	/**
-	 * Initializes this DynamicCommand.
+	 * Initializes this DynamicDifficulty Command.
 	 * @param plugin a reference to the DynamicDifficulty plugin
 	 */
 	public ChangeSettingCommand(DynamicDifficulty plugin)
 	{
-		super(plugin);
+		super(plugin,
+				SELF_ARGS_LENGTH, OTHER_ARGS_LENGTH,
+				SELF_PERMISSION, OTHER_PERMISSION,
+				SELF_DENY_PERMISSION_MESSAGE, OTHER_DENY_PERMISSION_MESSAGE,
+				SELF_DENY_CONSOLE_MESSAGE, INCORRECT_ARGS_MESSAGE);
 	}
 	
 	/**
 	 * Changes the setting for the player with the given playerName given that
 	 * the parameters contain valid info. Several things could go wrong when 
 	 * trying to change a player's setting. First, the setting is not a valid
-	 * setting. Second, the mob name is not a valid mob name. Third, the player
-	 * may not have permission to use the command.
+	 * setting. Second, the mob name is not a valid mob name.
 	 * @param sender the sender of the command
-	 * @param playerName the name of the player
-	 * @param args args[2] must contain the mob name and args[3] must contain
-	 * the setting to change to
-	 * @return true if the setting change was valid. false if the setting change
-	 * could not be completed
+	 * @param args must contain "changesetting" in args[0], args[1] must contain 
+	 * the mob name and args[2] must contain the setting to change to. Optionally
+	 * args[3] can contain a player's name
+	 * @return true if the player's setting was changed. false if the 
+	 * setting change could not be completed
 	 */
 	@Override
-	protected boolean commandAction(CommandSender sender, String playerName, String[] args)
+	protected boolean commandAction(CommandSender sender, String playerName, String [] args)
 	{
 		boolean valid = false;
 
-		// if the sender has permission to use this command
-		if(sender.hasPermission("dynamic.changesetting"))
-		{
-			String mobName = args[2];
-			String settingName = args[3];
+		String mobName = args[1];
+		String settingName = args[2];
 			
-			MobType mobType = MobType.getMobType(mobName);
-			Setting setting = Setting.getSetting(settingName);
+		MobType mobType = MobType.getMobType(mobName);
+		Setting setting = Setting.getSetting(settingName);
 			
-			// if the mobName was "all"
-			if(setting != null && mobName.equals("all"))
-			{
-				this.changeAllSettings(sender, playerName, setting);
-				valid = true;
-			}
-			// if setting was valid and mobType was valid
-			else if(setting != null && mobType != null)
-			{
-				this.changeMobSetting(sender, playerName, setting, mobType);
-				valid = true;
-			}		
-			//if setting was invalid and mobType was invalid
-			else if(setting == null && mobType == null)
-			{
-				this.safeSendMessage(sender, ChatColor.GOLD + mobName + ChatColor.WHITE + " is not a valid mob name, and " + 
-						ChatColor.GOLD + settingName + ChatColor.WHITE + " is not a valid setting");
-			}
-			// if only the setting was invalid 
-			else if(setting == null && mobType != null)
-			{
-				this.safeSendMessage(sender, ChatColor.GOLD + settingName + ChatColor.WHITE + " is not a valid setting");
-			}
-			// if only the mobType was invalid
-			else if(setting != null && mobType == null)
-			{
-				this.safeSendMessage(sender, ChatColor.GOLD + mobName + ChatColor.WHITE + " is not a valid mob name");
-			}
-		}
-		else
+		// if the mobName was "all"
+		if(setting != null && mobName.equals("all"))
 		{
-			this.safeSendMessage(sender, "You do not have permission to use this command");
+			this.changeAllSettings(sender, playerName, setting);
+			valid = true;
 		}
-		
+		// if setting was valid and mobType was valid
+		else if(setting != null && mobType != null)
+		{
+			this.changeMobSetting(sender, playerName, setting, mobType);
+			valid = true;
+		}		
+		//if setting was invalid and mobType was invalid
+		else if(setting == null && mobType == null)
+		{
+			this.safeSendMessage(sender, ChatColor.GOLD + mobName + ChatColor.WHITE + " is not a valid mob name, and " + 
+					ChatColor.GOLD + settingName + ChatColor.WHITE + " is not a valid setting");
+		}
+		// if only the setting was invalid 
+		else if(setting == null && mobType != null)
+		{
+			this.safeSendMessage(sender, ChatColor.GOLD + settingName + ChatColor.WHITE + " is not a valid setting");
+		}
+		// if only the mobType was invalid
+		else if(setting != null && mobType == null)
+		{
+			this.safeSendMessage(sender, ChatColor.GOLD + mobName + ChatColor.WHITE + " is not a valid mob name");
+		}
+
 		return valid;
 	}
 	
@@ -104,9 +114,23 @@ public class ChangeSettingCommand extends AbstractDDCommand
 			mobInfo.setSetting(setting);
 		}
 		
-		this.safeSendMessage(sender, "Your setting for " + ChatColor.GOLD + "every mob" + 
-				ChatColor.WHITE + " was changed to " + ChatColor.GOLD + setting.getName());
-		
+		if(!this.getPlugin().isRunningWithHead() || this.senderIsThePlayer(sender, playerName))
+		{
+			this.safeSendMessage(sender, ChatColor.GOLD + "Your " + 
+					ChatColor.WHITE + "settings for " + ChatColor.GOLD + "all mobs" + 
+					ChatColor.WHITE + " were changed to " + ChatColor.GOLD + setting.getName());
+		}
+		else
+		{
+			Player player = this.getPlugin().getServer().getPlayer(playerName);
+			this.safeSendMessage(player, ChatColor.GOLD + "Your " + 
+					ChatColor.WHITE + "settings for " + ChatColor.GOLD + "all mobs" + 
+					ChatColor.WHITE + " were changed to " + ChatColor.GOLD + setting.getName());
+			
+			this.safeSendMessage(sender, ChatColor.GOLD + playerName + 
+					ChatColor.WHITE + "'s settings for " + ChatColor.GOLD + "all mobs" + 
+					ChatColor.WHITE + " were changed to " + ChatColor.GOLD + setting.getName());
+		}
 	}
 	
 	private void changeMobSetting(CommandSender sender, String playerName, Setting setting, MobType mobType)
@@ -117,8 +141,23 @@ public class ChangeSettingCommand extends AbstractDDCommand
 		
 		mobInfo.setSetting(setting);
 		
-		this.safeSendMessage(sender, "Your setting for " + ChatColor.GOLD + mobType.getName() + 
-				ChatColor.WHITE + " was changed to " + ChatColor.GOLD + setting.getName());
-		
+		if(!this.getPlugin().isRunningWithHead() || this.senderIsThePlayer(sender, playerName))
+		{
+			this.safeSendMessage(sender, ChatColor.GOLD + "Your " +
+					ChatColor.WHITE + "setting for " + ChatColor.GOLD + mobType.getName() + 
+					ChatColor.WHITE + " was changed to " + ChatColor.GOLD + setting.getName());
+			
+		}
+		else
+		{
+			Player player = this.getPlugin().getServer().getPlayer(playerName);
+			this.safeSendMessage(player, ChatColor.GOLD + "Your " + 
+					ChatColor.WHITE + "setting for " + ChatColor.GOLD + mobType.getName() + 
+					ChatColor.WHITE + " was changed to " + ChatColor.GOLD + setting.getName());
+			
+			this.safeSendMessage(sender, ChatColor.GOLD + playerName + 
+					ChatColor.WHITE + "'s setting for " + ChatColor.GOLD + mobType.getName() + 
+					ChatColor.WHITE + " was changed to " + ChatColor.GOLD + setting.getName());
+		}
 	}
 }

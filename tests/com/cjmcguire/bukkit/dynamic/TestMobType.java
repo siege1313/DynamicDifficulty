@@ -9,7 +9,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 /**
- * Tests the MobName enum.
+ * Tests the MobType enum.
  * @author CJ McGuire
  */
 public class TestMobType
@@ -29,9 +29,8 @@ public class TestMobType
 		assertEquals(MobType.BLAZE, MobType.valueOf("BLAZE"));
 	}
 	
-	
 	/**
-	 * Tests the getNameAsString() method
+	 * Tests the getName() method.
 	 */
 	@Test
 	public void testGetName()

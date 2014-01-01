@@ -22,7 +22,7 @@ public class TestMobInfo
 	}
 	
 	/**
-	 * Tests the getMobSetting() and setSetting() methods.
+	 * Tests the getSetting() and setSetting() methods.
 	 */
 	@Test
 	public void testSetting() 
@@ -35,32 +35,49 @@ public class TestMobInfo
 	}
 	
 	/**
-	 * Tests the methods tied to the estimatedPerformanceLevel variable.
+	 * Tests that the estimatedPerformanceLevel starts at 100.
 	 */
 	@Test
-	public void testEstimatedPerformanceLevel() 
+	public void testInitialEstimatedPerformanceLevel()
 	{
-		// default
 		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
 		assertEquals(100, zombieInfo.getEstimatedPerformanceLevel(), .0001);
+	}
+	
+	/**
+	 * Tests the setEstimatedPerformanceLevel() method.
+	 */
+	@Test
+	public void testSetEstimatedPerformanceLevel() 
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
 		
-		// setting middle
+		// setEstimatedPerformanceLevel() in middle
 		zombieInfo.setEstimatedPerformanceLevel(110);
 		assertEquals(110, zombieInfo.getEstimatedPerformanceLevel(), .0001);
 		
-		// setting low
+		// setEstimatedPerformanceLevel() too low
 		zombieInfo.setEstimatedPerformanceLevel(30);
 		assertEquals(50, zombieInfo.getEstimatedPerformanceLevel(), .0001);
 		
-		// setting high
+		// setEstimatedPerformanceLevel() too high
 		zombieInfo.setEstimatedPerformanceLevel(250);
 		assertEquals(200, zombieInfo.getEstimatedPerformanceLevel(), .0001);
-		
-		// updating no change
+	}
+	
+	/**
+	 * Tests the updateEstimatedPerformanceLevel() method.
+	 */
+	@Test
+	public void testUpdateEstimatedPerformanceLevel() 
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+	
+		// update with no change
 		zombieInfo.updateEstimatedPerformanceLevel();
-		assertEquals(200, zombieInfo.getEstimatedPerformanceLevel(), .0001);
+		assertEquals(100, zombieInfo.getEstimatedPerformanceLevel(), .0001);
 		
-
+		// update with change
 		zombieInfo.addIDToInteractedWithIDs(0);
 		zombieInfo.addIDToInteractedWithIDs(1);
 		zombieInfo.addIDToInteractedWithIDs(2);
@@ -75,7 +92,7 @@ public class TestMobInfo
 		double expected = 100 + (30.0/20.0-20.0/20.0)/3.0*100;
 		assertEquals(expected, zombieInfo.getEstimatedPerformanceLevel(), .0001);
 	}
-
+	
 	/**
 	 * Tests the updateEstimatedPerformanceLevel() method when the mob's health is less than 20.
 	 */
@@ -83,7 +100,6 @@ public class TestMobInfo
 	public void testUpdateEstimatedPerformanceLevelWhenMobHealthLessThan20() 
 	{
 		MobInfo silverfishInfo = new MobInfo(MobType.SILVERFISH);
-		assertEquals(100, silverfishInfo.getEstimatedPerformanceLevel(), .0001);
 		
 		silverfishInfo.addIDToInteractedWithIDs(0);
 		silverfishInfo.addIDToInteractedWithIDs(1);
@@ -106,7 +122,6 @@ public class TestMobInfo
 	public void testUpdateEstimatedPerformanceLevelWhenMobHealthGreaterThan20() 
 	{
 		MobInfo enderManInfo = new MobInfo(MobType.ENDERMAN);
-		assertEquals(100, enderManInfo.getEstimatedPerformanceLevel(), .0001);
 		
 		enderManInfo.addIDToInteractedWithIDs(0);
 		enderManInfo.addIDToInteractedWithIDs(1);
@@ -123,25 +138,34 @@ public class TestMobInfo
 	}
 	
 	/**
-	 * Tests the setautoPerformanceLevel() method.
+	 * Tests that the autoPerformanceLevel starts at 100.
+	 */
+	@Test
+	public void testInitialAutoPerformanceLevel()
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+		assertEquals(100, zombieInfo.getAutoPerformanceLevel(), .0001);
+	}
+	
+	/**
+	 * Tests the setAutoPerformanceLevel() method.
 	 */
 	@Test
 	public void testSetAutoPerformanceLevel() 
 	{
 		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
-		assertEquals(100, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
+		// setAutoPerformanceLevel() in middle
 		zombieInfo.setAutoPerformanceLevel(110);
 		assertEquals(110, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
+		// setAutoPerformanceLevel() too low
 		zombieInfo.setAutoPerformanceLevel(30);
 		assertEquals(50, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
+		// setAutoPerformanceLevel() too high
 		zombieInfo.setAutoPerformanceLevel(250);
 		assertEquals(200, zombieInfo.getAutoPerformanceLevel(), .0001);
-		
-		zombieInfo.updateAutoPerformanceLevel();
-		assertEquals(200-MobInfo.MAX_INCREMENT, zombieInfo.getAutoPerformanceLevel(), .0001);
 	}
 	
 	/**
@@ -151,22 +175,25 @@ public class TestMobInfo
 	public void testUpdateAutoPerformanceLevel() 
 	{
 		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
-		assertEquals(100, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
+		// update by max amount upward
 		zombieInfo.setEstimatedPerformanceLevel(200);
 		zombieInfo.updateAutoPerformanceLevel();
 		assertEquals(100+MobInfo.MAX_INCREMENT, zombieInfo.getAutoPerformanceLevel(), .0001);
 		
+		// update by less than max amount upward
 		zombieInfo.setAutoPerformanceLevel(100);
 		zombieInfo.setEstimatedPerformanceLevel(105);
 		zombieInfo.updateAutoPerformanceLevel();
 		assertEquals(zombieInfo.getEstimatedPerformanceLevel(), zombieInfo.getAutoPerformanceLevel(), .0001);
 
+		// update by less than max amount downward
 		zombieInfo.setAutoPerformanceLevel(100);
 		zombieInfo.setEstimatedPerformanceLevel(95);
 		zombieInfo.updateAutoPerformanceLevel();
 		assertEquals(zombieInfo.getEstimatedPerformanceLevel(), zombieInfo.getAutoPerformanceLevel(), .0001);
 
+		//update by max amount downward
 		zombieInfo.setAutoPerformanceLevel(100);
 		zombieInfo.setEstimatedPerformanceLevel(50);
 		zombieInfo.updateAutoPerformanceLevel();
@@ -174,79 +201,44 @@ public class TestMobInfo
 	}
 	
 	/**
-	 * Tests the methods tied to the manualPerformanceLevel variable.
+	 * Tests that the manualPerformanceLevel starts at 100.
 	 */
 	@Test
-	public void testManualPerformanceLevel() 
+	public void testInitialManualPerformanceLevel()
 	{
 		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
 		assertEquals(100, zombieInfo.getManualPerformanceLevel(), .0001);
+	}
+	
+	/**
+	 * Tests the setManualPerformanceLevel() method.
+	 */
+	@Test
+	public void testSetManualPerformanceLevel() 
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
 		
+		// setManualPerformanceLevel() in middle
 		zombieInfo.setManualPerformanceLevel(110);
 		assertEquals(110, zombieInfo.getManualPerformanceLevel(), .0001);
 		
+		// setManualPerformanceLevel() too low
 		zombieInfo.setManualPerformanceLevel(30);
 		assertEquals(50, zombieInfo.getManualPerformanceLevel(), .0001);
 		
+		// setManualPerformanceLevel() too high
 		zombieInfo.setManualPerformanceLevel(250);
 		assertEquals(200, zombieInfo.getManualPerformanceLevel(), .0001);
 	}
 	
 	/**
-	 * Tests the methods tied to the damagePlayerGave variable.
-	 */
-	@Test
-	public void testDamagePlayerGave() 
-	{
-		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
-		assertEquals(0, zombieInfo.getDamagePlayerGave());
-		
-		zombieInfo.addIDToInteractedWithIDs(1);
-		zombieInfo.addToDamagePlayerGave(2);
-		assertEquals(2, zombieInfo.getDamagePlayerGave());
-		
-		zombieInfo.addToDamagePlayerGave(100);
-		assertEquals(20, zombieInfo.getDamagePlayerGave());
-	}
-	
-	/**
-	 * Tests the methods tied to the damagePlayerReceived variable.
-	 */
-	@Test
-	public void testDamagePlayerReceived() 
-	{
-		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
-		assertEquals(0, zombieInfo.getDamagePlayerReceived());
-		
-		zombieInfo.addToDamagePlayerReceived(2);
-		assertEquals(2, zombieInfo.getDamagePlayerReceived());
-	}
-	
-	/**
-	 * Tests the methods dealing with the number of enemies the player
-	 * has interacted with.
-	 */
-	@Test
-	public void testInteractedWith() 
-	{
-		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
-		assertEquals(0, zombieInfo.getNumberInteractedWith());
-		
-		assertTrue(zombieInfo.addIDToInteractedWithIDs(0));
-		assertEquals(1, zombieInfo.getNumberInteractedWith());
-
-		assertFalse(zombieInfo.addIDToInteractedWithIDs(0));
-		assertEquals(1, zombieInfo.getNumberInteractedWith());
-	}
-	
-	/**
 	 * Tests the getPerformanceLevelInUse() method.
-	 * has interacted with.
 	 */
 	@Test
 	public void testGetPerformanceLevelInUse() 
 	{
 		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+		
 		zombieInfo.setAutoPerformanceLevel(150);
 		zombieInfo.setManualPerformanceLevel(200);
 		
@@ -258,5 +250,90 @@ public class TestMobInfo
 
 		zombieInfo.setSetting(Setting.DISABLED);
 		assertEquals(100, zombieInfo.getPerformanceLevelInUse(), .0001);
+	}
+	
+	/**
+	 * Tests that the damagePlayerGave starts at 0.
+	 */
+	@Test
+	public void testInitialDamagePlayerGave()
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+		assertEquals(0, zombieInfo.getDamagePlayerGave());
+	}
+	
+	/**
+	 * Tests the addToDamagePlayerGave() method.
+	 */
+	@Test
+	public void testAddToDamagePlayerGave()
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+		
+		zombieInfo.addIDToInteractedWithIDs(1);
+		zombieInfo.addToDamagePlayerGave(2);
+		assertEquals(2, zombieInfo.getDamagePlayerGave());
+		
+		zombieInfo.addToDamagePlayerGave(100);
+		assertEquals(20, zombieInfo.getDamagePlayerGave());
+	}
+	
+	/**
+	 * Tests that the damagePlayerReceived starts at 0.
+	 */
+	@Test
+	public void testInitialDamagePlayerReceived()
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+		assertEquals(0, zombieInfo.getDamagePlayerReceived());
+	}
+	
+	/**
+	 * Tests the addToDamagePlayerReceived() method.
+	 */
+	@Test
+	public void testAddToDamagePlayerReceived()
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+
+		zombieInfo.addToDamagePlayerReceived(2);
+		assertEquals(2, zombieInfo.getDamagePlayerReceived());
+	}
+	
+	/**
+	 * Tests that the number of mobs interacted with starts at 0.
+	 */
+	@Test
+	public void testInitialGetNumberInteractedWith() 
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+		assertEquals(0, zombieInfo.getNumberInteractedWith());
+	}
+	
+	/**
+	 * Tests the addIDToInteractedWithIDs() method.
+	 */
+	@Test
+	public void testAddIDToInteractedWithIDs() 
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+		
+		assertTrue(zombieInfo.addIDToInteractedWithIDs(0));
+		assertEquals(1, zombieInfo.getNumberInteractedWith());
+	}
+	
+	/**
+	 * Tests the addIDToInteractedWithIDs() method when the same ID is added twice.
+	 */
+	@Test
+	public void testAddSameIDToInteractedWithIDs() 
+	{
+		MobInfo zombieInfo = new MobInfo(MobType.ZOMBIE);
+		
+		assertTrue(zombieInfo.addIDToInteractedWithIDs(0));
+		assertEquals(1, zombieInfo.getNumberInteractedWith());
+
+		assertFalse(zombieInfo.addIDToInteractedWithIDs(0));
+		assertEquals(1, zombieInfo.getNumberInteractedWith());
 	}
 }

@@ -44,34 +44,31 @@ public class DynamicCommandExecutor implements CommandExecutor
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
 	{
-		boolean validCommand = false;
+		boolean validCommand = true;
 		
 		// /dynmaic command
 		if(args.length == 0)
 		{
-			validCommand = dynamicCommand.executeCommand(sender, args);
+			dynamicCommand.executeCommand(sender, args);
 		}
-		else if(args.length == 1)
+		// /dynamic info
+		else if(args[0].equalsIgnoreCase(InfoCommand.NAME))
 		{
-			// /dynamic info
-			if(args[0].equalsIgnoreCase(InfoCommand.NAME))
-			{
-				validCommand = infoCommand.executeCommand(sender, args);
-			}
+			infoCommand.executeCommand(sender, args);
 		}
-		else if(args.length == 4)
+		// /dynamic changelevel
+		else if(args[0].equalsIgnoreCase(ChangeLevelCommand.NAME))
 		{
-			// /dynamic settings
-			String commandName = args[0] + " " + args[1];
-			if(commandName.equalsIgnoreCase(ChangeSettingCommand.NAME))
-			{
-				validCommand = changeSettingCommand.executeCommand(sender, args);
-			}
-			// /dynamic levels
-			else if(commandName.equalsIgnoreCase(ChangeLevelCommand.NAME))
-			{
-				validCommand = changeLevelCommand.executeCommand(sender, args);
-			}
+			changeLevelCommand.executeCommand(sender, args);
+		}
+		// /dynamic changesetting
+		else if(args[0].equalsIgnoreCase(ChangeSettingCommand.NAME))
+		{
+			changeSettingCommand.executeCommand(sender, args);
+		}
+		else
+		{
+			validCommand = false;
 		}
 		
 		return validCommand;

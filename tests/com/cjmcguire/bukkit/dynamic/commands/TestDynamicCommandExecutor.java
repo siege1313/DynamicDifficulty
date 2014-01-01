@@ -21,29 +21,22 @@ public class TestDynamicCommandExecutor
 	@Test
 	public void testOnCommandDynamic() 
 	{	
+		//create the mock sender
 		CommandSender mockSender = EasyMock.createNiceMock(CommandSender.class);
-		EasyMock.expect(mockSender.hasPermission("dynamic.dynamic")).andReturn(true);
 		EasyMock.replay(mockSender);
 
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
-		
+
+		// perform the command
 		DynamicCommandExecutor executor = new DynamicCommandExecutor(plugin);
 		
-		boolean hasPermission = executor.onCommand(mockSender, null, "dynamic", new String[0]);
+		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", new String[0]);
 		
-		assertTrue(hasPermission);
+		assertTrue(validCommand);
 		
 		EasyMock.verify(mockSender);
-		
-		/*DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
-		DynamicCommandExecutor executor = new DynamicCommandExecutor(plugin);
-		
-		boolean sentToConsole = executor.onCommand(null, null, "dynamic", new String[0]);
-		
-		assertFalse(sentToConsole);*/
 	}
 	
 	/**
@@ -51,102 +44,98 @@ public class TestDynamicCommandExecutor
 	 */
 	@Test
 	public void testOnCommandInfo() 
-	{
+	{	
+		//create the mock sender
+		CommandSender mockSender = EasyMock.createNiceMock(CommandSender.class);
+		EasyMock.replay(mockSender);
+
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
-		
+
+		// perform the command
 		DynamicCommandExecutor executor = new DynamicCommandExecutor(plugin);
 		
 		String[] args = {"info"};
-		boolean validCommand = executor.onCommand(null, null, "dynamic", args);
+		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", args);
 		
-		assertFalse(validCommand);
+		assertTrue(validCommand);
+		
+		EasyMock.verify(mockSender);
 	}
 
 	/**
-	 * Tests the onCommand() method when the command has invalid args.
-	 */
-	@Test
-	public void testOnCommandInvalidArgs() 
-	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
-		DynamicCommandExecutor executor = new DynamicCommandExecutor(plugin);
-		
-		String[] args = {"lvls"};
-		boolean validCommand = executor.onCommand(null, null, "dynamic", args);
-		
-		assertFalse(validCommand);
-	}
-	
-	/**
-	 * Tests the onCommand() method when the command is /dynamic change setting.
+	 * Tests the onCommand() method when the command is /dynamic changesetting.
 	 */
 	@Test
 	public void testOnCommandChangeSetting() 
 	{
+		//create the mock sender
+		CommandSender mockSender = EasyMock.createNiceMock(CommandSender.class);
+		EasyMock.replay(mockSender);
+
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
-		
+
+		// perform the command
 		DynamicCommandExecutor executor = new DynamicCommandExecutor(plugin);
 		
-		String[] args = {"change", "setting", "zombie", "disabled"};
-		boolean validCommand = executor.onCommand(null, null, "dynamic", args);
+		String[] args = {"changesetting", "zombie", "disabled"};
+		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", args);
+
+		assertTrue(validCommand);
 		
-		assertFalse(validCommand);
+		EasyMock.verify(mockSender);
 	}
 	
-	
 	/**
-	 * Tests the onCommand() method when the command is /dynamic change level.
+	 * Tests the onCommand() method when the command is /dynamic changelevel.
 	 */
 	@Test
 	public void testOnCommandChangeLevel() 
 	{
+		//create the mock sender
+		CommandSender mockSender = EasyMock.createNiceMock(CommandSender.class);
+		EasyMock.replay(mockSender);
+
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
-		
+
+		// perform the command
 		DynamicCommandExecutor executor = new DynamicCommandExecutor(plugin);
 		
-		String[] args = {"change", "level", "zombie", "150"};
-		boolean validCommand = executor.onCommand(null, null, "dynamic", args);
+		String[] args = {"changelevel", "zombie", "150"};
+		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", args);
+
+		assertTrue(validCommand);
 		
-		assertFalse(validCommand);
+		EasyMock.verify(mockSender);
 	}
 	
 	/**
-	 * Tests the onCommand() method when their are an incorrect number of parameters.
+	 * Tests the onCommand() method when the command has an invalid command.
 	 */
 	@Test
-	public void testOnCommandInvalidParameterNumber() 
+	public void testOnCommandInvalidCommand() 
 	{
+		//create the mock sender
+		CommandSender mockSender = EasyMock.createNiceMock(CommandSender.class);
+		EasyMock.replay(mockSender);
+
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
-		
+
+		// perform the command
 		DynamicCommandExecutor executor = new DynamicCommandExecutor(plugin);
 		
-		String[] args = {"change", "level", "zombie", "150", "extra"};
-		boolean validCommand = executor.onCommand(null, null, "dynamic", args);
+		String[] args = {"lvls"};
+		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", args);
 		
 		assertFalse(validCommand);
-	}
-	
-	
-	/**
-	 * Tests the onCommand() method when the command is /dynamic change lvl.
-	 */
-	@Test
-	public void testOnCommandChangeLvl() 
-	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
 		
-		DynamicCommandExecutor executor = new DynamicCommandExecutor(plugin);
-		
-		String[] args = {"change", "lvl", "zombie", "150"};
-		boolean validCommand = executor.onCommand(null, null, "dynamic", args);
-		
-		assertFalse(validCommand);
+		EasyMock.verify(mockSender);
 	}
 }

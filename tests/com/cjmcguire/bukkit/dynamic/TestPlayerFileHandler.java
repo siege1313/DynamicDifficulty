@@ -3,6 +3,9 @@ package com.cjmcguire.bukkit.dynamic;
 import static org.junit.Assert.*;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.easymock.EasyMock;
 import org.junit.Test;
 
 /**
@@ -52,7 +55,7 @@ public class TestPlayerFileHandler
 		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
 		
 		
-		String playerName = "testPlayer";
+		String playerName = "testPlayer1";
 		
 		fileHandler.loadPlayerDataFromFile(playerName);
 		
@@ -284,7 +287,7 @@ public class TestPlayerFileHandler
 		plugin.setRunningWithHead(false);
 		plugin.onEnable();
 
-		String playerName = "testPlayer";
+		String playerName = "testPlayer1";
 
 		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
 		
@@ -309,5 +312,28 @@ public class TestPlayerFileHandler
 		assertEquals("auto", playerYmlFileConfig.getString("ghast.setting"));
 		assertEquals(90, playerYmlFileConfig.getInt("ghast.manualPerformanceLevel"));
 		assertEquals(100, playerYmlFileConfig.getInt("ghast.autoPerformanceLevel"));
+	}
+	
+	/**
+	 * Tests the onPlayerLogin() method.
+	 */
+	@Test
+	public void testOnPlayerLogin()
+	{
+		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
+		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+        EasyMock.replay(mockPlayer);
+        
+		DynamicDifficulty plugin = new DynamicDifficulty();
+		plugin.setRunningWithHead(false);
+		plugin.onEnable();
+		
+		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
+		
+		PlayerJoinEvent event = new PlayerJoinEvent(mockPlayer, "");
+		fileHandler.onPlayerJoin(event);
+		
+		assertEquals("testPlayer", plugin.getPlayerInfo("testPlayer").getPlayerName());
+		EasyMock.verify(mockPlayer);
 	}
 }

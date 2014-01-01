@@ -10,7 +10,7 @@ import org.junit.Test;
  */
 public class TestSetting
 {
-	
+
 	/**
 	 * This test is here mostly to boost code coverage.
 	 */
@@ -27,10 +27,10 @@ public class TestSetting
 	}
 	
 	/**
-	 * Tests the getSettingName() method
+	 * Tests the getName() method
 	 */
 	@Test
-	public void testGetSettingName()
+	public void testGetName()
 	{
 		assertEquals("auto", Setting.AUTO.getName());
 		assertEquals("manual", Setting.MANUAL.getName());
@@ -48,6 +48,4 @@ public class TestSetting
 		assertEquals(Setting.DISABLED, Setting.getSetting("disabled"));
 		assertNull(Setting.getSetting("not setting"));
 	}
-
 }
-

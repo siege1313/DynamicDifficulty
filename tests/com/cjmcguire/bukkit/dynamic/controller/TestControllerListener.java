@@ -112,7 +112,7 @@ public class TestControllerListener
 		
 		
 		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.d)).andReturn(mockAttributes);//TODO: lag here
+		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.d)).andReturn(mockAttributes);
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.d)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 

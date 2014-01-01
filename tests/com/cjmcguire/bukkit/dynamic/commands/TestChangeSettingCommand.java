@@ -2,7 +2,6 @@ package com.cjmcguire.bukkit.dynamic.commands;
 
 import static org.junit.Assert.*;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -19,74 +18,65 @@ import com.cjmcguire.bukkit.dynamic.Setting;
  */
 public class TestChangeSettingCommand 
 {
-	
 	/**
-	 * Tests the executeCommand() method when the sender is null.
+	 * Tests the commandAction() method when the mob name and setting are valid.
 	 */
 	@Test
-	public void testOnCommandNull() 
+	public void testCommandActionValid() 
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
-		ChangeSettingCommand changeSettingsCommand = new ChangeSettingCommand(plugin);
-		
-		boolean validCommand = changeSettingsCommand.executeCommand(null, null);
-		
-		assertFalse(validCommand);
-	}
-
-	/**
-	 * Tests the changeSetting() method when the args are valid.
-	 */
-	@Test
-	public void testChangeSettingValid() 
-	{
+		//create the mock sender
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
-		EasyMock.expect(mockSender.hasPermission("dynamic.changesetting")).andReturn(true);
 		EasyMock.replay(mockSender);
 		
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
 		
+		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
+		
 		plugin.addPlayerInfo(playerInfo);
 		
+		// perform the command
 		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+
+		String [] args = {"changesetting", "zombie", "manual"};
+		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
 		
-		String [] args = {"change", "setting", "zombie", "manual"};
-		boolean valid = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
+		assertTrue(settingChanged);
 		
-		assertTrue(valid);
-		
-		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 		assertEquals(Setting.MANUAL, mobInfo.getSetting());
 		
 		EasyMock.verify(mockSender);
 	}
 	
 	/**
-	 * Tests the changeSetting() method when the setting is for "all".
+	 * Tests the commandAction() method when the mob name is "all" and the setting is valid.
 	 */
 	@Test
-	public void testChangeSettingAll() 
+	public void testCommandActionAll() 
 	{
+		//create the mock sender
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
-		EasyMock.expect(mockSender.hasPermission("dynamic.changesetting")).andReturn(true);
 		EasyMock.replay(mockSender);
 		
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
 		
+		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		
 		plugin.addPlayerInfo(playerInfo);
 		
+		// perform the command
 		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+
+		String [] args = {"changesetting", "all", "manual"};
+		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
 		
-		String [] args = {"change", "setting", "all", "manual"};
-		boolean valid = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
-		
-		assertTrue(valid);
+		assertTrue(settingChanged);
 		
 		for(MobType mobType: MobType.values())
 		{
@@ -96,114 +86,94 @@ public class TestChangeSettingCommand
 		
 		EasyMock.verify(mockSender);
 	}
-
+	
 	/**
-	 * Tests the changeSetting() method when the mob is invalid.
+	 * Tests the commandAction() method when the mob name is invalid.
 	 */
 	@Test
-	public void testChangeSettingMobInvalid() 
+	public void testCommandActionInvalidMobName() 
 	{
+		//create the mock sender
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
-		EasyMock.expect(mockSender.hasPermission("dynamic.changesetting")).andReturn(true);
 		EasyMock.replay(mockSender);
 		
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
 		
+		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		
 		plugin.addPlayerInfo(playerInfo);
 		
+		// perform the command
 		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+
+		String [] args = {"changesetting", "zoie", "manual"};
+		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
 		
-		String [] args = {"change", "setting", "zoie", "manual"};
-		boolean valid = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
-		
-		assertFalse(valid);
-		
-		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
-		assertEquals(Setting.AUTO, mobInfo.getSetting());
+		assertFalse(settingChanged);
 		
 		EasyMock.verify(mockSender);
 	}
 	
 	/**
-	 * Tests the changeSetting() method when the setting is invalid.
+	 * Tests the commandAction() method when the setting is invalid.
 	 */
 	@Test
-	public void testChangeSettingSettingInvalid() 
+	public void testCommandActionNotANumber() 
 	{
+		//create the mock sender
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
-		EasyMock.expect(mockSender.hasPermission("dynamic.changesetting")).andReturn(true);
 		EasyMock.replay(mockSender);
 		
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
 		
+		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		
 		plugin.addPlayerInfo(playerInfo);
 		
+		// perform the command
 		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+
+		String [] args = {"changesetting", "zombie", "disled"};
+		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
 		
-		String [] args = {"change", "setting", "zombie", "disled"};
-		boolean valid = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
-		
-		assertFalse(valid);
-		
-		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
-		assertEquals(Setting.AUTO, mobInfo.getSetting());
+		assertFalse(settingChanged);
 		
 		EasyMock.verify(mockSender);
 	}
 	
 	/**
-	 * Tests the changeSetting() method when both the setting and
-	 * the mob are invalid.
+	 * Tests the commandAction() method when both the setting and the mob are invalid.
 	 */
 	@Test
-	public void testChangeSettingBothInvalid() 
+	public void testCommandActionBothInvalid() 
 	{
+		//create the mock sender
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
-		EasyMock.expect(mockSender.hasPermission("dynamic.changesetting")).andReturn(true);
 		EasyMock.replay(mockSender);
 		
+		// set up the plugin
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
 		
+		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		
 		plugin.addPlayerInfo(playerInfo);
 		
+		// perform the command
 		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+
+		String [] args = {"changesetting", "zoie", "disled"};
+		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
 		
-		String [] args = {"change", "setting", "zome", "disled"};
-		boolean valid = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
-		
-		assertFalse(valid);
-		
-		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
-		assertEquals(Setting.AUTO, mobInfo.getSetting());
+		assertFalse(settingChanged);
 		
 		EasyMock.verify(mockSender);
-	}
-
-	/**
-	 * Tests the executeCommand() method when the sender does not have permission
-	 * to use the command.
-	 */
-	@Test
-	public void testExecuteCommandWithOutPermission() 
-	{
-		CommandSender mockSender = EasyMock.createNiceMock(CommandSender.class);
-		EasyMock.expect(mockSender.hasPermission("dynamic.changesetting")).andReturn(false);
-		EasyMock.replay(mockSender);
-
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
-		
-		boolean hasPermission = changeSettingCommand.commandAction(mockSender, null, null);
-		
-		assertFalse(hasPermission);
-		
-		EasyMock.verify(mockSender);	
 	}
 }

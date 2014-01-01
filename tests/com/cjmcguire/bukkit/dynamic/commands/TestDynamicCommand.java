@@ -2,12 +2,13 @@ package com.cjmcguire.bukkit.dynamic.commands;
 
 import static org.junit.Assert.*;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
 import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
+import com.cjmcguire.bukkit.dynamic.MockPlayer;
 
 /**
  * Tests the DynamicCommand class.
@@ -23,7 +24,7 @@ public class TestDynamicCommand
 	@Test
 	public void testExecuteCommandWithPermission() 
 	{
-		CommandSender mockSender = EasyMock.createNiceMock(CommandSender.class);
+		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockSender.hasPermission("dynamic.dynamic")).andReturn(true);
 		EasyMock.replay(mockSender);
 
@@ -31,9 +32,9 @@ public class TestDynamicCommand
 		plugin.setRunningWithHead(false);
 		DynamicCommand dynamicCommand = new DynamicCommand(plugin);
 		
-		boolean hasPermission = dynamicCommand.executeCommand(mockSender, null);
+		boolean valid = dynamicCommand.executeCommand(mockSender, null);
 		
-		assertTrue(hasPermission);
+		assertTrue(valid);
 		
 		EasyMock.verify(mockSender);	
 	}
@@ -45,7 +46,7 @@ public class TestDynamicCommand
 	@Test
 	public void testExecuteCommandWithOutPermission() 
 	{
-		CommandSender mockSender = EasyMock.createNiceMock(CommandSender.class);
+		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockSender.hasPermission("dynamic.dynamic")).andReturn(false);
 		EasyMock.replay(mockSender);
 
@@ -55,7 +56,7 @@ public class TestDynamicCommand
 		
 		boolean valid = dynamicCommand.executeCommand(mockSender, null);
 		
-		assertTrue(valid);
+		assertFalse(valid);
 		
 		EasyMock.verify(mockSender);	
 	}
@@ -74,9 +75,9 @@ public class TestDynamicCommand
 		plugin.setRunningWithHead(false);
 		DynamicCommand dynamicCommand = new DynamicCommand(plugin);
 		
-		boolean hasPermission = dynamicCommand.executeCommand(mockSender, null);
+		boolean valid = dynamicCommand.executeCommand(mockSender, null);
 		
-		assertTrue(hasPermission);
+		assertTrue(valid);
 		
 		EasyMock.verify(mockSender);	
 	}

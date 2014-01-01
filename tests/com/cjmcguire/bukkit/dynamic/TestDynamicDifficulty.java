@@ -11,14 +11,22 @@ import org.junit.Test;
 public class TestDynamicDifficulty 
 {
 	/**
-	 * Tests running headless.
+	 * Tests that DynamicDifficulty runs with its head by default.
+	 */
+	@Test
+	public void testRunWithHeadByDefault()
+	{
+		DynamicDifficulty plugin = new DynamicDifficulty();
+		assertTrue(plugin.isRunningWithHead());
+	}
+	
+	/**
+	 * Tests that DynamicDifficulty can run headless.
 	 */
 	@Test
 	public void testHeadless()
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		assertTrue(plugin.isRunningWithHead());
-		
+		DynamicDifficulty plugin = new DynamicDifficulty();		
 		plugin.setRunningWithHead(false);
 		
 		plugin.onEnable();
@@ -36,10 +44,12 @@ public class TestDynamicDifficulty
 		DynamicDifficulty plugin = new DynamicDifficulty();
 		plugin.setRunningWithHead(false);
 		
-		PlayerInfo playerInfo1 = new PlayerInfo("player1");
+		PlayerInfo playerInfo = new PlayerInfo("player");
 		
-		PlayerInfo nullInfo = plugin.addPlayerInfo(playerInfo1);
+		PlayerInfo nullInfo = plugin.addPlayerInfo(playerInfo);
 		assertNull(nullInfo);
+		
+		assertSame(playerInfo, plugin.getPlayerInfo("player"));
 	}
 	
 	/**
@@ -55,9 +65,9 @@ public class TestDynamicDifficulty
 		plugin.addPlayerInfo(playerInfo1);
 
 		PlayerInfo playerInfo2 = new PlayerInfo("player1");
-		PlayerInfo copy = plugin.addPlayerInfo(playerInfo2);
+		PlayerInfo playerInfo1Copy = plugin.addPlayerInfo(playerInfo2);
 		
-		assertSame(playerInfo1, copy);
+		assertSame(playerInfo1, playerInfo1Copy);
 	}
 	
 	/**
@@ -72,9 +82,9 @@ public class TestDynamicDifficulty
 		PlayerInfo playerInfo1 = new PlayerInfo("player1");
 		plugin.addPlayerInfo(playerInfo1);
 
-		PlayerInfo copy = plugin.removePlayerInfo("player1");
+		PlayerInfo playerInfo1Copy = plugin.removePlayerInfo("player1");
 		
-		assertSame(playerInfo1, copy);
+		assertSame(playerInfo1, playerInfo1Copy);
 	}
 	
 	/**
@@ -89,8 +99,6 @@ public class TestDynamicDifficulty
 		assertFalse(plugin.safeLogInfo("test safeLogInfo()"));
 	}
 	
-
-	
 	/**
 	 * Tests the getPlayersMobInfo() method.
 	 */
@@ -104,13 +112,51 @@ public class TestDynamicDifficulty
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
 		
-		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
-		
 		plugin.addPlayerInfo(playerInfo);
 		
+		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		MobInfo testInfo = plugin.getPlayersMobInfo(playerName, MobType.BLAZE);
 		
 		assertSame(blazeInfo, testInfo);
+	}
+	
+	/**
+	 * Tests the playerInfoExists() method.
+	 */
+	@Test
+	public void testPlayerInfoExists()
+	{
+		DynamicDifficulty plugin = new DynamicDifficulty();
+		plugin.setRunningWithHead(false);
 		
+		String playerName = "player";
+		
+		assertFalse(plugin.playerInfoExists("player"));
+		
+		
+		PlayerInfo playerInfo = new PlayerInfo(playerName);
+		plugin.addPlayerInfo(playerInfo);
+
+		assertTrue(plugin.playerInfoExists("player"));
+	}
+	
+	/**
+	 * Tests the getPlayerInfo() method when the player's PalyerInfo
+	 * does not initially exist.
+	 */
+	@Test
+	public void testGetPlayerInfoWhenNotExist()
+	{
+		DynamicDifficulty plugin = new DynamicDifficulty();
+		plugin.setRunningWithHead(false);
+		plugin.onEnable();
+		
+		String playerName = "testPlayer1";
+
+		assertFalse(plugin.playerInfoExists("player"));
+		
+		plugin.getPlayerInfo(playerName);
+
+		assertTrue(plugin.playerInfoExists(playerName));
 	}
 }

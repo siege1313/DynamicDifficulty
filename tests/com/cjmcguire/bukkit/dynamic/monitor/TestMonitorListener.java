@@ -2,14 +2,21 @@ package com.cjmcguire.bukkit.dynamic.monitor;
 
 import static org.junit.Assert.*;
 
+import org.bukkit.GameMode;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
 import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
 import com.cjmcguire.bukkit.dynamic.MobInfo;
 import com.cjmcguire.bukkit.dynamic.MobType;
+import com.cjmcguire.bukkit.dynamic.MockLivingEntity;
+import com.cjmcguire.bukkit.dynamic.MockPlayer;
 import com.cjmcguire.bukkit.dynamic.PlayerInfo;
 import com.cjmcguire.bukkit.dynamic.Setting;
 
@@ -198,28 +205,23 @@ public class TestMonitorListener
 		EasyMock.verify(mockEntity);
 	}
 	
-	// NOTE: THE FOLLOWING TEST METHODS WOULD HAVE WORKED IF THE JAVA PROXY
-	// HANDLER DID NOT COMPLAIN ABOUT LIVINGENTITY'S HAVING 2 METHODS WITH 
-	// THE SAME HEADER. IF BUKKIT EVER PROVIDES AN UPDATE THAT FIXES THIS
-	// ISSUE, THESE METHODS SHOULD BE RE-ENABLED TO PROVIDE FOR MORE
-	// TEST COVERAGE.
-	
 	/**
 	 * Tests the onEntityDamageByEntityEvent() where:
 	 * 1. the damager is a mob, not a projectile.
 	 * 2. the player is who gets damaged.
 	 * 3. the player is does not have invincibility frames
 	 */
-/*	@Test
+	@Test
 	public void testOnEntityDamageByEntityEventOutcome1()
 	{
-		LivingEntity mockDamager = EasyMock.createMock(LivingEntity.class);
+		LivingEntity mockDamager = EasyMock.createMockBuilder(MockLivingEntity.class).createMock();
 		EasyMock.expect(mockDamager.getEntityId()).andReturn(1);
 		EasyMock.expect(mockDamager.getType()).andReturn(EntityType.ZOMBIE);
 		EasyMock.replay(mockDamager);
 		
-		Player mockPlayer = EasyMock.createMock(Player.class);
+		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+        EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         EasyMock.expect(mockPlayer.getNoDamageTicks()).andReturn(1);
         EasyMock.expect(mockPlayer.getMaximumNoDamageTicks()).andReturn(5);
         
@@ -245,7 +247,7 @@ public class TestMonitorListener
 		EasyMock.verify(mockDamager);
 		
 		EasyMock.verify(mockPlayer);
-	}*/
+	}
 	
 	/**
 	 * Tests the onEntityDamageByEntityEvent() where:
@@ -253,15 +255,15 @@ public class TestMonitorListener
 	 * 2. the player is who gets damaged.
 	 * 3. the player is does have invincibility frames
 	 */
-/*	@Test
+	@Test
 	public void testOnEntityDamageByEntityEventOutcome2()
 	{
-		LivingEntity mockDamager = EasyMock.createMock(LivingEntity.class);
+		LivingEntity mockDamager = EasyMock.createMockBuilder(MockLivingEntity.class).createMock();
 		//EasyMock.expect(mockDamager.getEntityId()).andReturn(1);
 		//EasyMock.expect(mockDamager.getType()).andReturn(EntityType.ZOMBIE);
 		EasyMock.replay(mockDamager);
 		
-		Player mockPlayer = EasyMock.createMock(Player.class);
+		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		//EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
         EasyMock.expect(mockPlayer.getNoDamageTicks()).andReturn(5);
         EasyMock.expect(mockPlayer.getMaximumNoDamageTicks()).andReturn(5);
@@ -288,7 +290,7 @@ public class TestMonitorListener
 		EasyMock.verify(mockDamager);
 		
 		EasyMock.verify(mockPlayer);
-	}*/
+	}
 	
 	/**
 	 * Tests the onEntityDamageByEntityEvent() where:
@@ -296,10 +298,10 @@ public class TestMonitorListener
 	 * 2. the player is who gets damaged.
 	 * 3. the player is does not have invincibility frames
 	 */
-/*	@Test
+	@Test
 	public void testOnEntityDamageByEntityEventOutcome3()
 	{
-		LivingEntity mockDamager = EasyMock.createMock(LivingEntity.class);
+		LivingEntity mockDamager = EasyMock.createMockBuilder(MockLivingEntity.class).createMock();
 		EasyMock.expect(mockDamager.getEntityId()).andReturn(1);
 		EasyMock.expect(mockDamager.getType()).andReturn(EntityType.ZOMBIE);
 		EasyMock.replay(mockDamager);
@@ -308,8 +310,9 @@ public class TestMonitorListener
 		EasyMock.expect(mockArrow.getShooter()).andReturn(mockDamager);
 		EasyMock.replay(mockArrow);
 		
-		Player mockPlayer = EasyMock.createMock(Player.class);
+		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+        EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         EasyMock.expect(mockPlayer.getNoDamageTicks()).andReturn(1);
         EasyMock.expect(mockPlayer.getMaximumNoDamageTicks()).andReturn(5);
         
@@ -335,7 +338,7 @@ public class TestMonitorListener
 		EasyMock.verify(mockArrow);
 		
 		EasyMock.verify(mockPlayer);
-	}*/
+	}
 	
 	/**
 	 * Tests the onEntityDamageByEntityEvent() where:
@@ -343,18 +346,19 @@ public class TestMonitorListener
 	 * 2. the mob is who gets damaged.
 	 * 3. the mob is does not have invincibility frames
 	 */
-/*	@Test
+	@Test
 	public void testOnEntityDamageByEntityEventOutcome4()
 	{
-		LivingEntity mockDamaged = EasyMock.createMock(LivingEntity.class);
+		LivingEntity mockDamaged = EasyMock.createMockBuilder(MockLivingEntity.class).createMock();
 		EasyMock.expect(mockDamaged.getEntityId()).andReturn(1);
 		EasyMock.expect(mockDamaged.getType()).andReturn(EntityType.ZOMBIE);
         EasyMock.expect(mockDamaged.getNoDamageTicks()).andReturn(1);
         EasyMock.expect(mockDamaged.getMaximumNoDamageTicks()).andReturn(5);
 		EasyMock.replay(mockDamaged);
 		
-		Player mockPlayer = EasyMock.createMock(Player.class);
+		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+        EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         
         EasyMock.replay(mockPlayer);
        
@@ -378,7 +382,7 @@ public class TestMonitorListener
 		EasyMock.verify(mockDamaged);
 		
 		EasyMock.verify(mockPlayer);
-	}*/
+	}
 	
 	
 	/**
@@ -387,17 +391,17 @@ public class TestMonitorListener
 	 * 2. the mob is who gets damaged.
 	 * 3. the mob is does have invincibility frames
 	 */
-/*	@Test
+	@Test
 	public void testOnEntityDamageByEntityEventOutcome5()
 	{
-		LivingEntity mockDamaged = EasyMock.createMock(LivingEntity.class);
+		LivingEntity mockDamaged = EasyMock.createMockBuilder(MockLivingEntity.class).createMock();
 		//EasyMock.expect(mockDamaged.getEntityId()).andReturn(1);
 		//EasyMock.expect(mockDamaged.getType()).andReturn(EntityType.ZOMBIE);
         EasyMock.expect(mockDamaged.getNoDamageTicks()).andReturn(5);
         EasyMock.expect(mockDamaged.getMaximumNoDamageTicks()).andReturn(5);
 		EasyMock.replay(mockDamaged);
 		
-		Player mockPlayer = EasyMock.createMock(Player.class);
+		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		//EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
         
         EasyMock.replay(mockPlayer);
@@ -422,7 +426,7 @@ public class TestMonitorListener
 		EasyMock.verify(mockDamaged);
 		
 		EasyMock.verify(mockPlayer);
-	}*/
+	}
 	
 	/**
 	 * Tests the onEntityDamageByEntityEvent() where:
@@ -430,18 +434,19 @@ public class TestMonitorListener
 	 * 2. the mob is who gets damaged.
 	 * 3. the player is does not have invincibility frames
 	 */
-/*	@Test
+	@Test
 	public void testOnEntityDamageByEntityEventOutcome6()
 	{
-		Player mockPlayer = EasyMock.createMock(Player.class);
+		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+        EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         EasyMock.replay(mockPlayer);
         
         Arrow mockArrow = EasyMock.createMock(Arrow.class);
 		EasyMock.expect(mockArrow.getShooter()).andReturn(mockPlayer);
 		EasyMock.replay(mockArrow);
 		
-        LivingEntity mockDamaged = EasyMock.createMock(LivingEntity.class);
+        LivingEntity mockDamaged = EasyMock.createMockBuilder(MockLivingEntity.class).createMock();
 		EasyMock.expect(mockDamaged.getEntityId()).andReturn(1);
 		EasyMock.expect(mockDamaged.getType()).andReturn(EntityType.ZOMBIE);
 		EasyMock.expect(mockDamaged.getNoDamageTicks()).andReturn(1);
@@ -467,28 +472,5 @@ public class TestMonitorListener
 		EasyMock.verify(mockArrow);
 		
 		EasyMock.verify(mockPlayer);
-	}*/
-	
-	/**
-	 * Tests the onPlayerLogin() method.
-	 */
-/*	@Test
-	public void testOnPlayerLogin()
-	{
-		Player mockPlayer = EasyMock.createMock(Player.class);
-		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
-        EasyMock.replay(mockPlayer);
-        
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
-		MonitorListener monitor = new MonitorListener(plugin);
-		
-		PlayerLoginEvent event = new PlayerLoginEvent(mockPlayer);
-		monitor.onPlayerLogin(event);
-		
-		assertEquals("testPlayer", plugin.getPlayerInfo("testPlayer").getPlayerName());
-		assertNotNull(plugin.getPlayerInfo("testPlayer"));
-		EasyMock.verify(mockPlayer);
-	}*/
+	}
 }

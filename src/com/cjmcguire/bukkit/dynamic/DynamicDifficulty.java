@@ -146,6 +146,17 @@ public final class DynamicDifficulty extends JavaPlugin
 	}
 	
 	/**
+	 * @param playerName the name of the player whose PlayerInfo you want to know
+	 * exists or not
+	 * @return true if PlayerInfo for the given playerName exists in this plugin's
+	 * player data
+	 */
+	public boolean playerInfoExists(String playerName)
+	{
+		return playerData.containsKey(playerName);
+	}
+	
+	/**
 	 * Gets a player's PlayerInfo. If no PlayerInfo currently exists for the 
 	 * player when this method is called, then it will generate new PlayerInfo
 	 * for the player before returning it.
@@ -156,11 +167,11 @@ public final class DynamicDifficulty extends JavaPlugin
 	{
 		if(!playerData.containsKey(playerName))
 		{
-			this.safeLogInfo(playerName + "'s PlayerInfo DID NOT EXIST");
+			//this.safeLogInfo(playerName + "'s PlayerInfo DID NOT EXIST");
 			fileHandler.loadPlayerDataFromFile(playerName);
 		}
 
-		this.safeLogInfo(playerData.get(playerName) + " EXISTS NOW. GETTING IT");
+		//this.safeLogInfo(playerData.get(playerName) + " EXISTS NOW. GETTING IT");
 		
 		return playerData.get(playerName);
 	}

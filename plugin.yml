@@ -1,36 +1,64 @@
 name: DynamicDifficulty
 main: com.cjmcguire.bukkit.dynamic.DynamicDifficulty
-version: 1.1.0
+version: 1.2.0
+author: siege1313
 commands:
   dynamic:
     description: The DynamicDifficulty base command
     usage: Use the command like this "/<command>"
   dynamic info:
-    description: Lists your difficulty info
+    description: Lists a player's difficulty info
     usage: /<command>
-  dynamic change setting:
-    description: Changes your setting
+  dynamic changesetting:
+    description: Changes a player's setting
     usage: /<command> 
-  dynamic change level:
-    description: Changes your performance level
+  dynamic changelevel:
+    description: Changes a player's performance level
     usage: /<command>
 permissions:
   dynamic.*:
-    description: Gives access to all of the DynamicDifficulty Commands (All players have this by default)
+    description: Gives access to all of the DynamicDifficulty commands
     children:
       dynamic.dynamic: true
-      dynamic.info: true
-      dynamic.changelevel: true
-      dynamic.changesetting: true
+      dynamic.info.self: true
+      dynamic.info.other: true
+      dynamic.changelevel.self: true
+      dynamic.changelevel.other: true
+      dynamic.changesetting.self: true
+      dynamic.changesetting.other: true
+  dynamic.info.*:
+    description: Gives access to the entire /dynamic info command
+    children:
+      dynamic.info.self: true
+      dynamic.info.other: true
+  dynamic.changelevel.*:
+    description: Gives access to the entire /dynamic changelevel command
+    children:
+      dynamic.changelevel.self: true
+      dynamic.changelevel.other: true
+  dynamic.changesetting.*:
+    description: Gives access to the entire /dynamic changesetting command
+    children:
+      dynamic.changesetting.self: true
+      dynamic.changesetting.other: true
   dynamic.dynamic:
     description: Allows you to use the /dynamic command
     default: true
-  dynamic.info:
-    description: Allows you to display your mob difficulty settings and performance levels
+  dynamic.info.self:
+    description: Allows you to display your difficulty settings and performance levels
     default: true
-  dynamic.changelevel:
-    description: Allows you to change your mob performance levels
+  dynamic.info.other:
+    description: Allows you to display other players' difficulty settings and performance levels
+    default: false
+  dynamic.changelevel.self:
+    description: Allows you to change your performance levels
     default: true
-  dynamic.changesetting:
-    description: Allows you to change your mob difficulty settings
+  dynamic.changelevel.other:
+    description: Allows you to change other players' performance levels
+    default: false
+  dynamic.changesetting.self:
+    description: Allows you to change your difficulty settings
     default: true
+  dynamic.changesetting.other:
+    description: Allows you to change other players' difficulty settings
+    default: false

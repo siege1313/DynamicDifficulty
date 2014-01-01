@@ -43,5 +43,4 @@ public class TestPlayerInfo
 		assertEquals(MobType.ZOMBIE, playerInfo.getMobInfo(MobType.ZOMBIE).getMobType());
 		assertEquals(MobType.PIG_ZOMBIE, playerInfo.getMobInfo(MobType.PIG_ZOMBIE).getMobType());
 	}
-
 }

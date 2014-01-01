@@ -10,6 +10,7 @@ import com.cjmcguire.bukkit.dynamic.commands.TestChangeSettingCommand;
 import com.cjmcguire.bukkit.dynamic.commands.TestDynamicCommand;
 import com.cjmcguire.bukkit.dynamic.commands.TestDynamicCommandExecutor;
 import com.cjmcguire.bukkit.dynamic.commands.TestInfoCommand;
+import com.cjmcguire.bukkit.dynamic.commands.TestPlayerTargetableCommand;
 import com.cjmcguire.bukkit.dynamic.controller.TestControllerListener;
 import com.cjmcguire.bukkit.dynamic.monitor.TestMonitorListener;
 
@@ -38,6 +39,7 @@ import com.cjmcguire.bukkit.dynamic.monitor.TestMonitorListener;
 	TestDynamicCommand.class,
 	TestDynamicCommandExecutor.class,
 	TestInfoCommand.class,
+	TestPlayerTargetableCommand.class,
 	
 	// com.cjmcguire,bukkit.dynamic.controller
 	TestControllerListener.class,

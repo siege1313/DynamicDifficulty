@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
@@ -68,7 +68,6 @@ public class PlayerFileHandler implements Listener
 		File playersFolder = new File(plugin.getDataFolder(), PLAYERS_FOLDER);
 		if(!playersFolder.exists())
 		{
-			plugin.safeLogInfo("players FOLDER DOES NOT EXIST");
 			playersFolder.mkdirs();
 		}
 	}
@@ -81,14 +80,13 @@ public class PlayerFileHandler implements Listener
 	 * @param event the PlayerLoginEvent that just occurred
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerLogin(PlayerLoginEvent event)
+	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		// get the player
 		Player player = event.getPlayer();
 		// get the player's name
 		String playerName = player.getDisplayName();
-
-		plugin.safeLogInfo(playerName + " LOGGED IN");
+		
 		// load the playerData contained in the FileConfiguration into the plugin
 		this.loadPlayerDataFromFile(playerName);
 	}
@@ -106,8 +104,6 @@ public class PlayerFileHandler implements Listener
 		Player player = event.getPlayer();
 		// get the player's name
 		String playerName = player.getDisplayName();
-
-		plugin.safeLogInfo(playerName + " LOGGED OUT");
 		
 		// save key variables from PlayerInfo to the player.yml file
 		this.savePlayerDataToFile(playerName);
@@ -251,7 +247,6 @@ public class PlayerFileHandler implements Listener
 			plugin.safeLogInfo("Could not save player data to " + PLAYERS_FOLDER + playerFile);
 			e.printStackTrace();
 		}
-		
 	}
 	
 	private void saveMobInfoToConfig(MobInfo mobInfo, FileConfiguration playerConfig)
