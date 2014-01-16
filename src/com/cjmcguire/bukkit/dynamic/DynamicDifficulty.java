@@ -19,7 +19,7 @@
 package com.cjmcguire.bukkit.dynamic;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,7 +44,7 @@ public final class DynamicDifficulty extends JavaPlugin
 	
 	private boolean runningWithHead = true;
 	
-	private HashMap<String, PlayerInfo> playerData = new HashMap<String, PlayerInfo>();
+	private ConcurrentHashMap<String, PlayerInfo> playerData = new ConcurrentHashMap<String, PlayerInfo>();
 	
 	private PlayerFileHandler fileHandler;
 	
@@ -167,7 +167,6 @@ public final class DynamicDifficulty extends JavaPlugin
 	{
 		if(!playerData.containsKey(playerName))
 		{
-			//this.safeLogInfo(playerName + "'s PlayerInfo DID NOT EXIST");
 			fileHandler.loadPlayerDataFromFile(playerName);
 		}
 

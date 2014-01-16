@@ -220,7 +220,7 @@ public class TestMonitorListener
 		EasyMock.replay(mockDamager);
 		
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
         EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         EasyMock.expect(mockPlayer.getNoDamageTicks()).andReturn(1);
         EasyMock.expect(mockPlayer.getMaximumNoDamageTicks()).andReturn(5);
@@ -264,7 +264,7 @@ public class TestMonitorListener
 		EasyMock.replay(mockDamager);
 		
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		//EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+		//EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
         EasyMock.expect(mockPlayer.getNoDamageTicks()).andReturn(5);
         EasyMock.expect(mockPlayer.getMaximumNoDamageTicks()).andReturn(5);
         
@@ -311,7 +311,7 @@ public class TestMonitorListener
 		EasyMock.replay(mockArrow);
 		
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
         EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         EasyMock.expect(mockPlayer.getNoDamageTicks()).andReturn(1);
         EasyMock.expect(mockPlayer.getMaximumNoDamageTicks()).andReturn(5);
@@ -357,7 +357,7 @@ public class TestMonitorListener
 		EasyMock.replay(mockDamaged);
 		
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
         EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         
         EasyMock.replay(mockPlayer);
@@ -402,7 +402,7 @@ public class TestMonitorListener
 		EasyMock.replay(mockDamaged);
 		
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		//EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+		//EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
         
         EasyMock.replay(mockPlayer);
        
@@ -438,7 +438,7 @@ public class TestMonitorListener
 	public void testOnEntityDamageByEntityEventOutcome6()
 	{
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
         EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         EasyMock.replay(mockPlayer);
         

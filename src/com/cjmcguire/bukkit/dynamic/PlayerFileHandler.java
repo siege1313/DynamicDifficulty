@@ -85,7 +85,7 @@ public class PlayerFileHandler implements Listener
 		// get the player
 		Player player = event.getPlayer();
 		// get the player's name
-		String playerName = player.getDisplayName();
+		String playerName = player.getName();
 		
 		// load the playerData contained in the FileConfiguration into the plugin
 		this.loadPlayerDataFromFile(playerName);
@@ -103,7 +103,7 @@ public class PlayerFileHandler implements Listener
 		// get the player
 		Player player = event.getPlayer();
 		// get the player's name
-		String playerName = player.getDisplayName();
+		String playerName = player.getName();
 		
 		// save key variables from PlayerInfo to the player.yml file
 		this.savePlayerDataToFile(playerName);
@@ -335,7 +335,7 @@ public class PlayerFileHandler implements Listener
 		
 		for(Player player: players)
 		{
-			String playerName = player.getDisplayName();
+			String playerName = player.getName();
 
 			// load the playerData contained in the FileConfiguration into the plugin
 			this.loadPlayerDataFromFile(playerName);

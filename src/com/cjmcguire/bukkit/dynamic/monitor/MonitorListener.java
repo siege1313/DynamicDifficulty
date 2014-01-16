@@ -69,7 +69,7 @@ public class MonitorListener implements Listener
 				// if the player is not in creative mode
 				if(player.getGameMode() != GameMode.CREATIVE)
 				{
-					String playerName = player.getDisplayName();
+					String playerName = player.getName();
 					this.updateDamagePlayerReceived(playerName, (LivingEntity)damager, damage);
 				}
 			}
@@ -86,7 +86,7 @@ public class MonitorListener implements Listener
 				// if the player is not in creative mode
 				if(player.getGameMode() != GameMode.CREATIVE)
 				{
-					String playerName = player.getDisplayName();
+					String playerName = player.getName();
 					this.updateDamagePlayerGave(damaged, playerName, damage);
 				}
 			}

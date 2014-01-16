@@ -83,7 +83,7 @@ public class ControllerListener implements Listener
 				if(player.getNoDamageTicks() < player.getMaximumNoDamageTicks()/2f)
 				{
 					// get the player's name
-					String playerName = player.getDisplayName();
+					String playerName = player.getName();
 
 					// manipulate the damage they received based on their dynamic difficulty
 					int alteredDamage = manipulateDamagePlayerReceived(playerName, mobType, (int) event.getDamage());
@@ -149,7 +149,7 @@ public class ControllerListener implements Listener
 		LivingEntity mob = (LivingEntity)targeter;
 
 		// get the player name
-		String playerName = player.getDisplayName();
+		String playerName = player.getName();
 		// get the mob's MobType
 		MobType mobType = MobType.getEntitysMobType(mob);
 

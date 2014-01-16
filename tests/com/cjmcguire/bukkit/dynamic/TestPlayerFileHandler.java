@@ -321,7 +321,7 @@ public class TestPlayerFileHandler
 	public void testOnPlayerLogin()
 	{
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getDisplayName()).andReturn("testPlayer");
+		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer1");
         EasyMock.replay(mockPlayer);
         
 		DynamicDifficulty plugin = new DynamicDifficulty();
@@ -333,7 +333,7 @@ public class TestPlayerFileHandler
 		PlayerJoinEvent event = new PlayerJoinEvent(mockPlayer, "");
 		fileHandler.onPlayerJoin(event);
 		
-		assertEquals("testPlayer", plugin.getPlayerInfo("testPlayer").getPlayerName());
+		assertEquals("testPlayer1", plugin.getPlayerInfo("testPlayer1").getPlayerName());
 		EasyMock.verify(mockPlayer);
 	}
 }

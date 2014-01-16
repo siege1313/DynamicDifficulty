@@ -118,18 +118,7 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 			// if the sender is a player
 			if(sender instanceof Player)
 			{
-				// if the player has permission
-				if(sender.hasPermission(selfPermission))
-				{
-					Player player = (Player) sender;
-					String playerName = player.getDisplayName();
-					workedAsIntended = this.commandAction(sender, playerName, args);
-				}
-				// if the player does not have permission
-				else
-				{
-					this.safeSendMessage(sender, selfDenyPermissionMessage);
-				}
+				workedAsIntended = this.playerAskForSelf((Player)sender, args);
 			}
 			// if the sender is not a player
 			else
@@ -143,10 +132,14 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 			// if the sender is a player
 			if(sender instanceof Player)
 			{
-				// if the player has permission
-				if(sender.hasPermission(otherPermission))
+				if(this.isAskingForSelf((Player)sender, args))
 				{
-					workedAsIntended = this.otherPlayerAction(sender, args);
+					workedAsIntended = this.playerAskForSelf((Player)sender, args);
+				}
+				// if the player has permission
+				else if(sender.hasPermission(otherPermission))
+				{
+					workedAsIntended = this.askForOther(sender, args);
 				}
 				// if the player does not have permission
 				else
@@ -157,7 +150,7 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 			// if the sender is not a player
 			else
 			{
-				workedAsIntended = this.otherPlayerAction(sender, args);
+				workedAsIntended = this.askForOther(sender, args);
 			}
 		}
 		// if the number of arguments is wrong
@@ -169,7 +162,25 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 		return workedAsIntended;
 	}
 	
-	private boolean otherPlayerAction(CommandSender sender, String [] args)
+	private boolean playerAskForSelf(Player player, String [] args)
+	{
+		boolean workedAsIntended = false;
+		
+		// if the player has permission
+		if(player.hasPermission(selfPermission))
+		{
+			String playerName = player.getName();
+			workedAsIntended = this.commandAction(player, playerName, args);
+		}
+		// if the player does not have permission
+		else
+		{
+			this.safeSendMessage(player, selfDenyPermissionMessage);
+		}
+		return workedAsIntended;
+	}
+	
+	private boolean askForOther(CommandSender sender, String [] args)
 	{
 		boolean workedAsIntended = false;
 		
@@ -185,6 +196,19 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 		
 		return workedAsIntended;
 		
+	}
+	
+	private boolean isAskingForSelf(Player player, String [] args)
+	{
+		String otherPlayerName = args[otherArgsLength-1];
+		if(player.getName().equals(otherPlayerName))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	/**

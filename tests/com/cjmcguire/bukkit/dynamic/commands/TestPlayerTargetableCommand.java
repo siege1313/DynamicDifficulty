@@ -23,7 +23,7 @@ public class TestPlayerTargetableCommand
 	 * and the sender is asking for another player.
 	 */
 	@Test
-	public void testExecuteCommandConsoleAndAskOther()
+	public void testWhenConsoleAsksForOther()
 	{
 		//create the mock sender
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
@@ -54,7 +54,7 @@ public class TestPlayerTargetableCommand
 	 * and the sender is asking for itself.
 	 */
 	@Test
-	public void testExecuteCommandConsoleAndAskSelf()
+	public void testWhenConsoleAsksForSelf()
 	{
 		//create the mock sender
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
@@ -86,11 +86,12 @@ public class TestPlayerTargetableCommand
 	 * permission.
 	 */
 	@Test
-	public void testExecuteCommandPlayerAndAskOtherAndPermission()
+	public void testWhenPlayerAsksForOtherAndHasPermission()
 	{
 		//create the mock sender
 		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockSender.hasPermission("dynamic.info.other")).andReturn(true);
+		EasyMock.expect(mockSender.getName()).andReturn("testPlayerSender");
 		EasyMock.replay(mockSender);
 
 		// set up the plugin
@@ -119,11 +120,12 @@ public class TestPlayerTargetableCommand
 	 * not have permission.
 	 */
 	@Test
-	public void testExecuteCommandPlayerAndAskOtherAndNoPermission()
+	public void testWhenPlayerAsksForOtherAndHasNoPermission()
 	{
 		//create the mock sender
 		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockSender.hasPermission("dynamic.info.other")).andReturn(false);
+		EasyMock.expect(mockSender.getName()).andReturn("testPlayerSender");
 		EasyMock.replay(mockSender);
 
 		// set up the plugin
@@ -151,14 +153,14 @@ public class TestPlayerTargetableCommand
 	 * and the sender is asking for itself and the sender has permission.
 	 */
 	@Test
-	public void testExecuteCommandPlayerAndAskSelfAndPermission()
+	public void testWhenPlayerAsksForSelfAndHasPermission()
 	{
 		String playerName = "testPlayer";
 		
 		//create the mock sender
 		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockSender.hasPermission("dynamic.info.self")).andReturn(true);
-		EasyMock.expect(mockSender.getDisplayName()).andReturn(playerName);
+		EasyMock.expect(mockSender.getName()).andReturn(playerName);
 		EasyMock.replay(mockSender);
 
 		// set up the plugin
@@ -185,7 +187,7 @@ public class TestPlayerTargetableCommand
 	 * the sender is asking for itself and the sender does not have permission.
 	 */
 	@Test
-	public void testExecuteCommandPlayerAndAskSelfAndNoPermission()
+	public void testWhenPlayerAsksForSelfAndHasNoPermission()
 	{
 		//create the mock sender
 		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
@@ -211,6 +213,44 @@ public class TestPlayerTargetableCommand
 		
 		EasyMock.verify(mockSender);
 	}
+	
+
+	/**
+	 * Tests the executeCommand() method when the sender is a player
+	 * and the sender is asking for itself using the /dynamic info "player"
+	 * command. Even if the player does not have the "dynmaic.info.other"
+	 * permission, the player should be able to use the command.
+	 */
+	@Test
+	public void testWhenPlayerAsksForSelfUsingOtherCommand()
+	{
+		String playerName = "testPlayer";
+		
+		//create the mock sender
+		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
+		EasyMock.expect(mockSender.hasPermission("dynamic.info.self")).andReturn(true);
+		EasyMock.expect(mockSender.getName()).andReturn(playerName);
+		EasyMock.expect(mockSender.getName()).andReturn(playerName);
+		EasyMock.replay(mockSender);
+
+		// set up the plugin
+		DynamicDifficulty plugin = new DynamicDifficulty();
+		plugin.setRunningWithHead(false);
+
+		// set up the PlayerInfo
+		PlayerInfo playerInfo = new PlayerInfo(playerName);
+		
+		plugin.addPlayerInfo(playerInfo);
+
+		// perform the command
+		InfoCommand infoCommand = new InfoCommand(plugin);
+		String [] args = {"info", playerName};
+		boolean valid = infoCommand.executeCommand(mockSender, args);
+		
+		assertTrue(valid);
+		
+		EasyMock.verify(mockSender);
+	}
 
 	/**
 	 * Tests the executeCommand() method when the sender is a player and 
@@ -218,7 +258,7 @@ public class TestPlayerTargetableCommand
 	 * but entered the wrong number of arguments.
 	 */
 	@Test
-	public void testExecuteCommandTooManyArgs()
+	public void testWhenThereAreTooManyArgs()
 	{
 		//create the mock sender
 		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
@@ -250,11 +290,12 @@ public class TestPlayerTargetableCommand
 	 * but the other player does not exist.
 	 */
 	@Test
-	public void testExecuteCommandOtherDoesNotExist()
+	public void testWhenOtherDoesNotExist()
 	{
 		//create the mock sender
 		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.expect(mockSender.hasPermission("dynamic.info.other")).andReturn(true);
+		EasyMock.expect(mockSender.getName()).andReturn("testPlayer");
 		EasyMock.replay(mockSender);
 
 		// set up the plugin
