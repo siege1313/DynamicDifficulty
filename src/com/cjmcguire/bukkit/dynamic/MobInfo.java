@@ -41,7 +41,9 @@ public class MobInfo
 	private ArrayList<Integer> interactedWithIDs;
 	
 	/**
-	 * Initializes this MobInfo with the given MobType
+	 * Initializes this MobInfo with the given MobType.
+	 * By default, the setting is set to auto and all 
+	 * performance levels are set to 100.
 	 * @param mobType the type of mob for this MobInfo
 	 */
 	public MobInfo(MobType mobType)

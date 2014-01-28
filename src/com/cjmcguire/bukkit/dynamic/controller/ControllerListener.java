@@ -86,7 +86,7 @@ public class ControllerListener implements Listener
 					String playerName = player.getName();
 
 					// manipulate the damage they received based on their dynamic difficulty
-					int alteredDamage = manipulateDamagePlayerReceived(playerName, mobType, (int) event.getDamage());
+					int alteredDamage = this.manipulateDamagePlayerReceived(playerName, mobType, (int) event.getDamage());
 					event.setDamage((double)alteredDamage);
 				}
 			}
@@ -128,40 +128,44 @@ public class ControllerListener implements Listener
 		// get the target
 		Entity target = event.getTarget();
 		
-		// if the mob was not untargeting
-		// and the target was a Player
-		// and the targeter was a LivingEntity (a mob)
-		if(target != null && target instanceof Player && targeter instanceof LivingEntity)
+		// if targeter was a LivingEntity (Ideally, the targeter should 
+		// be a mob but there is no way to know that at this point)
+		if(targeter instanceof LivingEntity)
 		{
-			this.makeTargeterDynamic(targeter, target);
-		}
-		else if(event.getReason() == TargetReason.FORGOT_TARGET)
-		{
-			this.resetTargeterToDefault(targeter);
+			if(target instanceof Player)
+			{
+				this.makeTargeterDynamic((LivingEntity)targeter, (Player)target);
+			}
+			else if(event.getReason() == TargetReason.FORGOT_TARGET)
+			{
+				this.resetTargeterToDefault((LivingEntity)targeter);
+			}
 		}
 	}
-	
-	private void makeTargeterDynamic(Entity targeter, Entity target)
-	{
-		// cast the target to a Player
-		Player player = (Player) target;
-		// cast the targeter to a LivingEntity
-		LivingEntity mob = (LivingEntity)targeter;
 
-		// get the player name
-		String playerName = player.getName();
+	/**
+	 * @param targeter the targeter whose attributes to make dynamic. 
+	 * It should be a hostile mob that has a type in the MobType enum.
+	 * @param player the player whose mob performance level to made the
+	 * targeter dynamic from
+	 */
+	private void makeTargeterDynamic(LivingEntity targeter, Player player)
+	{
 		// get the mob's MobType
-		MobType mobType = MobType.getEntitysMobType(mob);
+		MobType mobType = MobType.getEntitysMobType(targeter);
 
 		// if the mob had a valid MobType
 		if(mobType != null)
 		{
+			// get the player name
+			String playerName = player.getName();
+			
 			// get the Player's MobInfo for the mob
 			MobInfo mobInfo = plugin.getPlayersMobInfo(playerName, mobType);
 			
 			double performanceLevel = mobInfo.getPerformanceLevelInUse();
 			
-			CraftLivingEntity livingEntity = (CraftLivingEntity) mob;
+			CraftLivingEntity livingEntity = (CraftLivingEntity) targeter;
 			EntityInsentient insEntity = (EntityInsentient) livingEntity.getHandle();
 
 			this.makeMobSpeedDynamic(insEntity, performanceLevel);
@@ -246,17 +250,23 @@ public class ControllerListener implements Listener
 		}
 	}
 	
-	private void resetTargeterToDefault(Entity targeter)
+	/**
+	 * @param targeter the targeter to reset. It should be a hostile mob that
+	 * has a type in the MobType enum.
+	 */
+	private void resetTargeterToDefault(LivingEntity targeter)
 	{
-		LivingEntity mob = (LivingEntity)targeter;
-		CraftLivingEntity livingEntity = (CraftLivingEntity) mob;
-		EntityInsentient insEntity = (EntityInsentient) livingEntity.getHandle();
-		
 		MobType mobType = MobType.getEntitysMobType(targeter);
-		
-		this.resetMobSpeed(insEntity);
-		this.resetMobKnockback(insEntity);
-		this.resetMobFollowDistance(insEntity, mobType);
+			
+		if(mobType != null)
+		{
+			CraftLivingEntity livingEntity = (CraftLivingEntity) targeter;
+			EntityInsentient insEntity = (EntityInsentient) livingEntity.getHandle();
+			
+			this.resetMobSpeed(insEntity);
+			this.resetMobKnockback(insEntity);
+			this.resetMobFollowDistance(insEntity, mobType);
+		}
 	}
 	
 	/**

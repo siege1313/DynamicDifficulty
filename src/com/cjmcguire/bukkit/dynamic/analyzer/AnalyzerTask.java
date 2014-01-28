@@ -43,8 +43,9 @@ public class AnalyzerTask extends BukkitRunnable
 	}
 	
 	/**
-	 * Updates the current performance level and estimated performance level of all mob types
-	 * for all players as long as the player's performance level is set to auto.
+	 * Updates the current performance level and estimated performance level 
+	 * of all mob types for all players as long as the player's performance 
+	 * level is set to auto.
 	 */
 	protected void updatePlayerData()
 	{

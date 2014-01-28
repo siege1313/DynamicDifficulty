@@ -76,6 +76,7 @@ public final class DynamicDifficulty extends JavaPlugin
 				
 			fileHandler.createDefaultPlayerFile();
 			fileHandler.createPlayersFolder();
+			
 			// if a reload occurs, load the PlayerInfo for any players that
 			// are currently logged in
 			fileHandler.reloadInfoForLoggedInPlayers();
@@ -169,8 +170,6 @@ public final class DynamicDifficulty extends JavaPlugin
 		{
 			fileHandler.loadPlayerDataFromFile(playerName);
 		}
-
-		//this.safeLogInfo(playerData.get(playerName) + " EXISTS NOW. GETTING IT");
 		
 		return playerData.get(playerName);
 	}

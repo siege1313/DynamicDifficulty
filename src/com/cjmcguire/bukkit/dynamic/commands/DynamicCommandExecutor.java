@@ -39,7 +39,8 @@ public class DynamicCommandExecutor implements CommandExecutor
 	
 	/** 
 	 * This method gets called in response to the /dynamic command.
-	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, 
+	 * org.bukkit.command.Command, java.lang.String, java.lang.String[])
 	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
