@@ -2,18 +2,18 @@ package com.cjmcguire.bukkit.dynamic.controller;
 
 import static org.junit.Assert.*;
 
-import net.minecraft.server.v1_7_R1.AttributeInstance;
-import net.minecraft.server.v1_7_R1.EntityInsentient;
-import net.minecraft.server.v1_7_R1.GenericAttributes;
+import net.minecraft.server.v1_7_R2.AttributeInstance;
+import net.minecraft.server.v1_7_R2.EntityInsentient;
+import net.minecraft.server.v1_7_R2.GenericAttributes;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobInfo;
-import com.cjmcguire.bukkit.dynamic.MobType;
-import com.cjmcguire.bukkit.dynamic.PlayerInfo;
-import com.cjmcguire.bukkit.dynamic.Setting;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * Tests the ControllerListener class.
@@ -29,9 +29,8 @@ public class TestControllerListener
 	@Test
 	public void testManipulateDamageAuto() 
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
@@ -39,9 +38,9 @@ public class TestControllerListener
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		blazeInfo.setAutoPerformanceLevel(200);
 		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 		
-		ControllerListener controller = new ControllerListener(plugin);
+		ControllerListener controller = new ControllerListener();
 		
         int damage = controller.manipulateDamagePlayerReceived(playerName, MobType.BLAZE, 2);
         assertEquals(4, damage);
@@ -54,9 +53,8 @@ public class TestControllerListener
 	@Test
 	public void testManipulateDamageManual() 
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
@@ -65,9 +63,9 @@ public class TestControllerListener
 		blazeInfo.setManualPerformanceLevel(200);
 		blazeInfo.setSetting(Setting.MANUAL);
 		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 		
-		ControllerListener controller = new ControllerListener(plugin);
+		ControllerListener controller = new ControllerListener();
 		
         int damage = controller.manipulateDamagePlayerReceived(playerName, MobType.BLAZE, 2);
         assertEquals(4, damage);
@@ -80,9 +78,8 @@ public class TestControllerListener
 	@Test
 	public void testManipulateDamageDisabled() 
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
@@ -92,9 +89,9 @@ public class TestControllerListener
 		blazeInfo.setManualPerformanceLevel(2);
 		blazeInfo.setSetting(Setting.DISABLED);
 		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 		
-		ControllerListener controller = new ControllerListener(plugin);
+		ControllerListener controller = new ControllerListener();
 		
         int damage = controller.manipulateDamagePlayerReceived(playerName, MobType.BLAZE, 2);
         assertEquals(2, damage);
@@ -110,16 +107,13 @@ public class TestControllerListener
 		EasyMock.expect(mockAttributes.getValue()).andReturn(.32+.32/2);
 		EasyMock.replay(mockAttributes);
 		
-		
 		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.d)).andReturn(mockAttributes);
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.d)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
-		ControllerListener controller = new ControllerListener(plugin);
+		// Run the actual test.
+		ControllerListener controller = new ControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(2.0);
@@ -151,10 +145,8 @@ public class TestControllerListener
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.d)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
-		ControllerListener controller = new ControllerListener(plugin);
+		// Run the actual test.
+		ControllerListener controller = new ControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(2.0);
@@ -182,16 +174,13 @@ public class TestControllerListener
 		EasyMock.expect(mockAttributes.getValue()).andReturn(.5);
 		EasyMock.replay(mockAttributes);
 		
-		
 		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.c)).andReturn(mockAttributes);
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.c)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
-		ControllerListener controller = new ControllerListener(plugin);
+		// Run the actual test.
+		ControllerListener controller = new ControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(200);
@@ -217,25 +206,21 @@ public class TestControllerListener
 		EasyMock.expect(mockAttributes.getValue()).andReturn(0.0);
 		EasyMock.replay(mockAttributes);
 		
-		
 		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.c)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
-		ControllerListener controller = new ControllerListener(plugin);
+		// Run the actual test.
+		ControllerListener controller = new ControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(60);
-		
+
 		controller.makeMobKnockbackDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.c);
 		
 		assertEquals(0.0, attributes.getValue(), .001);
-		
 		
 		EasyMock.verify(mockIns);
 		EasyMock.verify(mockAttributes);
@@ -257,10 +242,8 @@ public class TestControllerListener
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.c)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
-		ControllerListener controller = new ControllerListener(plugin);
+		// Run the actual test.
+		ControllerListener controller = new ControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(2.0);
@@ -295,10 +278,8 @@ public class TestControllerListener
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.b)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
-		ControllerListener controller = new ControllerListener(plugin);
+		// Run the actual test.
+		ControllerListener controller = new ControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(200);
@@ -324,26 +305,22 @@ public class TestControllerListener
 		AttributeInstance mockAttributes = EasyMock.createNiceMock(AttributeInstance.class);
 		EasyMock.expect(mockAttributes.b()).andReturn(16.0);
 		EasyMock.replay(mockAttributes);
-		
-		
+
 		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.b)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
-		ControllerListener controller = new ControllerListener(plugin);
+		// Run the actual test.
+		ControllerListener controller = new ControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(.75);
-		
+
 		controller.makeMobFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.b);
 		
 		assertEquals(16.0, attributes.b(), .0001);
-		
 		
 		EasyMock.verify(mockIns);
 		EasyMock.verify(mockAttributes);
@@ -365,10 +342,8 @@ public class TestControllerListener
 		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.b)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
-		ControllerListener controller = new ControllerListener(plugin);
+		// Run the actual test.
+		ControllerListener controller = new ControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(2.0);

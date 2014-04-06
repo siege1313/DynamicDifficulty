@@ -10,45 +10,47 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobInfo;
-import com.cjmcguire.bukkit.dynamic.MobType;
-import com.cjmcguire.bukkit.dynamic.Setting;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * The MonitorListener carries out the function of the Monitor in the 
- * Dynamic Difficulty implementation. It monitors events that occur in-game and
- * determines a player's performance level for each mob based on these events.
+ * Dynamic Difficulty implementation. It monitors events that occur in 
+ * game and determines a player's performance level for each mob based 
+ * on these events.
  * @author CJ McGuire
  */
 public class MonitorListener implements Listener
 {
-	private final DynamicDifficulty plugin;
+	private final PlayerDataManager playerDataManager;
 
 	/**
 	 * Initializes the MonitorListener.
-	 * @param plugin a reference to the DynamicDifficulty plugin that uses 
-	 * this MonitorListener
 	 */
-	public MonitorListener(DynamicDifficulty plugin)
+	public MonitorListener()
 	{
-		this.plugin = plugin;
+		this.playerDataManager = PlayerDataManager.getInstance();
 	}
 	
 	/**
-	 * This method triggers whenever a creature takes damage in Minecraft. This method
-	 * will update a player's player data, whenever the player takes damage from a mob,
-	 * or when a mob deals damage to the player. 
+	 * This method triggers whenever a creature takes damage in 
+	 * Minecraft. This method will update a player's player data, 
+	 * whenever the player takes damage from a mob, or when a mob 
+	 * deals damage to the player. 
 	 * @param event the EntityDamageEvent that just occurred
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event)
 	{
-		// get the damager and convert it to the shooter if it was originally the projectile
+		// get the damager and convert it to the shooter if it was 
+		// originally the projectile
 		Entity damager = event.getDamager();
 		if(damager instanceof Projectile)
 		{
-			damager = ((Projectile) damager).getShooter();
+			Projectile projectile = (Projectile) damager;
+			damager = projectile.getShooter();
 		}
 		
 		// get the damaged
@@ -94,10 +96,12 @@ public class MonitorListener implements Listener
 	}
 
 	/**
-	 * Updates the value for the amount of damage that a Player has received from a 
-	 * certain MobType. Note that if a player was damaged by something that was not a 
-	 * standard MobType, then this method does nothing. Also, note that a player's
-	 * setting must be set to Auto for this method to update the damage a player received.
+	 * Updates the value for the amount of damage that a Player has 
+	 * received from a certain MobType. Note that if a player was 
+	 * damaged by something that was not a standard MobType, then this 
+	 * method does nothing. Also, note that a player's setting must be 
+	 * set to Auto for this method to update the damage a player 
+	 * received.
 	 * @param playerName the name of the player that took damage
 	 * @param damager the living entity that did the damage
 	 * @param damage the damage the damager caused
@@ -109,7 +113,7 @@ public class MonitorListener implements Listener
 		if(mobType != null)
 		{
 			// get the PlayerInfo's MobData
-			MobInfo mobInfo = plugin.getPlayersMobInfo(playerName, mobType);
+			MobInfo mobInfo = playerDataManager.getPlayersMobInfo(playerName, mobType);
 
 			// if the player's setting is set to AUTO (OFF and MANUAL will not update anything)
 			if(mobInfo.getSetting() == Setting.AUTO)
@@ -121,10 +125,11 @@ public class MonitorListener implements Listener
 	}
 
 	/**
-	 * Updates the value for the amount of damage that a Player has given to a 
-	 * certain MobType. Note that if a player damaged something that was not a 
-	 * standard MobType, then this method does nothing. Also, note that a player's
-	 * setting must be set to Auto for this method to update the damage a player gave.
+	 * Updates the value for the amount of damage that a Player has 
+	 * given to a certain MobType. Note that if a player damaged 
+	 * something that was not a standard MobType, then this method 
+	 * does nothing. Also, note that a player's setting must be set to 
+	 * Auto for this method to update the damage a player gave.
 	 * @param damaged the mob that was damaged
 	 * @param playerName the name of the player that did damage
 	 * @param damage the damage the player causes
@@ -136,7 +141,7 @@ public class MonitorListener implements Listener
 		if(mobType != null)
 		{
 			// get the PlayerInfo's MobData
-			MobInfo mobInfo = plugin.getPlayersMobInfo(playerName, mobType);
+			MobInfo mobInfo = playerDataManager.getPlayersMobInfo(playerName, mobType);
 			
 			// if the player's setting is set to AUTO (OFF and MANUAL will not update anything)
 			if(mobInfo.getSetting() == Setting.AUTO)

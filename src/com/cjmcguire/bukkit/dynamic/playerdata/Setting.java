@@ -1,4 +1,4 @@
-package com.cjmcguire.bukkit.dynamic;
+package com.cjmcguire.bukkit.dynamic.playerdata;
 
 /**
  * The Setting Enum is used to represent three user settings in the

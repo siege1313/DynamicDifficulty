@@ -1,4 +1,4 @@
-package com.cjmcguire.bukkit.dynamic;
+package com.cjmcguire.bukkit.dynamic.filehandlers;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
+import com.cjmcguire.bukkit.dynamic.MockPlayer;
+import com.cjmcguire.bukkit.dynamic.filehandlers.PlayerFileHandler;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
+
 /**
  * Tests the PlayerFileHandler class.
  * @author CJ McGuire
@@ -16,18 +24,14 @@ public class TestPlayerFileHandler
 {
 	
 	/**
-	 * Tests the getDefaultPlayerConfig() method.
+	 * Tests that the defaultPlayerConfiguration gets loaded in correctly.
 	 */
 	@Test
 	public void testGetDefaultPlayerConfig()
-	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
+	{		
+		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		
-		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
-		
-		FileConfiguration fileConfig = fileHandler.getDefaultPlayerConfig();
+		FileConfiguration fileConfig = fileHandler.getFileConfig();
 		
 		assertEquals("auto", fileConfig.getString("blaze.setting"));
 		assertEquals(100, fileConfig.getInt("blaze.manualPerformanceLevel"));
@@ -48,18 +52,16 @@ public class TestPlayerFileHandler
 	@Test
 	public void testLoadPlayerInfoFromFile()
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
-		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
-		
+		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
+		playerDataManager.setPlayerFileHandler(fileHandler);
 		
 		String playerName = "testPlayer1";
+		fileHandler.loadPlayerData(playerName);
 		
-		fileHandler.loadPlayerDataFromFile(playerName);
-		
-		PlayerInfo playerInfo = plugin.getPlayerInfo(playerName);
+		PlayerInfo playerInfo = playerDataManager.getPlayerInfo(playerName);
 		
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
@@ -95,17 +97,16 @@ public class TestPlayerFileHandler
 	@Test
 	public void testLoadPlayerInfoFromFileBadPlayerYml()
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
+		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		
 		String playerName = "testPlayer4";
+		fileHandler.loadPlayerData(playerName);
+
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.setPlayerFileHandler(fileHandler);
 		
-		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
-		
-		fileHandler.loadPlayerDataFromFile(playerName);
-		
-		PlayerInfo playerInfo = plugin.getPlayerInfo(playerName);
+		PlayerInfo playerInfo = playerDataManager.getPlayerInfo(playerName);
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		assertEquals(Setting.AUTO, blazeInfo.getSetting());
@@ -120,11 +121,6 @@ public class TestPlayerFileHandler
 	@Test
 	public void testSavePlayerDataToFile()
 	{
-		// make the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
-		
 		// make the playerInfo
 		String playerName = "testPlayer2";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
@@ -141,74 +137,20 @@ public class TestPlayerFileHandler
 		
 		
 		// add the playerInfo to the plugin
-		plugin.addPlayerInfo(playerInfo);
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		
-		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
+		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
+		playerDataManager.setPlayerFileHandler(fileHandler);
 		
-		fileHandler.savePlayerDataToFile(playerName);
-		plugin.removePlayerInfo(playerName);
-		
-		
-		fileHandler.loadPlayerDataFromFile(playerName);
-		playerInfo = plugin.getPlayerInfo(playerName);
+		fileHandler.savePlayerData(playerName);
+		playerDataManager.removePlayerInfo(playerName);
 		
 		
-		blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
-		assertEquals(Setting.MANUAL, blazeInfo.getSetting());
-		
-		caveSpiderInfo = playerInfo.getMobInfo(MobType.CAVE_SPIDER);
-		assertEquals(130, caveSpiderInfo.getManualPerformanceLevel(), .0001);
-
-		creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
-		assertEquals(70, creeperInfo.getAutoPerformanceLevel(), .0001);
-	}
-	
-	/**
-	 * Tests the saveAllPlayerData() method.
-	 */
-	@Test
-	public void testSaveAllPlayerData()
-	{
-		// make the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
-		
-		
-		// make the playerInfo
-		String playerName = "testPlayer2";
-		PlayerInfo playerInfo = new PlayerInfo(playerName);
-
-		String playerName3 = "testPlayer3";
-		PlayerInfo playerInfo3 = new PlayerInfo(playerName3);
-		
-		
-		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
-		blazeInfo.setSetting(Setting.MANUAL);
-		
-		MobInfo caveSpiderInfo = playerInfo.getMobInfo(MobType.CAVE_SPIDER);
-		caveSpiderInfo.setManualPerformanceLevel(130);
-
-		MobInfo creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
-		creeperInfo.setAutoPerformanceLevel(70);
-		
-		// add the playerInfo to the plugin
-		plugin.addPlayerInfo(playerInfo);
-		plugin.addPlayerInfo(playerInfo3);
-		
-		plugin.onDisable();
-		
-		
-		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
-			
-		// test that the values were saved
-		fileHandler.loadPlayerDataFromFile(playerName);
-		fileHandler.loadPlayerDataFromFile(playerName3);
-		
-		
-		playerInfo = plugin.getPlayerInfo(playerName);
-		playerInfo3 = plugin.getPlayerInfo(playerName3);
+		fileHandler.loadPlayerData(playerName);
+		playerInfo = playerDataManager.getPlayerInfo(playerName);
 		
 		
 		blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
@@ -219,23 +161,14 @@ public class TestPlayerFileHandler
 
 		creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
 		assertEquals(70, creeperInfo.getAutoPerformanceLevel(), .0001);
-		
-		
-		MobInfo zombieInfo = playerInfo3.getMobInfo(MobType.ZOMBIE);
-		assertEquals(100, zombieInfo.getAutoPerformanceLevel(), .0001);
 	}
 	
 	/**
 	 * 
 	 */
-	@Test
+/*	@Test
 	public void testOnDisableWithPlayersStillLoggedIn()
 	{
-		// make the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
-		
 		// make the playerInfo
 		String playerName = "testPlayer3";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
@@ -251,21 +184,23 @@ public class TestPlayerFileHandler
 		creeperInfo.setAutoPerformanceLevel(70);
 		
 		// add the playerInfo to the plugin
-		plugin.addPlayerInfo(playerInfo);
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// save the values
 		//File playerFile = new File(playerName + ".yml");
 		//FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerFile);
 		//plugin.savePlayerInfo(playerConfig, playerFile, playerName);
-		plugin.onDisable();
 	
-		
-		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
+
+		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		
 		// test that the values were saved
-		fileHandler.loadPlayerDataFromFile(playerName);
+		fileHandler.loadPlayerData(playerName);
 		
-		playerInfo = plugin.getPlayerInfo(playerName);
+		playerInfo = playerDataManager.getPlayerInfo(playerName);
 		
 		blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		assertEquals(Setting.MANUAL, blazeInfo.getSetting());
@@ -275,7 +210,7 @@ public class TestPlayerFileHandler
 
 		creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
 		assertEquals(70, creeperInfo.getAutoPerformanceLevel(), .001);
-	}
+	}*/
 
 	/**
 	 * Tests the loadPlayerConfig() method.
@@ -283,15 +218,10 @@ public class TestPlayerFileHandler
 	@Test
 	public void testLoadPlayerConfig()
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
-
-		String playerName = "testPlayer1";
-
-		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
+		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		
-		FileConfiguration playerYmlFileConfig = fileHandler.loadPlayerConfig(playerName);
+		String playerName = "testPlayer1";
+		FileConfiguration playerYmlFileConfig = fileHandler.getPlayerConfig(playerName);
 
 		assertEquals("auto", playerYmlFileConfig.getString("blaze.setting"));
 		assertEquals(100, playerYmlFileConfig.getInt("blaze.manualPerformanceLevel"));
@@ -324,16 +254,16 @@ public class TestPlayerFileHandler
 		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer1");
         EasyMock.replay(mockPlayer);
         
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
-		
-		PlayerFileHandler fileHandler = plugin.getPlayerFileHandler();
+
+		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		
 		PlayerJoinEvent event = new PlayerJoinEvent(mockPlayer, "");
 		fileHandler.onPlayerJoin(event);
 		
-		assertEquals("testPlayer1", plugin.getPlayerInfo("testPlayer1").getPlayerName());
+
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		assertEquals("testPlayer1", playerDataManager.getPlayerInfo("testPlayer1").getPlayerName());
 		EasyMock.verify(mockPlayer);
 	}
 }

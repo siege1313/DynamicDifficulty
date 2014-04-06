@@ -1,8 +1,10 @@
-package com.cjmcguire.bukkit.dynamic;
+package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * Tests the MobName enum.

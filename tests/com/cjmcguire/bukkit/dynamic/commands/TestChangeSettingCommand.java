@@ -6,11 +6,11 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobInfo;
-import com.cjmcguire.bukkit.dynamic.MobType;
-import com.cjmcguire.bukkit.dynamic.PlayerInfo;
-import com.cjmcguire.bukkit.dynamic.Setting;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * Tests the ChangeSettingCommand class.
@@ -19,7 +19,8 @@ import com.cjmcguire.bukkit.dynamic.Setting;
 public class TestChangeSettingCommand 
 {
 	/**
-	 * Tests the commandAction() method when the mob name and setting are valid.
+	 * Tests the commandAction() method when the mob name and setting 
+	 * are valid.
 	 */
 	@Test
 	public void testCommandActionValid() 
@@ -28,18 +29,16 @@ public class TestChangeSettingCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(null);
 
 		String [] args = {"changesetting", "zombie", "manual"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
@@ -52,7 +51,8 @@ public class TestChangeSettingCommand
 	}
 	
 	/**
-	 * Tests the commandAction() method when the mob name is "all" and the setting is valid.
+	 * Tests the commandAction() method when the mob name is "all" and 
+	 * the setting is valid.
 	 */
 	@Test
 	public void testCommandActionAll() 
@@ -61,17 +61,15 @@ public class TestChangeSettingCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(null);
 
 		String [] args = {"changesetting", "all", "manual"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
@@ -97,17 +95,15 @@ public class TestChangeSettingCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(null);
 
 		String [] args = {"changesetting", "zoie", "manual"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
@@ -127,17 +123,15 @@ public class TestChangeSettingCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(null);
 
 		String [] args = {"changesetting", "zombie", "disled"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);
@@ -148,7 +142,8 @@ public class TestChangeSettingCommand
 	}
 	
 	/**
-	 * Tests the commandAction() method when both the setting and the mob are invalid.
+	 * Tests the commandAction() method when both the setting and the 
+	 * mob are invalid.
 	 */
 	@Test
 	public void testCommandActionBothInvalid() 
@@ -157,17 +152,15 @@ public class TestChangeSettingCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(plugin);
+		ChangeSettingCommand changeSettingCommand = new ChangeSettingCommand(null);
 
 		String [] args = {"changesetting", "zoie", "disled"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, "testPlayer", args);

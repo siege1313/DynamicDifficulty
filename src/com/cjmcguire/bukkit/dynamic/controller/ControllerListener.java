@@ -2,12 +2,12 @@ package com.cjmcguire.bukkit.dynamic.controller;
 
 import java.util.UUID;
 
-import net.minecraft.server.v1_7_R1.EntityInsentient;
-import net.minecraft.server.v1_7_R1.AttributeInstance;
-import net.minecraft.server.v1_7_R1.AttributeModifier;
-import net.minecraft.server.v1_7_R1.GenericAttributes;
+import net.minecraft.server.v1_7_R2.EntityInsentient;
+import net.minecraft.server.v1_7_R2.AttributeInstance;
+import net.minecraft.server.v1_7_R2.AttributeModifier;
+import net.minecraft.server.v1_7_R2.GenericAttributes;
 
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -20,82 +20,93 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobInfo;
-import com.cjmcguire.bukkit.dynamic.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
 
 /**
- * The ControllerListener carries out the function of the Controller in the 
- * Dynamic Difficulty implementation. It listens to events that occur in-game and
- * manipulates (controls) the outcome of the events based on the dynamic difficulty
- * settings determined by the Analyzer.
+ * The ControllerListener carries out the function of the Controller 
+ * in the Dynamic Difficulty implementation. It listens to events that 
+ * occur in-game and manipulates (controls) the outcome of the events 
+ * based on the dynamic difficulty settings determined by the Analyzer.
  * @author CJ McGuire
  */
 public class ControllerListener implements Listener
 {
-	private final DynamicDifficulty plugin;
-
+	private final PlayerDataManager playerDataManager;
+	
+//	private ConfigFileHandler configFileHandler;
+	
 	private static final UUID movementSpeedUID = UUID.fromString("206a89dc-be78-4c4d-b42c-3b31db3f5a7c");
 	
 	/**
 	 * Initializes the ControllerListener.
-	 * @param plugin a reference to the DynamicDifficulty plugin that uses 
-	 * this ControllerListener
 	 */
-	public ControllerListener(DynamicDifficulty plugin)
+	public ControllerListener()
 	{
-		this.plugin = plugin;
+		this.playerDataManager = PlayerDataManager.getInstance();
+		
+//		this.configFileHandler = plugin.getConfigFileHandler();
 	}
 
 	/**
-	 * This method triggers whenever a creature takes damage in Minecraft. 
-	 * This method changes the damage that the player received from a mob
-	 * based on the player's performance level for that mob.
+	 * This method triggers whenever a creature takes damage. 
+	 * This method changes the damage that the player received from a 
+	 * mob based on the player's performance level for that mob.
 	 * @param event the EntityDamageEvent that just occurred
 	 */
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event)
 	{
-		// get the damager and convert it to the shooter if it was originally the projectile
-		Entity damager = event.getDamager();
-		if(damager instanceof Projectile)
-		{
-			damager = ((Projectile) damager).getShooter();
-		}
-
-		// get the entity that was damaged
-		Entity damaged = event.getEntity();
-
-		// if the entity that got damaged was the player
-		// and the entity doing the damage was a living entity (a mob)
-		if(damaged instanceof Player && damager instanceof LivingEntity)
-		{
-			// get the mobType of the mob
-			MobType mobType = MobType.getEntitysMobType((LivingEntity)damager);
-
-			// if the mob had a valid mobType
-			if(mobType != null)
+//		if(configFileHandler.shouldScaleAttackDamage())
+//		{
+			// get the damager and convert it to the shooter if it was originally the projectile
+			Entity damager = event.getDamager();
+			if(damager instanceof Projectile)
 			{
-				// get the player
-				Player player = (Player)damaged;
+				Projectile projectile = (Projectile) damager;
+				damager = projectile.getShooter();
+			}
 
-				// if the player is not temporarily immune
-				if(player.getNoDamageTicks() < player.getMaximumNoDamageTicks()/2f)
+			// get the entity that was damaged
+			Entity damaged = event.getEntity();
+
+			// if the entity that got damaged was the player
+			// and the entity doing the damage was a living entity (a mob)
+			if(damaged instanceof Player && damager instanceof LivingEntity)
+			{
+				// get the mobType of the mob
+				MobType mobType = MobType.getEntitysMobType((LivingEntity)damager);
+
+				// if the mob had a valid mobType
+				if(mobType != null)
 				{
-					// get the player's name
-					String playerName = player.getName();
+					// get the player
+					Player player = (Player)damaged;
 
-					// manipulate the damage they received based on their dynamic difficulty
-					int alteredDamage = this.manipulateDamagePlayerReceived(playerName, mobType, (int) event.getDamage());
-					event.setDamage((double)alteredDamage);
+					// if the player is not temporarily immune
+					if(this.playerNotInvincible(player))
+					{
+						// get the player's name
+						String playerName = player.getName();
+
+						// manipulate the damage they received based on their dynamic difficulty
+						int alteredDamage = this.manipulateDamagePlayerReceived(playerName, mobType, (int) event.getDamage());
+						event.setDamage((double)alteredDamage);
+					}
 				}
 			}
-		}
+//		}
 	}	
+	
+	private boolean playerNotInvincible(Player player)
+	{
+		return player.getNoDamageTicks() < player.getMaximumNoDamageTicks()/2f;
+	}
 
 	/**
-	 * Manipulates the damage that a Player received based on their dynamic 
-	 * difficulty settings.
+	 * Manipulates the damage that a Player received based on their 
+	 * dynamic difficulty settings.
 	 * @param playerName the name of the player that was damaged
 	 * @param mobType the mobType that damaged the player
 	 * @param baseDamage the base damage that was done to the player
@@ -104,7 +115,7 @@ public class ControllerListener implements Listener
 	protected int manipulateDamagePlayerReceived(String playerName, MobType mobType, int baseDamage)
 	{
 		// get the PlayerInfo's MobData
-		MobInfo mobInfo = plugin.getPlayersMobInfo(playerName, mobType);
+		MobInfo mobInfo = playerDataManager.getPlayersMobInfo(playerName, mobType);
 
 		double performanceLevel = mobInfo.getPerformanceLevelInUse();
 		
@@ -115,10 +126,11 @@ public class ControllerListener implements Listener
 	}
 
 	/**
-	 * This method triggers whenever a mob targets a Player. This method
-	 * changes the movement speed of a mob based on its target's performance level
-	 * for that mob.
-	 * @param event the EntityTargetLivingEntityEvent that just occurred
+	 * This method triggers whenever a mob targets a Player. This 
+	 * method changes the movement speed of a mob based on its 
+	 * target's performance level for that mob.
+	 * @param event the EntityTargetLivingEntityEvent that just 
+	 * occurred.
 	 */
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onEntityTargetEntityEvent(EntityTargetEvent event)
@@ -146,8 +158,8 @@ public class ControllerListener implements Listener
 	/**
 	 * @param targeter the targeter whose attributes to make dynamic. 
 	 * It should be a hostile mob that has a type in the MobType enum.
-	 * @param player the player whose mob performance level to made the
-	 * targeter dynamic from
+	 * @param player the player whose mob performance level to made 
+	 * the targeter dynamic from
 	 */
 	private void makeTargeterDynamic(LivingEntity targeter, Player player)
 	{
@@ -161,7 +173,7 @@ public class ControllerListener implements Listener
 			String playerName = player.getName();
 			
 			// get the Player's MobInfo for the mob
-			MobInfo mobInfo = plugin.getPlayersMobInfo(playerName, mobType);
+			MobInfo mobInfo = playerDataManager.getPlayersMobInfo(playerName, mobType);
 			
 			double performanceLevel = mobInfo.getPerformanceLevelInUse();
 			
@@ -175,84 +187,97 @@ public class ControllerListener implements Listener
 	}
 	
 	/**
-	 * Changes the mob speed of the given EntityInsentient based on the given MobInfo
-	 * Will change the mob speed by adding (performanceLevel/100.0-1)/2 to the mobs base speed.
+	 * Changes the mob speed of the given EntityInsentient based on 
+	 * the given MobInfo. Will change the mob speed by adding 
+	 * (performanceLevel/100.0-1)/2 to the mobs base speed.
 	 * @param insEntity the EntityInsentient whose speed you want to change
 	 * @param performanceLevel the performance level of the player
 	 */
 	protected void makeMobSpeedDynamic(EntityInsentient insEntity, double performanceLevel)
 	{
-		// get the mob speed attribute
-		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.d);
+//		if(configFileHandler.shouldScaleSpeed())
+//		{
+			// get the mob speed attribute
+			AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.d);
 		
-		//performance level of 200 scales to -> 150% speed 
-		//performance level of 50 scales to -> 75% speed
-		double modifier = (performanceLevel/100.0-1)/2.0;
+			//performance level of 200 scales to -> 150% speed 
+			//performance level of 50 scales to -> 75% speed
+			double modifier = (performanceLevel/100.0-1)/2.0;
 		
-		AttributeModifier attributeModifier = new AttributeModifier(movementSpeedUID, "DynamicDifficulty movement speed modifier", modifier, 1);
+			AttributeModifier attributeModifier = new AttributeModifier(movementSpeedUID, "DynamicDifficulty movement speed modifier", modifier, 1);
 		
-		// remove the modifier if one was on it
-		attribute.b(attributeModifier);
-		// add the modifier we created
-		attribute.a(attributeModifier);
-		
+			// remove the modifier if one was on it
+			attribute.b(attributeModifier);
+			// add the modifier we created
+			attribute.a(attributeModifier);
+//		}
 	}
 	
 	/**
-	 * Changes the mob follow distance of the given EntityInsentient based on the given MobInfo
-	 * Will change the mob follow distance by setting it to "normal follow distance" *
-	 * performanceLevel/100.0. Note that this method will only change the follow distance if the 
-	 * performance level is greater than 100.
-	 * @param insEntity the EntityInsentient whose follow distance you want to change
-	 * @param mobInfo the MobInfo which contains the necessary information for how much
-	 * to change the follow distance
-	 * @param performanceLevel the performance level of the player
+	 * Changes the mob follow distance of the given EntityInsentient 
+	 * based on the given MobInfo. Will change the mob follow distance 
+	 * by setting it to "normal follow distance" performanceLevel/100.0. 
+	 * Note that this method will only change the follow distance if 
+	 * the performance level is greater than 100.
+	 * @param insEntity the EntityInsentient whose follow distance you 
+	 * want to change.
+	 * @param mobInfo the MobInfo which contains the necessary 
+	 * information for how much to change the follow distance.
+	 * @param performanceLevel the performance level of the player.
 	 */
 	protected void makeMobFollowDistanceDynamic(EntityInsentient insEntity, MobInfo mobInfo, double performanceLevel)
 	{
-		// The player's performance level must be greater than 100 because if it is less 
-		// than 100 and we try to decrease the mob's view distance, the mob will just 
-		// stand there stupidly looking at the player due to its follow distance constantly 
-		// decreasing and increasing. Basically, this causes the mob to go into an endless
-		// loop of targeting and untargeting the player. 
-		if(performanceLevel > 100)
-		{
-			AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.b);
-			double value = mobInfo.getMobType().getDefaultFollowDistance() * performanceLevel/100.0;
-			attribute.setValue(value);
-		}
+//		if(configFileHandler.shouldScaleMaxFollowDistance())
+//		{
+			// The player's performance level must be greater than 100 because if it is less 
+			// than 100 and we try to decrease the mob's view distance, the mob will just 
+			// stand there stupidly looking at the player due to its follow distance constantly 
+			// decreasing and increasing. Basically, this causes the mob to go into an endless
+			// loop of targeting and untargeting the player. 
+			if(performanceLevel > 100)
+			{
+				AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.b);
+				double value = mobInfo.getMobType().getDefaultFollowDistance() * performanceLevel/100.0;
+				attribute.setValue(value);
+			}
+//		}
 	}
 	
 	/**
-	 * Changes the mob knockback resistance of the given EntityInsentient based on the 
-	 * given MobInfo. Will change the mob knockback resistance by adding 
-	 * (performancePercent/100-1)/2 to the mob's base knockback resistance. Note that 
-	 * Knockback resistance cannot go below 0, so if a player's performance percent is 
-	 * below 100, knockback resistance cannot be reduced.
-	 * @param insEntity the EntityInsentient whose speed you want to change
+	 * Changes the mob knockback resistance of the given 
+	 * EntityInsentient based on the given MobInfo. Will change the 
+	 * mob knockback resistance by adding (performancePercent/100-1)/2 
+	 * to the mob's base knockback resistance. Note that Knockback 
+	 * resistance cannot go below 0, so if a player's performance 
+	 * percent is below 100, knockback resistance cannot be reduced. 
+	 * @param insEntity the EntityInsentient whose speed you want to 
+	 * change
 	 * @param performanceLevel the performance level of the player
 	 */
 	protected void makeMobKnockbackDynamic(EntityInsentient insEntity, double performanceLevel)
 	{
-		// The player's performance level must be greater than 100 because if it is less 
-		// than 100, we are trying to reduce knockback resistance but Bukkit does not allow
-		// knockback resistance to be negative.
-		if(performanceLevel > 100)
-		{
-			// performance level of 50 to 100 scales to -> 0%
-			// performance level of 100 to 200 scales to -> 0% to 50%
-			double changeAmount = (performanceLevel/100.0-1.0)/2.0;
-			
-			// get the mob knockback resistance attribute
-			AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.c);
-			//set it to the change amount
-			attribute.setValue(changeAmount);
-		}
+//		if(configFileHandler.shouldScaleKnockbackResistance())
+//		{
+			// The player's performance level must be greater than 100 because if it is less 
+			// than 100, we are trying to reduce knockback resistance but Bukkit does not allow
+			// knockback resistance to be negative.
+			if(performanceLevel > 100)
+			{
+				// performance level of 50 to 100 scales to -> 0%
+				// performance level of 100 to 200 scales to -> 0% to 50%
+				double changeAmount = (performanceLevel/100.0-1.0)/2.0;
+				
+				// get the mob knockback resistance attribute
+				AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.c);
+				//set it to the change amount
+				attribute.setValue(changeAmount);
+			}
+//		}
 	}
 	
 	/**
-	 * @param targeter the targeter to reset. It should be a hostile mob that
-	 * has a type in the MobType enum.
+	 * @param targeter the targeter to reset. It should be a hostile 
+	 * mob that has a type in the MobType enum.
 	 */
 	private void resetTargeterToDefault(LivingEntity targeter)
 	{
@@ -270,8 +295,10 @@ public class ControllerListener implements Listener
 	}
 	
 	/**
-	 * Resets the speed of the given EntityInsentient back to its default move speed.
-	 * @param insEntity the EntityInsentient whose speed you want to reset
+	 * Resets the speed of the given EntityInsentient back to its 
+	 * default move speed.
+	 * @param insEntity the EntityInsentient whose speed you want to 
+	 * reset.
 	 */
 	protected void resetMobSpeed(EntityInsentient insEntity)
 	{
@@ -282,8 +309,10 @@ public class ControllerListener implements Listener
 	}
 	
 	/**
-	 * Resets the follow distance of the given EntityInsentient back to its default follow distance.
-	 * @param insEntity the EntityInsentient whose follow distance you want to reset
+	 * Resets the follow distance of the given EntityInsentient back 
+	 * to its default follow distance.
+	 * @param insEntity the EntityInsentient whose follow distance you 
+	 * want to reset.
 	 * @param mobType the mob type of the entity insentient
 	 */
 	protected void resetMobFollowDistance(EntityInsentient insEntity, MobType mobType)
@@ -293,13 +322,85 @@ public class ControllerListener implements Listener
 	}
 	
 	/**
-	 * Resets the knockback resistance of the given EntityInsentient back to its 
-	 * default move knockback resistance.
-	 * @param insEntity the EntityInsentient whose knockback resistance you want to reset
+	 * Resets the knockback resistance of the given EntityInsentient 
+	 * back to its default move knockback resistance.
+	 * @param insEntity the EntityInsentient whose knockback 
+	 * resistance you want to reset.
 	 */
 	protected void resetMobKnockback(EntityInsentient insEntity)
 	{
 		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.c);
 		attribute.setValue(0);
 	}
+	
+/*
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onEntityDeathEvent(EntityDeathEvent event)
+	{
+		// get the killed living entity
+		LivingEntity killedEntity = event.getEntity();
+		
+		// get the mobType of the living entity
+		MobType mobType = MobType.getEntitysMobType(killedEntity);
+		
+		Player player = killedEntity.getKiller();
+		
+		// if the mob had a valid mobType
+		if(player != null && mobType != null)
+		{
+			// get the player's name
+			String playerName = player.getName();
+			
+			int alteredEXP = this.manipulateEXP(playerName, mobType, (int) event.getDroppedExp());
+			event.setDroppedExp(alteredEXP);
+			
+			this.manipulateItemAmounts(playerName, mobType, event.getDrops());
+		}
+	}
+	
+	protected int manipulateEXP(String playerName, MobType mobType, int baseEXP)
+	{
+		// get the PlayerInfo's MobData
+		MobInfo mobInfo = plugin.getPlayersMobInfo(playerName, mobType);
+		
+		double performanceLevel = mobInfo.getPerformanceLevelInUse();
+		
+		// figure out the altered damage
+		int alteredEXP;
+		
+		if(performanceLevel > 100)
+		{
+			// If performance level is greater than 100, we reward the player
+			// with more EXP.
+			alteredEXP = (int) (baseEXP * performanceLevel/100.0 + 0.5); // add .5 here so that it rounds correctly
+		}
+		else
+		{
+			// If the player has a low performance level, we do not penalize
+			// them; we give them the normal EXP.
+			alteredEXP = baseEXP;
+		}
+		
+		return alteredEXP;
+	}
+	
+	protected void manipulateItemAmounts(String playerName, MobType mobType, List<ItemStack> itemStacks)
+	{
+		// get the PlayerInfo's MobData
+		MobInfo mobInfo = plugin.getPlayersMobInfo(playerName, mobType);
+				
+		double performanceLevel = mobInfo.getPerformanceLevelInUse(); 
+		
+		// If performance level is greater than 100, we reward the player
+		// with more items.
+		if(performanceLevel > 100)
+		{
+			for(ItemStack stack: itemStacks)
+			{
+				int amount = (int)(stack.getAmount() * performanceLevel/100.0 + 0.5);
+				stack.setAmount(amount);
+			}
+		}
+	}
+*/
 }

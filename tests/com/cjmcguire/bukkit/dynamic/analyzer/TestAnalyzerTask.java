@@ -4,11 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobInfo;
-import com.cjmcguire.bukkit.dynamic.MobType;
-import com.cjmcguire.bukkit.dynamic.PlayerInfo;
-import com.cjmcguire.bukkit.dynamic.Setting;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * Tests the AnalyzerTask class.
@@ -22,9 +22,8 @@ public class TestAnalyzerTask
 	@Test
 	public void testRun()
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
@@ -36,9 +35,9 @@ public class TestAnalyzerTask
 		
 		blazeInfo.addToDamagePlayerGave(100);
 		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 		
-		AnalyzerTask analyzer = new AnalyzerTask(plugin);
+		AnalyzerTask analyzer = new AnalyzerTask();
 
 		analyzer.run();
 		
@@ -52,9 +51,8 @@ public class TestAnalyzerTask
 	@Test
 	public void testUpdatePlayerData()
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
@@ -65,9 +63,9 @@ public class TestAnalyzerTask
 		blazeInfo.addIDToInteractedWithIDs(3);
 		blazeInfo.addToDamagePlayerGave(100);
 		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 		
-		AnalyzerTask analyzer = new AnalyzerTask(plugin);
+		AnalyzerTask analyzer = new AnalyzerTask();
 
 		analyzer.updatePlayerData();
 		
@@ -81,9 +79,8 @@ public class TestAnalyzerTask
 	@Test
 	public void testUpdatePlayerDataWhenManual()
 	{
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		plugin.onEnable();
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
@@ -93,9 +90,9 @@ public class TestAnalyzerTask
 		blazeInfo.addToDamagePlayerGave(100);
 		blazeInfo.setSetting(Setting.MANUAL);
 		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 		
-		AnalyzerTask analyzer = new AnalyzerTask(plugin);
+		AnalyzerTask analyzer = new AnalyzerTask();
 
 		analyzer.updatePlayerData();
 		

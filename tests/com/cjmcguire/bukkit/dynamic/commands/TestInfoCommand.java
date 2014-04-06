@@ -6,9 +6,9 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobType;
-import com.cjmcguire.bukkit.dynamic.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
 
 /**
  * Tests the InfoCommand class.
@@ -27,19 +27,17 @@ public class TestInfoCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		playerInfo.getMobInfo(MobType.BLAZE).setManualPerformanceLevel(50);
 		playerInfo.getMobInfo(MobType.BLAZE).setAutoPerformanceLevel(50);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info"};
 		boolean valid = infoCommand.commandAction(mockSender, "testPlayer", args);
 		

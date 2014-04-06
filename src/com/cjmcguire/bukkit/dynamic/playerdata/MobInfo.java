@@ -1,20 +1,20 @@
-package com.cjmcguire.bukkit.dynamic;
+package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import java.util.ArrayList;
 
 /**
- * Holds all of the dynamic difficulty information for a given mob such as
- * the difficulty setting, auto performance level and manual performance
- * level.
+ * Holds all of the dynamic difficulty information for a given mob 
+ * such as the difficulty setting, auto performance level and manual 
+ * performance level.
  * @author CJ McGuire
  */
 public class MobInfo 
 {
 	/**
-	 * The maximum number of units that a player's auto performance level can 
-	 * change in a single update. (10 units)
+	 * The maximum number of units that a player's auto performance 
+	 * level can change in a single update. (10 units)
 	 */
-	public final static int MAX_INCREMENT = 10;
+	public static int MAX_INCREMENT = 10;
 	
 	/**
 	 * The maximum performance level that a player can have. (200 units)
@@ -41,9 +41,9 @@ public class MobInfo
 	private ArrayList<Integer> interactedWithIDs;
 	
 	/**
-	 * Initializes this MobInfo with the given MobType.
-	 * By default, the setting is set to auto and all 
-	 * performance levels are set to 100.
+	 * Initializes this MobInfo with the given MobType. By default, 
+	 * the setting is set to auto and all performance levels are set 
+	 * to 100.
 	 * @param mobType the type of mob for this MobInfo
 	 */
 	public MobInfo(MobType mobType)
@@ -59,6 +59,17 @@ public class MobInfo
 		damagePlayerReceived = 0;
 		
 		interactedWithIDs = new ArrayList<Integer>();
+	}
+	
+	/**
+	 * Sets MAX_INCREMENT (the amount of units that a player's auto 
+	 * performance level can chance by in a single update) equal to 
+	 * maxIncrement.
+	 * @param maxIncrement the value to set MAX_INCREMENT to
+	 */
+	public static void setMaxIncrement(int maxIncrement)
+	{
+		MAX_INCREMENT = maxIncrement;
 	}
 	
 	/**
@@ -115,18 +126,24 @@ public class MobInfo
 	}
 	
 	/**
-	 * Updates the estimated performance level for this Mob, using the following algorithm:
-	 * Let ESL = the player’s estimated performance level for a given mob type.
+	 * Updates the estimated performance level for this Mob, using the 
+	 * following algorithm:
+	 * Let ESL = the player’s estimated performance level for a given 
+	 * mob type.
 	 * Let G = the total damage given to all mobs of a given mob type. 
 	 * Let MH = the max hp for the mob. 
-	 * Let R = the total damage received from all mobs of a given mob type. 
+	 * Let R = the total damage received from all mobs of a given mob 
+	 * type. 
 	 * Let PH = the player's max hp. 
-	 * Let N = number of mobs of a given type that a player has interacted with. 
+	 * Let N = number of mobs of a given type that a player has 
+	 * interacted with. 
 	 * ESL = 100 + ((G/MH – R/PH) / N) * 100
-	 * Note that ESL must be between MIN_PERFORMANCE_LEVEL and MAX_PERFORMANCE_LEVEL.
+	 * Note that ESL must be between MIN_PERFORMANCE_LEVEL and 
+	 * MAX_PERFORMANCE_LEVEL.
 	 * Also note that ESL will not be updated if N < 3.
+	 * @return the estimated performance level
 	 */
-	public void updateEstimatedPerformanceLevel()
+	public double updateEstimatedPerformanceLevel()
 	{
 		if(interactedWithIDs.size() >= 3)
 		{			
@@ -138,7 +155,11 @@ public class MobInfo
 			double performalLevel = 100.0 + ((damageGiven/maxMobHealth - damageReceived/MAX_PLAYER_HEALTH) / interactedWith) * 100;
 			
 			this.setEstimatedPerformanceLevel(performalLevel);
+			
+			return performalLevel;
 		}
+		
+		return 100;
 	}
 
 	/**
@@ -220,11 +241,12 @@ public class MobInfo
 	}
 	
 	/**
-	 * @return the performance level currently in use based on the player's setting.
-	 * If the player's setting is auto, this method will return the player's
-	 * auto performance level. If the player's setting is set to manual, this 
-	 * method will return the player's manual performance level. If the player's
-	 * setting is disabled, this method will return 100.
+	 * @return the performance level currently in use based on the 
+	 * player's setting. If the player's setting is auto, this method 
+	 * will return the player's auto performance level. If the 
+	 * player's setting is set to manual, this method will return the 
+	 * player's manual performance level. If the player's setting is 
+	 * disabled, this method will return 100.
 	 */
 	public double getPerformanceLevelInUse()
 	{
@@ -243,8 +265,8 @@ public class MobInfo
 	}
 
 	/**
-	 * @return the total amount of damage that a player has given to all
-	 * mobs of this type
+	 * @return the total amount of damage that a player has given to 
+	 * all mobs of this type
 	 */
 	public int getDamagePlayerGave()
 	{
@@ -252,10 +274,10 @@ public class MobInfo
 	}
 	
 	/**
-	 * Adds the given amount to the total amount of damage that a player
-	 * has given to all mobs of a certain type. Note that the total amount of
-	 * damage a player has given cannot be greater than the total number of mobs
-	 * interacted with * the mob's health.
+	 * Adds the given amount to the total amount of damage that a 
+	 * player has given to all mobs of a certain type. Note that the 
+	 * total amount of damage a player has given cannot be greater 
+	 * than the total number of mobs interacted with * the mob's health.
 	 * @param amount the amount of damage to add
 	 */
 	public void addToDamagePlayerGave(int amount)
@@ -268,8 +290,8 @@ public class MobInfo
 	}
 	
 	/**
-	 * @return the total amount of damage that a player has received from all
-	 * mobs of this type
+	 * @return the total amount of damage that a player has received 
+	 * from all mobs of this type
 	 */
 	public int getDamagePlayerReceived() 
 	{
@@ -277,8 +299,8 @@ public class MobInfo
 	}
 	
 	/**
-	 * Adds the given amount to the total amount of damage that a player
-	 * has received from all mobs of this type
+	 * Adds the given amount to the total amount of damage that a 
+	 * player has received from all mobs of this type
 	 * @param amount the amount of damage to add
 	 */
 	public void addToDamagePlayerReceived(int amount)

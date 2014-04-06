@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
 
 /**
- * This abstract command sets a outline for commands that can optionally 
- * target another player.
+ * This abstract command sets a outline for commands that can 
+ * optionally target another player.
  * @author CJ McGuire
  */
 public abstract class PlayerTargetableCommand extends AbstractDDCommand 
@@ -29,20 +29,20 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 	/**
 	 * Initializes this DynamicDifficulty Command.
 	 * @param plugin a reference to the DynamicDifficulty plugin
-	 * @param selfArgsLength the number of arguments for when the command targets 
-	 * the sender
-	 * @param otherArgsLength the number of arguments for when the command targets 
-	 * another player
+	 * @param selfArgsLength the number of arguments for when the 
+	 * command targets the sender.
+	 * @param otherArgsLength the number of arguments for when the 
+	 * command targets another player.
 	 * @param selfPermission the permission to target self
 	 * @param otherPermission the permission to target another player
-	 * @param selfDenyPermissionMessage the message to send when the sender does 
-	 * not have permission to target self
-	 * @param otherDenyPermissionMessage the message to send when the sender does 
-	 * not have permission to target another player
-	 * @param selfDenyConsoleMessage the message to send when the console tries to 
-	 * target self
-	 * @param incorrectArgsMessage the message to send when the arguments have an 
-	 * incorrect length
+	 * @param selfDenyPermissionMessage the message to send when the 
+	 * sender does not have permission to target self.
+	 * @param otherDenyPermissionMessage the message to send when the 
+	 * sender does not have permission to target another player.
+	 * @param selfDenyConsoleMessage the message to send when the 
+	 * console tries to target self.
+	 * @param incorrectArgsMessage the message to send when the 
+	 * arguments have an incorrect length.
 	 */
 	public PlayerTargetableCommand(DynamicDifficulty plugin,
 			int selfArgsLength,
@@ -71,41 +71,42 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 	}
 	
 	/**
-     * Executes this command. This method is part of the template method pattern.
-     * It handles figuring out who sent the command, who the command is targetting,
-     * and if the sender has permission or not.
+     * Executes this command. This method is part of the template 
+     * method pattern. It handles figuring out who sent the command, 
+     * who the command is targetting, and if the sender has permission 
+     * or not.
 	 * 
-	 * 1. If the sender is not a player and it is asking about another player, then 
-	 * the method will work as intended.
+	 * 1. If the sender is not a player and it is asking about another 
+	 * player, then the method will work as intended.
 	 * 
-	 * 2. If the sender is not a player and it is asking about itself, then 
-	 * the method will work because the console is not a player.
+	 * 2. If the sender is not a player and it is asking about itself, 
+	 * then the method will work because the console is not a player.
 	 * 
+	 * 3. If the sender is a player, and is asking about another 
+	 * player, and has permission to do so, then the method will work 
+	 * as intended.
 	 * 
-	 * 3. If the sender is a player, and is asking about another player, and has 
-	 * permission to do so, then the method will work as intended.
+	 * 4. If the sender is a player, and is asking about another 
+	 * player, and does not have permission to do so, then the method 
+	 * will not work as intended.
 	 * 
-	 * 4. If the sender is a player, and is asking about another player, and does
-	 * not have permission to do so, then the method will not work as intended.
+	 * 5. If the sender is a player, and is asking about itself, and 
+	 * has permission to do so, then the method will work as intended.
 	 * 
+	 * 6. If the sender is a player, and is asking about itseld, and 
+	 * does not have permission to do so, then the method will not 
+	 * work as intended.
 	 * 
-	 * 5. If the sender is a player, and is asking about itself, and has 
-	 * permission to do so, then the method will work as intended.
+	 * 7. If the sender put in the incorrect number of arguments, then 
+	 * the method will not work as intended.
 	 * 
-	 * 6. If the sender is a player, and is asking about itseld, and does
-	 * not have permission to do so, then the method will not work as intended.
-	 * 
-	 * 
-	 * 7. If the sender put in the incorrect number of arguments, then the 
-	 * method will not work as intended.
-	 * 
-	 * 
-	 * 8. If the sender is asking for another player who does not exist, then 
-	 * this method will not work as intended.
+	 * 8. If the sender is asking for another player who does not 
+	 * exist, then this method will not work as intended.
 	 * 
 	 * @param sender the sender of the command
 	 * @param args must contain the command name in args[0]
-	 * @return true if the command worked as intended. false if it did not.
+	 * @return true if the command worked as intended. false if it did
+	 * not.
 	 */
 	@Override
 	protected boolean executeCommand(CommandSender sender, String [] args)
@@ -185,7 +186,7 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 		boolean workedAsIntended = false;
 		
 		String otherPlayerName = args[otherArgsLength-1];
-		if(this.getPlugin().playerInfoExists(otherPlayerName))
+		if(this.playerDataManager.playerInfoExists(otherPlayerName))
 		{
 			workedAsIntended = this.commandAction(sender, otherPlayerName, args);
 		}
@@ -218,7 +219,7 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 	 */
 	protected boolean senderIsThePlayer(CommandSender sender, String playerName)
 	{
-		Player player = this.getPlugin().getServer().getPlayer(playerName);
+		Player player = this.plugin.getServer().getPlayer(playerName);
 		if(player == sender)
 		{
 			return true;

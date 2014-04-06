@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
 import com.cjmcguire.bukkit.dynamic.MockPlayer;
-import com.cjmcguire.bukkit.dynamic.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
 
 /**
  * Tests the PlayerTargetableCommand class.
@@ -19,8 +19,8 @@ public class TestPlayerTargetableCommand
 {
 
 	/**
-	 * Tests the executeCommand() method when the sender is not a player
-	 * and the sender is asking for another player.
+	 * Tests the executeCommand() method when the sender is not a 
+	 * player and the sender is asking for another player.
 	 */
 	@Test
 	public void testWhenConsoleAsksForOther()
@@ -29,18 +29,16 @@ public class TestPlayerTargetableCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info", playerName};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -50,8 +48,8 @@ public class TestPlayerTargetableCommand
 	}
 
 	/**
-	 * Tests the executeCommand() method when the sender is not a player
-	 * and the sender is asking for itself.
+	 * Tests the executeCommand() method when the sender is not a 
+	 * player and the sender is asking for itself.
 	 */
 	@Test
 	public void testWhenConsoleAsksForSelf()
@@ -60,18 +58,16 @@ public class TestPlayerTargetableCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info"};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -94,18 +90,16 @@ public class TestPlayerTargetableCommand
 		EasyMock.expect(mockSender.getName()).andReturn("testPlayerSender");
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info", playerName};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -128,18 +122,16 @@ public class TestPlayerTargetableCommand
 		EasyMock.expect(mockSender.getName()).andReturn("testPlayerSender");
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info", playerName};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -163,17 +155,15 @@ public class TestPlayerTargetableCommand
 		EasyMock.expect(mockSender.getName()).andReturn(playerName);
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info"};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -183,8 +173,9 @@ public class TestPlayerTargetableCommand
 	}
 
 	/**
-	 * Tests the executeCommand() method when the sender is a player and 
-	 * the sender is asking for itself and the sender does not have permission.
+	 * Tests the executeCommand() method when the sender is a player 
+	 * and the sender is asking for itself and the sender does not 
+	 * have permission.
 	 */
 	@Test
 	public void testWhenPlayerAsksForSelfAndHasNoPermission()
@@ -194,18 +185,16 @@ public class TestPlayerTargetableCommand
 		EasyMock.expect(mockSender.hasPermission("dynamic.info.self")).andReturn(false);
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info"};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -217,9 +206,10 @@ public class TestPlayerTargetableCommand
 
 	/**
 	 * Tests the executeCommand() method when the sender is a player
-	 * and the sender is asking for itself using the /dynamic info "player"
-	 * command. Even if the player does not have the "dynmaic.info.other"
-	 * permission, the player should be able to use the command.
+	 * and the sender is asking for itself using the /dynamic info 
+	 * "player" command. Even if the player does not have the 
+	 * "dynmaic.info.other" permission, the player should be able to 
+	 * use the command.
 	 */
 	@Test
 	public void testWhenPlayerAsksForSelfUsingOtherCommand()
@@ -233,17 +223,15 @@ public class TestPlayerTargetableCommand
 		EasyMock.expect(mockSender.getName()).andReturn(playerName);
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info", playerName};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -253,9 +241,9 @@ public class TestPlayerTargetableCommand
 	}
 
 	/**
-	 * Tests the executeCommand() method when the sender is a player and 
-	 * the sender is asking for itself and the sender does have permission
-	 * but entered the wrong number of arguments.
+	 * Tests the executeCommand() method when the sender is a player 
+	 * and the sender is asking for itself and the sender does have 
+	 * permission but entered the wrong number of arguments.
 	 */
 	@Test
 	public void testWhenThereAreTooManyArgs()
@@ -264,18 +252,16 @@ public class TestPlayerTargetableCommand
 		Player mockSender = EasyMock.createMockBuilder(MockPlayer.class).createMock();
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info", "asdf", "aa"};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -286,8 +272,8 @@ public class TestPlayerTargetableCommand
 
 	/**
 	 * Tests the executeCommand() method when the sender is a player
-	 * and the sender is asking for another player and the sender has permission
-	 * but the other player does not exist.
+	 * and the sender is asking for another player and the sender has 
+	 * permission but the other player does not exist.
 	 */
 	@Test
 	public void testWhenOtherDoesNotExist()
@@ -298,18 +284,16 @@ public class TestPlayerTargetableCommand
 		EasyMock.expect(mockSender.getName()).andReturn("testPlayer");
 		EasyMock.replay(mockSender);
 
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
 		// set up the PlayerInfo
 		String playerName = "testPlayer";
 		PlayerInfo playerInfo = new PlayerInfo(playerName);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand(plugin);
+		InfoCommand infoCommand = new InfoCommand(null);
 		String [] args = {"info", "otherplayer"};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		

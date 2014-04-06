@@ -1,10 +1,10 @@
-package com.cjmcguire.bukkit.dynamic;
+package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import java.util.HashMap;
 
 /**
- * The Player Info class holds the name of a player and all of the player's 
- * MobInfo for each type of hostile mob in the game.
+ * The Player Info class holds the name of a player and all of the 
+ * player's MobInfo for each type of hostile mob in the game.
  * @author CJ McGuire
  */
 public class PlayerInfo 
@@ -15,7 +15,8 @@ public class PlayerInfo
 	
 	/**
 	 * Initializes this PlayerInfo
-	 * @param playerName the name of the player associated with this PlayerInfo
+	 * @param playerName the name of the player associated with this 
+	 * PlayerInfo
 	 */
 	public PlayerInfo(String playerName)
 	{

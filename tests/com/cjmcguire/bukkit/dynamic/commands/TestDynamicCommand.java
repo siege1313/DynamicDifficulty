@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
 import com.cjmcguire.bukkit.dynamic.MockPlayer;
 
 /**
@@ -18,8 +17,8 @@ public class TestDynamicCommand
 {
 	
 	/**
-	 * Tests the executeCommand() method when the sender has permission to use
-	 * the command.
+	 * Tests the executeCommand() method when the sender has permission 
+	 * to use the command.
 	 */
 	@Test
 	public void testExecuteCommandWithPermission() 
@@ -28,9 +27,7 @@ public class TestDynamicCommand
 		EasyMock.expect(mockSender.hasPermission("dynamic.dynamic")).andReturn(true);
 		EasyMock.replay(mockSender);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		DynamicCommand dynamicCommand = new DynamicCommand(plugin);
+		DynamicCommand dynamicCommand = new DynamicCommand(null);
 		
 		boolean valid = dynamicCommand.executeCommand(mockSender, null);
 		
@@ -40,8 +37,8 @@ public class TestDynamicCommand
 	}
 
 	/**
-	 * Tests the executeCommand() method when the sender does not have permission
-	 * to use the command.
+	 * Tests the executeCommand() method when the sender does not have 
+	 * permission to use the command.
 	 */
 	@Test
 	public void testExecuteCommandWithOutPermission() 
@@ -50,9 +47,7 @@ public class TestDynamicCommand
 		EasyMock.expect(mockSender.hasPermission("dynamic.dynamic")).andReturn(false);
 		EasyMock.replay(mockSender);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		DynamicCommand dynamicCommand = new DynamicCommand(plugin);
+		DynamicCommand dynamicCommand = new DynamicCommand(null);
 		
 		boolean valid = dynamicCommand.executeCommand(mockSender, null);
 		
@@ -71,9 +66,7 @@ public class TestDynamicCommand
 		EasyMock.expect(mockSender.hasPermission("dynamic.dynamic")).andReturn(false);
 		EasyMock.replay(mockSender);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		DynamicCommand dynamicCommand = new DynamicCommand(plugin);
+		DynamicCommand dynamicCommand = new DynamicCommand(null);
 		
 		boolean valid = dynamicCommand.executeCommand(mockSender, null);
 		

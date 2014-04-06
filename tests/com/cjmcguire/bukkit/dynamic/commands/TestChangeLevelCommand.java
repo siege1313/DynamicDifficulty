@@ -6,11 +6,11 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobInfo;
-import com.cjmcguire.bukkit.dynamic.MobType;
-import com.cjmcguire.bukkit.dynamic.PlayerInfo;
-import com.cjmcguire.bukkit.dynamic.Setting;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * Tests the ChangeLevelCommand class.
@@ -19,7 +19,8 @@ import com.cjmcguire.bukkit.dynamic.Setting;
 public class TestChangeLevelCommand 
 {
 	/**
-	 * Tests the commandAction() method when the mob name is valid and the setting is not manual.
+	 * Tests the commandAction() method when the mob name is valid and 
+	 * the setting is not manual.
 	 */
 	@Test
 	public void testCommandActionValidAndSettingNotManual() 
@@ -28,18 +29,16 @@ public class TestChangeLevelCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(plugin);
+		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(null);
 		
 		String [] args = {"changelevel", "zombie", "150"};
 		boolean levelChanged = changeLevelCommand.commandAction(mockSender, "testPlayer", args);
@@ -52,7 +51,8 @@ public class TestChangeLevelCommand
 	}
 	
 	/**
-	 * Tests the commandAction() method when the mob name is valid and the setting is manual.
+	 * Tests the commandAction() method when the mob name is valid and 
+	 * the setting is manual.
 	 */
 	@Test
 	public void testCommandActionValidAndSettingManual() 
@@ -61,19 +61,17 @@ public class TestChangeLevelCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 		mobInfo.setSetting(Setting.MANUAL);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(plugin);
+		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(null);
 		
 		String [] args = {"changelevel", "zombie", "150"};
 		boolean levelChanged = changeLevelCommand.commandAction(mockSender, "testPlayer", args);
@@ -86,7 +84,8 @@ public class TestChangeLevelCommand
 	}
 	
 	/**
-	 * Tests the commandAction() method when the mob name is "all" and no setting is manual.
+	 * Tests the commandAction() method when the mob name is "all" and
+	 * no setting is manual.
 	 */
 	@Test
 	public void testCommandActionAllAndNoSettingManual() 
@@ -95,17 +94,15 @@ public class TestChangeLevelCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(plugin);
+		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(null);
 		
 		String [] args = {"changelevel", "all", "150"};
 		boolean levelChanged = changeLevelCommand.commandAction(mockSender, "testPlayer", args);
@@ -122,8 +119,8 @@ public class TestChangeLevelCommand
 	}
 	
 	/**
-	 * Tests the commandAction() method when the mob name is "all" and at least one setting
-	 * is manual.
+	 * Tests the commandAction() method when the mob name is "all" and 
+	 * at least one setting is manual.
 	 */
 	@Test
 	public void testCommandActionAllAndSettingManual() 
@@ -132,19 +129,17 @@ public class TestChangeLevelCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 		zombieInfo.setSetting(Setting.MANUAL);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(plugin);
+		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(null);
 		
 		String [] args = {"changelevel", "all", "150"};
 		boolean levelChanged = changeLevelCommand.commandAction(mockSender, "testPlayer", args);
@@ -171,17 +166,15 @@ public class TestChangeLevelCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(plugin);
+		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(null);
 		
 		String [] args = {"changelevel", "zoie", "150"};
 		boolean levelChanged = changeLevelCommand.commandAction(mockSender, "testPlayer", args);
@@ -192,7 +185,8 @@ public class TestChangeLevelCommand
 	}
 	
 	/**
-	 * Tests the commandAction() method when the performance level arg is not a number.
+	 * Tests the commandAction() method when the performance level arg 
+	 * is not a number.
 	 */
 	@Test
 	public void testCommandActionNotANumber() 
@@ -201,18 +195,16 @@ public class TestChangeLevelCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 		
-		// set up the plugin
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-		
 		// set up the PlayerInfo
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
-		
-		plugin.addPlayerInfo(playerInfo);
+	
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(plugin);
+		ChangeLevelCommand changeLevelCommand = new ChangeLevelCommand(null);
 		
 		String [] args = {"changelevel", "zombie", "not number"};
 		boolean levelChanged = changeLevelCommand.commandAction(mockSender, "testPlayer", args);

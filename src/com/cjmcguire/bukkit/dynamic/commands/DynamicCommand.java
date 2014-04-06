@@ -8,7 +8,8 @@ import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
 
 /**
  * This class is used with the /dynamic command. The /dynamic command 
- * prints out a message describing what the DynamicDifficulty plugin does.
+ * prints out a message describing what the DynamicDifficulty plugin 
+ * does.
  * @author CJ McGuire
  */
 public class DynamicCommand extends AbstractDDCommand
@@ -53,10 +54,12 @@ public class DynamicCommand extends AbstractDDCommand
 	}
 
 	/**
-	 * Sends a summary message about the DynamicDifficulty plugin to the sender.
+	 * Sends a summary message about the DynamicDifficulty plugin to 
+	 * the sender.
 	 * @param sender the sender of the command
 	 * @param args not used
-	 * @return true if the command worked as intended. false if it did not.
+	 * @return true if the command worked as intended. false if it did 
+	 * not work as intended.
 	 */
 	@Override
 	protected boolean executeCommand(CommandSender sender, String[] args) 

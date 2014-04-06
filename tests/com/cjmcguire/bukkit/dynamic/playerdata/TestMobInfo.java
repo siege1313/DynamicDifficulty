@@ -1,8 +1,12 @@
-package com.cjmcguire.bukkit.dynamic;
+package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * Tests the MobInfo class.
@@ -10,6 +14,23 @@ import org.junit.Test;
  */
 public class TestMobInfo
 {
+	
+	/**
+	 * Tests the MAX_INCREMENT variable and the methods that goes with
+	 * it.
+	 */
+	@Test
+	public void testMaxIncrement()
+	{
+		assertEquals(10, MobInfo.MAX_INCREMENT);
+		
+		MobInfo.setMaxIncrement(1);
+		assertEquals(1, MobInfo.MAX_INCREMENT);
+		
+		MobInfo.setMaxIncrement(9);
+		assertEquals(9, MobInfo.MAX_INCREMENT);
+		
+	}
 	
 	/**
 	 * Tests the getMobType() method.
@@ -94,7 +115,8 @@ public class TestMobInfo
 	}
 	
 	/**
-	 * Tests the updateEstimatedPerformanceLevel() method when the mob's health is less than 20.
+	 * Tests the updateEstimatedPerformanceLevel() method when the 
+	 * mob's health is less than 20.
 	 */
 	@Test
 	public void testUpdateEstimatedPerformanceLevelWhenMobHealthLessThan20() 
@@ -116,7 +138,8 @@ public class TestMobInfo
 	}
 
 	/**
-	 * Tests the updateEstimatedPerformanceLevel() method when the mob's health is greater than 20.
+	 * Tests the updateEstimatedPerformanceLevel() method when the 
+	 * mob's health is greater than 20.
 	 */
 	@Test
 	public void testUpdateEstimatedPerformanceLevelWhenMobHealthGreaterThan20() 
@@ -323,7 +346,8 @@ public class TestMobInfo
 	}
 	
 	/**
-	 * Tests the addIDToInteractedWithIDs() method when the same ID is added twice.
+	 * Tests the addIDToInteractedWithIDs() method when the same ID 
+	 * is added twice.
 	 */
 	@Test
 	public void testAddSameIDToInteractedWithIDs() 

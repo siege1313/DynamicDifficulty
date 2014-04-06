@@ -1,13 +1,13 @@
-package com.cjmcguire.bukkit.dynamic;
+package com.cjmcguire.bukkit.dynamic.playerdata;
 
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton.SkeletonType;
 
 /**
- * The MobName Enum is used to represent the various hostile
- * mobs in Minecraft. It provides a mob name, max health, and the mob's 
+ * The MobName Enum is used to represent the various hostile mobs in
+ * Minecraft. It provides a mob name, max health, and the mob's 
  * default follow distance.
  * @author CJ McGuire
  */

@@ -4,32 +4,31 @@ import java.util.Collection;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobInfo;
-import com.cjmcguire.bukkit.dynamic.MobType;
-import com.cjmcguire.bukkit.dynamic.PlayerInfo;
-import com.cjmcguire.bukkit.dynamic.Setting;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * The AnalyzerTask carries out the function of the Analyzer in the 
  * Dynamic Difficulty implementation. It is scheduled to run repeatedly
  * on a timer. The AnalyzerTask takes the player data obtained by the
- * Monitor section and analyzes it to determine a player's performance level.
+ * Monitor section and analyzes it to determine a player's performance 
+ * level.
  * @author CJ McGuire
  */
 public class AnalyzerTask extends BukkitRunnable
 {
 	
-	private final DynamicDifficulty plugin;
+	private final PlayerDataManager playerDataManager;
 	
 	/**
 	 * Initializes the AnalyzerTask.
-	 * @param plugin a reference to the DynamicDifficulty plugin that uses 
-	 * this AnalyzerTask
 	 */
-	public AnalyzerTask(DynamicDifficulty plugin)
+	public AnalyzerTask()
 	{
-		this.plugin = plugin;
+		this.playerDataManager = PlayerDataManager.getInstance();
 	}
 	
 	/**
@@ -43,13 +42,13 @@ public class AnalyzerTask extends BukkitRunnable
 	}
 	
 	/**
-	 * Updates the current performance level and estimated performance level 
-	 * of all mob types for all players as long as the player's performance 
-	 * level is set to auto.
+	 * Updates the current performance level and estimated performance 
+	 * level of all mob types for all players as long as the player's 
+	 * performance level is set to AUTO.
 	 */
 	protected void updatePlayerData()
 	{
-		Collection<PlayerInfo> playerCollection = plugin.getPlayerData();
+		Collection<PlayerInfo> playerCollection = playerDataManager.getPlayerData();
 		
 		// loop through all PlayerInfos
 		for(PlayerInfo playerInfo: playerCollection)

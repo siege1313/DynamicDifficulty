@@ -5,14 +5,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobInfo;
-import com.cjmcguire.bukkit.dynamic.MobType;
-import com.cjmcguire.bukkit.dynamic.PlayerInfo;
-import com.cjmcguire.bukkit.dynamic.Setting;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * This class is used with the /dynamic command. The /dynamic command 
- * prints out a message describing what the DynamicDifficulty plugin does.
+ * prints out a message describing what the DynamicDifficulty plugin
+ * does.
  * @author CJ McGuire
  */
 public class ChangeSettingCommand extends PlayerTargetableCommand
@@ -50,14 +51,15 @@ public class ChangeSettingCommand extends PlayerTargetableCommand
 	}
 	
 	/**
-	 * Changes the setting for the player with the given playerName given that
-	 * the parameters contain valid info. Several things could go wrong when 
-	 * trying to change a player's setting. First, the setting is not a valid
-	 * setting. Second, the mob name is not a valid mob name.
+	 * Changes the setting for the player with the given playerName 
+	 * given that the parameters contain valid info. Several things 
+	 * could go wrong when trying to change a player's setting. First, 
+	 * the setting is not a valid setting. Second, the mob name is not 
+	 * a valid mob name.
 	 * @param sender the sender of the command
-	 * @param args must contain "changesetting" in args[0], args[1] must contain 
-	 * the mob name and args[2] must contain the setting to change to. Optionally
-	 * args[3] can contain a player's name
+	 * @param args must contain "changesetting" in args[0], args[1]
+	 * must contain the mob name and args[2] must contain the setting 
+	 * to change to. Optionally, args[3] can contain a player's name
 	 * @return true if the player's setting was changed. false if the 
 	 * setting change could not be completed
 	 */
@@ -72,31 +74,26 @@ public class ChangeSettingCommand extends PlayerTargetableCommand
 		MobType mobType = MobType.getMobType(mobName);
 		Setting setting = Setting.getSetting(settingName);
 			
-		// if the mobName was "all"
-		if(setting != null && mobName.equals("all"))
+		if(setting != null && mobName.equals("all"))	// if the mobName was "all"
 		{
 			this.changeAllSettings(sender, playerName, setting);
 			valid = true;
 		}
-		// if setting was valid and mobType was valid
-		else if(setting != null && mobType != null)
+		else if(setting != null && mobType != null)		// if setting was valid and mobType was valid
 		{
 			this.changeMobSetting(sender, playerName, setting, mobType);
 			valid = true;
-		}		
-		//if setting was invalid and mobType was invalid
-		else if(setting == null && mobType == null)
+		}
+		else if(setting == null && mobType == null)		// if setting was invalid and mobType was invalid
 		{
 			this.safeSendMessage(sender, ChatColor.GOLD + mobName + ChatColor.WHITE + " is not a valid mob name, and " + 
 					ChatColor.GOLD + settingName + ChatColor.WHITE + " is not a valid setting");
 		}
-		// if only the setting was invalid 
-		else if(setting == null && mobType != null)
+		else if(setting == null && mobType != null)		// if only the setting was invalid 
 		{
 			this.safeSendMessage(sender, ChatColor.GOLD + settingName + ChatColor.WHITE + " is not a valid setting");
 		}
-		// if only the mobType was invalid
-		else if(setting != null && mobType == null)
+		else if(setting != null && mobType == null)		// if only the mobType was invalid
 		{
 			this.safeSendMessage(sender, ChatColor.GOLD + mobName + ChatColor.WHITE + " is not a valid mob name");
 		}
@@ -106,7 +103,7 @@ public class ChangeSettingCommand extends PlayerTargetableCommand
 	
 	private void changeAllSettings(CommandSender sender, String playerName, Setting setting)
 	{
-		PlayerInfo playerInfo = this.getPlugin().getPlayerInfo(playerName);
+		PlayerInfo playerInfo = this.playerDataManager.getPlayerInfo(playerName);
 		
 		for(MobType mob: MobType.values())
 		{
@@ -114,7 +111,7 @@ public class ChangeSettingCommand extends PlayerTargetableCommand
 			mobInfo.setSetting(setting);
 		}
 		
-		if(!this.getPlugin().isRunningWithHead() || this.senderIsThePlayer(sender, playerName))
+		if(!this.isRunningWithHead() || this.senderIsThePlayer(sender, playerName))
 		{
 			this.safeSendMessage(sender, ChatColor.GOLD + "Your " + 
 					ChatColor.WHITE + "settings for " + ChatColor.GOLD + "all mobs" + 
@@ -122,7 +119,7 @@ public class ChangeSettingCommand extends PlayerTargetableCommand
 		}
 		else
 		{
-			Player player = this.getPlugin().getServer().getPlayer(playerName);
+			Player player = this.plugin.getServer().getPlayer(playerName);
 			this.safeSendMessage(player, ChatColor.GOLD + "Your " + 
 					ChatColor.WHITE + "settings for " + ChatColor.GOLD + "all mobs" + 
 					ChatColor.WHITE + " were changed to " + ChatColor.GOLD + setting.getName());
@@ -135,13 +132,13 @@ public class ChangeSettingCommand extends PlayerTargetableCommand
 	
 	private void changeMobSetting(CommandSender sender, String playerName, Setting setting, MobType mobType)
 	{
-		PlayerInfo playerInfo = this.getPlugin().getPlayerInfo(playerName);
+		PlayerInfo playerInfo = this.playerDataManager.getPlayerInfo(playerName);
 		
 		MobInfo mobInfo = playerInfo.getMobInfo(mobType);
 		
 		mobInfo.setSetting(setting);
 		
-		if(!this.getPlugin().isRunningWithHead() || this.senderIsThePlayer(sender, playerName))
+		if(!this.isRunningWithHead() || this.senderIsThePlayer(sender, playerName))
 		{
 			this.safeSendMessage(sender, ChatColor.GOLD + "Your " +
 					ChatColor.WHITE + "setting for " + ChatColor.GOLD + mobType.getName() + 
@@ -150,7 +147,7 @@ public class ChangeSettingCommand extends PlayerTargetableCommand
 		}
 		else
 		{
-			Player player = this.getPlugin().getServer().getPlayer(playerName);
+			Player player = this.plugin.getServer().getPlayer(playerName);
 			this.safeSendMessage(player, ChatColor.GOLD + "Your " + 
 					ChatColor.WHITE + "setting for " + ChatColor.GOLD + mobType.getName() + 
 					ChatColor.WHITE + " was changed to " + ChatColor.GOLD + setting.getName());

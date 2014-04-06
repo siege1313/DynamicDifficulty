@@ -12,13 +12,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-import com.cjmcguire.bukkit.dynamic.MobInfo;
-import com.cjmcguire.bukkit.dynamic.MobType;
 import com.cjmcguire.bukkit.dynamic.MockLivingEntity;
 import com.cjmcguire.bukkit.dynamic.MockPlayer;
-import com.cjmcguire.bukkit.dynamic.PlayerInfo;
-import com.cjmcguire.bukkit.dynamic.Setting;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
+import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
+import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * Tests the MonitorListener class.
@@ -32,31 +32,35 @@ public class TestMonitorListener
 	@Test
 	public void testUpdatePlayerDamageReceived()
 	{
+		// Set up the Mock stuff.
 		Entity mockEntity = EasyMock.createMock(Entity.class);
 		EasyMock.expect(mockEntity.getEntityId()).andReturn(1);
 		EasyMock.expect(mockEntity.getType()).andReturn(EntityType.ZOMBIE);
 		
-
 		EasyMock.replay(mockEntity);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
-
-		MonitorListener monitor = new MonitorListener(plugin);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		
+		MonitorListener monitor = new MonitorListener();
 
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		monitor.updateDamagePlayerReceived(playerInfo.getPlayerName(), mockEntity, 2);
 
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
 		assertEquals(2, zombieInfo.getDamagePlayerReceived());
+		
+		// Verify the Mock stuff.
 		EasyMock.verify(mockEntity);
 	}
 	
 	/**
-	 * Tests the updatePlayerDamageReceived() method when the player's setting is manual.
+	 * Tests the updatePlayerDamageReceived() method when the player's
+	 * setting is manual.
 	 */
 	@Test
 	public void testUpdatePlayerDamageReceivedWhenManual()
@@ -64,19 +68,19 @@ public class TestMonitorListener
 		Entity mockEntity = EasyMock.createMock(Entity.class);
 		EasyMock.expect(mockEntity.getType()).andReturn(EntityType.ZOMBIE);
 		
-
 		EasyMock.replay(mockEntity);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 		mobInfo.setSetting(Setting.MANUAL);
 		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		monitor.updateDamagePlayerReceived(playerInfo.getPlayerName(), mockEntity, 2);
 
@@ -87,7 +91,8 @@ public class TestMonitorListener
 	}
 	
 	/**
-	 * Tests the updatePlayerDamageReceived() method when the Entity is not a valid MobType.
+	 * Tests the updatePlayerDamageReceived() method when the Entity 
+	 * is not a valid MobType.
 	 */
 	@Test
 	public void testUpdatePlayerDamageReceivedWhenInvaldMobType()
@@ -97,14 +102,14 @@ public class TestMonitorListener
 		
 		EasyMock.replay(mockEntity);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		monitor.updateDamagePlayerReceived(playerInfo.getPlayerName(), mockEntity, 2);
 
@@ -128,13 +133,14 @@ public class TestMonitorListener
 
 		EasyMock.replay(mockEntity);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		monitor.updateDamagePlayerGave(mockEntity, playerInfo.getPlayerName(), 2);
 
@@ -145,7 +151,8 @@ public class TestMonitorListener
 	}
 
 	/**
-	 * Tests the updatePlayerDamageGave() method when the player's setting is manual.
+	 * Tests the updatePlayerDamageGave() method when the player's 
+	 * setting is manual.
 	 */
 	@Test
 	public void testUpdatePlayerDamageGaveWhenManual()
@@ -153,19 +160,19 @@ public class TestMonitorListener
 		Entity mockEntity = EasyMock.createMock(Entity.class);
 		EasyMock.expect(mockEntity.getType()).andReturn(EntityType.ZOMBIE);
 		
-
 		EasyMock.replay(mockEntity);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 		mobInfo.setSetting(Setting.MANUAL);
 		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		monitor.updateDamagePlayerGave(mockEntity, playerInfo.getPlayerName(), 2);
 
@@ -176,7 +183,8 @@ public class TestMonitorListener
 	}
 	
 	/**
-	 * Tests the updatePlayerDamageGave() method when the Entity is not a valid MobType.
+	 * Tests the updatePlayerDamageGave() method when the Entity is 
+	 * not a valid MobType.
 	 */
 	@Test
 	public void testUpdatePlayerDamageGaveWhenInvaldMobType()
@@ -186,14 +194,15 @@ public class TestMonitorListener
 		
 		EasyMock.replay(mockEntity);
 
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
 		
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
 		monitor.updateDamagePlayerGave(mockEntity, playerInfo.getPlayerName(), 2);
 
@@ -227,14 +236,14 @@ public class TestMonitorListener
         
         EasyMock.replay(mockPlayer);
        
-
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 		
 		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(mockDamager, mockPlayer, null, 2.0);
 		
@@ -259,25 +268,22 @@ public class TestMonitorListener
 	public void testOnEntityDamageByEntityEventOutcome2()
 	{
 		LivingEntity mockDamager = EasyMock.createMockBuilder(MockLivingEntity.class).createMock();
-		//EasyMock.expect(mockDamager.getEntityId()).andReturn(1);
-		//EasyMock.expect(mockDamager.getType()).andReturn(EntityType.ZOMBIE);
 		EasyMock.replay(mockDamager);
 		
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		//EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
         EasyMock.expect(mockPlayer.getNoDamageTicks()).andReturn(5);
         EasyMock.expect(mockPlayer.getMaximumNoDamageTicks()).andReturn(5);
         
         EasyMock.replay(mockPlayer);
        
-
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 		
 		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(mockDamager, mockPlayer, null, 2.0);
 		
@@ -318,14 +324,14 @@ public class TestMonitorListener
         
         EasyMock.replay(mockPlayer);
        
-
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 		
 		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(mockArrow, mockPlayer, null, 2.0);
 		
@@ -362,14 +368,14 @@ public class TestMonitorListener
         
         EasyMock.replay(mockPlayer);
        
-
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 		
 		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(mockPlayer, mockDamaged, null, 2.0);
 		
@@ -395,25 +401,22 @@ public class TestMonitorListener
 	public void testOnEntityDamageByEntityEventOutcome5()
 	{
 		LivingEntity mockDamaged = EasyMock.createMockBuilder(MockLivingEntity.class).createMock();
-		//EasyMock.expect(mockDamaged.getEntityId()).andReturn(1);
-		//EasyMock.expect(mockDamaged.getType()).andReturn(EntityType.ZOMBIE);
         EasyMock.expect(mockDamaged.getNoDamageTicks()).andReturn(5);
         EasyMock.expect(mockDamaged.getMaximumNoDamageTicks()).andReturn(5);
 		EasyMock.replay(mockDamaged);
 		
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		//EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
         
         EasyMock.replay(mockPlayer);
        
-
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 		
 		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(mockPlayer, mockDamaged, null, 2.0);
 		
@@ -453,13 +456,14 @@ public class TestMonitorListener
         EasyMock.expect(mockDamaged.getMaximumNoDamageTicks()).andReturn(5);
         EasyMock.replay(mockDamaged);
 	
-		DynamicDifficulty plugin = new DynamicDifficulty();
-		plugin.setRunningWithHead(false);
+		// Run the actual test.
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		
 		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
-		plugin.addPlayerInfo(playerInfo);
+		playerDataManager.addPlayerInfo(playerInfo);
 
-		MonitorListener monitor = new MonitorListener(plugin);
+		MonitorListener monitor = new MonitorListener();
 		
 		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(mockArrow, mockDamaged, null, 2.0);
 		

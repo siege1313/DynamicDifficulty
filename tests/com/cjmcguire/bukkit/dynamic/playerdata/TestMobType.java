@@ -1,12 +1,14 @@
-package com.cjmcguire.bukkit.dynamic;
+package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import static org.junit.Assert.*;
 
-import org.bukkit.craftbukkit.v1_7_R1.entity.*;
+import org.bukkit.craftbukkit.v1_7_R2.entity.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.easymock.EasyMock;
 import org.junit.Test;
+
+import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
 
 /**
  * Tests the MobType enum.
