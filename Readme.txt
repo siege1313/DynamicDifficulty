@@ -1,8 +1,6 @@
 DynamicDifficulty
 =================
 
-DynamicDifficulty is a Bukkit plugin that implements dynamic 
-difficulty on a Minecraft Bukkit server.
 "DynamicDifficulty" is a Bukkit plugin that implements dynamic 
 difficulty on a Minecraft Bukkit Server. It gives the player more 
 control over the difficulty of Minecraft's mobs.
