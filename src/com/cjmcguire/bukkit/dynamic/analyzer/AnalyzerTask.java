@@ -12,10 +12,10 @@ import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * The AnalyzerTask carries out the function of the Analyzer in the 
- * Dynamic Difficulty implementation. It is scheduled to run repeatedly
- * on a timer. The AnalyzerTask takes the player data obtained by the
- * Monitor section and analyzes it to determine a player's performance 
- * level.
+ * dynamic difficulty implementation. It is scheduled to run 
+ * repeatedly on a timer. The AnalyzerTask takes the data obtained by 
+ * the Monitor and analyzes it to determine all of the players' 
+ * performance levels.
  * @author CJ McGuire
  */
 public class AnalyzerTask extends BukkitRunnable
@@ -32,8 +32,9 @@ public class AnalyzerTask extends BukkitRunnable
 	}
 	
 	/**
-	 * This method updates the values for current performance level and 
-	 * estimated performance level for each mob for all players. 
+	 * This method updates the values for the players' estimated 
+	 * performance levels and current performance levels for each 
+	 * type of mob. 
 	 */
 	@Override
 	public void run()
@@ -42,21 +43,24 @@ public class AnalyzerTask extends BukkitRunnable
 	}
 	
 	/**
-	 * Updates the current performance level and estimated performance 
-	 * level of all mob types for all players as long as the player's 
-	 * performance level is set to AUTO.
+	 * Updates the players' estimated performance level and current 
+	 * performance levels for each type of mob as long as the player's 
+	 * setting is set to AUTO.
 	 */
 	protected void updatePlayerData()
 	{
 		Collection<PlayerInfo> playerCollection = playerDataManager.getPlayerData();
 		
-		// loop through all PlayerInfos
+		MobType[] mobTypes = MobType.values();
+		
+		// Loop through all PlayerInfos.
 		for(PlayerInfo playerInfo: playerCollection)
 		{
-			// loop through each MobType in each PlayerInfo
-			for(MobType mobType: MobType.values())
+			// Loop through each MobType in the PlayerInfo.
+			for(MobType mobType: mobTypes)
 			{
 				MobInfo mobInfo = playerInfo.getMobInfo(mobType);
+				
 				if(mobInfo.getSetting() == Setting.AUTO)
 				{
 					mobInfo.updateEstimatedPerformanceLevel();

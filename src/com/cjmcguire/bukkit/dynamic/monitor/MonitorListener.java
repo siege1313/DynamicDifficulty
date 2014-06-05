@@ -1,15 +1,16 @@
 package com.cjmcguire.bukkit.dynamic.monitor;
 
+import java.util.UUID;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import com.cjmcguire.bukkit.dynamic.AbstractEntityDamageListener;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
 import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
@@ -22,7 +23,7 @@ import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
  * on these events.
  * @author CJ McGuire
  */
-public class MonitorListener implements Listener
+public class MonitorListener extends AbstractEntityDamageListener
 {
 	private final PlayerDataManager playerDataManager;
 
@@ -44,57 +45,43 @@ public class MonitorListener implements Listener
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event)
 	{
-		// get the damager and convert it to the shooter if it was 
-		// originally the projectile
-		Entity damager = event.getDamager();
-		if(damager instanceof Projectile)
+		this.onEntityDamageByEntityAction(event);
+	}
+	
+	@Override
+	protected int playerDamagedAction(Player player, LivingEntity mob, int damage) 
+	{
+		// If the player is not temporarily immune
+		if(this.notInvincible(player))
 		{
-			Projectile projectile = (Projectile) damager;
-			damager = projectile.getShooter();
-		}
-		
-		// get the damaged
-		Entity damaged = event.getEntity();
-		
-		// get the damage caused
-		int damage = (int) event.getDamage();
-		
-		// if the entity being damaged was the player 
-		// and the entity doing the damage was a living entity (a mob) 
-		if(damaged instanceof Player && damager instanceof LivingEntity)
-		{
-			Player player = (Player)damaged;
-
-			// if the player is not temporarily immune
-			if(player.getNoDamageTicks() < player.getMaximumNoDamageTicks()/2.0)
+			// If the player is not in creative mode
+			if(player.getGameMode() != GameMode.CREATIVE)
 			{
-				// if the player is not in creative mode
-				if(player.getGameMode() != GameMode.CREATIVE)
-				{
-					String playerName = player.getName();
-					this.updateDamagePlayerReceived(playerName, (LivingEntity)damager, damage);
-				}
+				UUID playerID = player.getUniqueId();
+				this.updateDamagePlayerReceived(playerID, mob, damage);
 			}
 		}
-		// if the entity being damaged was a living entity (a mob)
-		// and the entity doing the damage was a player
-		else if(damaged instanceof LivingEntity && damager instanceof Player)
-		{
-			LivingEntity mob = (LivingEntity)damaged;
-			// if the mob is not temporarily immune
-			if(mob.getNoDamageTicks() < mob.getMaximumNoDamageTicks()/2.0)
-			{
-				Player player = (Player)damager;
-				// if the player is not in creative mode
-				if(player.getGameMode() != GameMode.CREATIVE)
-				{
-					String playerName = player.getName();
-					this.updateDamagePlayerGave(damaged, playerName, damage);
-				}
-			}
-		}
+		
+		return damage;
 	}
 
+	@Override
+	protected int livingEntityDamagedAction(LivingEntity mob, Player player, int damage) 
+	{
+		// if the mob is not temporarily immune
+		if(this.notInvincible(mob))
+		{
+			// if the player is not in creative mode
+			if(player.getGameMode() != GameMode.CREATIVE)
+			{
+				UUID playerID = player.getUniqueId();
+				this.updateDamagePlayerGave(mob, playerID, damage);
+			}
+		}
+		
+		return damage;
+	}
+	
 	/**
 	 * Updates the value for the amount of damage that a Player has 
 	 * received from a certain MobType. Note that if a player was 
@@ -102,18 +89,18 @@ public class MonitorListener implements Listener
 	 * method does nothing. Also, note that a player's setting must be 
 	 * set to Auto for this method to update the damage a player 
 	 * received.
-	 * @param playerName the name of the player that took damage
+	 * @param playerID the UUID of the player that took damage
 	 * @param damager the living entity that did the damage
 	 * @param damage the damage the damager caused
 	 */
-	protected void updateDamagePlayerReceived(String playerName, Entity damager, int damage)
+	protected void updateDamagePlayerReceived(UUID playerID, Entity damager, int damage)
 	{
 		MobType mobType = MobType.getEntitysMobType(damager);
 
 		if(mobType != null)
 		{
 			// get the PlayerInfo's MobData
-			MobInfo mobInfo = playerDataManager.getPlayersMobInfo(playerName, mobType);
+			MobInfo mobInfo = playerDataManager.getPlayersMobInfo(playerID, mobType);
 
 			// if the player's setting is set to AUTO (OFF and MANUAL will not update anything)
 			if(mobInfo.getSetting() == Setting.AUTO)
@@ -131,17 +118,17 @@ public class MonitorListener implements Listener
 	 * does nothing. Also, note that a player's setting must be set to 
 	 * Auto for this method to update the damage a player gave.
 	 * @param damaged the mob that was damaged
-	 * @param playerName the name of the player that did damage
+	 * @param playerID the UUID of the player that did damage
 	 * @param damage the damage the player causes
 	 */
-	protected void updateDamagePlayerGave(Entity damaged, String playerName, int damage)
+	protected void updateDamagePlayerGave(Entity damaged, UUID playerID, int damage)
 	{
 		MobType mobType = MobType.getEntitysMobType(damaged);
 		
 		if(mobType != null)
 		{
 			// get the PlayerInfo's MobData
-			MobInfo mobInfo = playerDataManager.getPlayersMobInfo(playerName, mobType);
+			MobInfo mobInfo = playerDataManager.getPlayersMobInfo(playerID, mobType);
 			
 			// if the player's setting is set to AUTO (OFF and MANUAL will not update anything)
 			if(mobInfo.getSetting() == Setting.AUTO)

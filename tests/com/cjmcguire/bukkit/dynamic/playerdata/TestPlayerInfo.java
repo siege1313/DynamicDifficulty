@@ -2,6 +2,8 @@ package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import static org.junit.Assert.*;
 
+import java.util.UUID;
+
 import org.junit.Test;
 
 import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
@@ -13,14 +15,16 @@ import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
  */
 public class TestPlayerInfo 
 {
+	private static final UUID PLAYER_1_ID = UUID.fromString("12345678-1234-1234-1234-123456789001");
+
 	/**
 	 * Tests the getPlayerName() method.
 	 */
 	@Test
 	public void testGetPlayerName() 
 	{
-		PlayerInfo playerInfo = new PlayerInfo("player1");
-		assertEquals("player1", playerInfo.getPlayerName());
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
+		assertEquals(PLAYER_1_ID, playerInfo.getPlayerID());
 	}
 	
 	/**
@@ -29,7 +33,7 @@ public class TestPlayerInfo
 	@Test
 	public void testGetMobInfo() 
 	{
-		PlayerInfo playerInfo = new PlayerInfo("player1");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		
 		assertEquals(MobType.BLAZE, playerInfo.getMobInfo(MobType.BLAZE).getMobType());
 		assertEquals(MobType.CAVE_SPIDER, playerInfo.getMobInfo(MobType.CAVE_SPIDER).getMobType());

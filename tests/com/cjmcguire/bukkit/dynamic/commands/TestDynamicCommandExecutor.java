@@ -24,7 +24,7 @@ public class TestDynamicCommandExecutor
 		EasyMock.replay(mockSender);
 
 		// perform the command
-		DynamicCommandExecutor executor = new DynamicCommandExecutor(null);
+		DynamicCommandExecutor executor = new DynamicCommandExecutor();
 		
 		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", new String[0]);
 		
@@ -44,7 +44,7 @@ public class TestDynamicCommandExecutor
 		EasyMock.replay(mockSender);
 
 		// perform the command
-		DynamicCommandExecutor executor = new DynamicCommandExecutor(null);
+		DynamicCommandExecutor executor = new DynamicCommandExecutor();
 		
 		String[] args = {"info"};
 		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", args);
@@ -66,7 +66,7 @@ public class TestDynamicCommandExecutor
 		EasyMock.replay(mockSender);
 
 		// perform the command
-		DynamicCommandExecutor executor = new DynamicCommandExecutor(null);
+		DynamicCommandExecutor executor = new DynamicCommandExecutor();
 		
 		String[] args = {"changesetting", "zombie", "disabled"};
 		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", args);
@@ -88,7 +88,7 @@ public class TestDynamicCommandExecutor
 		EasyMock.replay(mockSender);
 
 		// perform the command
-		DynamicCommandExecutor executor = new DynamicCommandExecutor(null);
+		DynamicCommandExecutor executor = new DynamicCommandExecutor();
 		
 		String[] args = {"changelevel", "zombie", "150"};
 		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", args);
@@ -110,7 +110,7 @@ public class TestDynamicCommandExecutor
 		EasyMock.replay(mockSender);
 
 		// perform the command
-		DynamicCommandExecutor executor = new DynamicCommandExecutor(null);
+		DynamicCommandExecutor executor = new DynamicCommandExecutor();
 		
 		String[] args = {"lvls"};
 		boolean validCommand = executor.onCommand(mockSender, null, "dynamic", args);

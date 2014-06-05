@@ -2,6 +2,8 @@ package com.cjmcguire.bukkit.dynamic.monitor;
 
 import static org.junit.Assert.*;
 
+import java.util.UUID;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -26,6 +28,10 @@ import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
  */
 public class TestMonitorListener 
 {
+	private static final UUID PLAYER_1_ID = UUID.fromString("12345678-1234-1234-1234-123456789001");
+	
+	private static final double ACCURACY = .0001;
+	
 	/**
 	 * Tests the updatePlayerDamageReceived() method.
 	 */
@@ -45,14 +51,14 @@ public class TestMonitorListener
 		
 		MonitorListener monitor = new MonitorListener();
 
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		playerDataManager.addPlayerInfo(playerInfo);
 
-		monitor.updateDamagePlayerReceived(playerInfo.getPlayerName(), mockEntity, 2);
+		monitor.updateDamagePlayerReceived(playerInfo.getPlayerID(), mockEntity, 2);
 
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(2, zombieInfo.getDamagePlayerReceived());
+		assertEquals(2, zombieInfo.getDamagePlayerReceived(), ACCURACY);
 		
 		// Verify the Mock stuff.
 		EasyMock.verify(mockEntity);
@@ -76,17 +82,17 @@ public class TestMonitorListener
 
 		MonitorListener monitor = new MonitorListener();
 
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 		mobInfo.setSetting(Setting.MANUAL);
 		
 		playerDataManager.addPlayerInfo(playerInfo);
 
-		monitor.updateDamagePlayerReceived(playerInfo.getPlayerName(), mockEntity, 2);
+		monitor.updateDamagePlayerReceived(playerInfo.getPlayerID(), mockEntity, 2);
 
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(0, zombieInfo.getDamagePlayerReceived());
+		assertEquals(0, zombieInfo.getDamagePlayerReceived(), ACCURACY);
 		EasyMock.verify(mockEntity);
 	}
 	
@@ -108,14 +114,14 @@ public class TestMonitorListener
 
 		MonitorListener monitor = new MonitorListener();
 
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		playerDataManager.addPlayerInfo(playerInfo);
 
-		monitor.updateDamagePlayerReceived(playerInfo.getPlayerName(), mockEntity, 2);
+		monitor.updateDamagePlayerReceived(playerInfo.getPlayerID(), mockEntity, 2);
 
 		for(MobType mobType: MobType.values())
 		{
-			assertEquals(0, playerInfo.getMobInfo(mobType).getDamagePlayerReceived());
+			assertEquals(0, playerInfo.getMobInfo(mobType).getDamagePlayerReceived(), ACCURACY);
 		}
 		
 		EasyMock.verify(mockEntity);
@@ -139,14 +145,14 @@ public class TestMonitorListener
 
 		MonitorListener monitor = new MonitorListener();
 
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		playerDataManager.addPlayerInfo(playerInfo);
 
-		monitor.updateDamagePlayerGave(mockEntity, playerInfo.getPlayerName(), 2);
+		monitor.updateDamagePlayerGave(mockEntity, playerInfo.getPlayerID(), 2);
 
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(2, zombieInfo.getDamagePlayerGave());
+		assertEquals(2, zombieInfo.getDamagePlayerGave(), ACCURACY);
 		EasyMock.verify(mockEntity);
 	}
 
@@ -168,17 +174,17 @@ public class TestMonitorListener
 
 		MonitorListener monitor = new MonitorListener();
 
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		MobInfo mobInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 		mobInfo.setSetting(Setting.MANUAL);
 		
 		playerDataManager.addPlayerInfo(playerInfo);
 
-		monitor.updateDamagePlayerGave(mockEntity, playerInfo.getPlayerName(), 2);
+		monitor.updateDamagePlayerGave(mockEntity, playerInfo.getPlayerID(), 2);
 
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(0, zombieInfo.getDamagePlayerGave());
+		assertEquals(0, zombieInfo.getDamagePlayerGave(), ACCURACY);
 		EasyMock.verify(mockEntity);
 	}
 	
@@ -200,15 +206,15 @@ public class TestMonitorListener
 
 		MonitorListener monitor = new MonitorListener();
 
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		
 		playerDataManager.addPlayerInfo(playerInfo);
 
-		monitor.updateDamagePlayerGave(mockEntity, playerInfo.getPlayerName(), 2);
+		monitor.updateDamagePlayerGave(mockEntity, playerInfo.getPlayerID(), 2);
 
 		for(MobType mobType: MobType.values())
 		{
-			assertEquals(0, playerInfo.getMobInfo(mobType).getDamagePlayerGave());
+			assertEquals(0, playerInfo.getMobInfo(mobType).getDamagePlayerGave(), ACCURACY);
 		}
 		
 		EasyMock.verify(mockEntity);
@@ -229,7 +235,7 @@ public class TestMonitorListener
 		EasyMock.replay(mockDamager);
 		
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
+		EasyMock.expect(mockPlayer.getUniqueId()).andReturn(PLAYER_1_ID);
         EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         EasyMock.expect(mockPlayer.getNoDamageTicks()).andReturn(1);
         EasyMock.expect(mockPlayer.getMaximumNoDamageTicks()).andReturn(5);
@@ -240,7 +246,7 @@ public class TestMonitorListener
 		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
 		playerDataManager.clearPlayerData();
 		
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		MonitorListener monitor = new MonitorListener();
@@ -251,7 +257,7 @@ public class TestMonitorListener
 		
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(2, zombieInfo.getDamagePlayerReceived());
+		assertEquals(2, zombieInfo.getDamagePlayerReceived(), ACCURACY);
 		
 		EasyMock.verify(mockDamager);
 		
@@ -280,7 +286,7 @@ public class TestMonitorListener
 		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
 		playerDataManager.clearPlayerData();
 		
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		MonitorListener monitor = new MonitorListener();
@@ -291,7 +297,7 @@ public class TestMonitorListener
 		
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(0, zombieInfo.getDamagePlayerReceived());
+		assertEquals(0, zombieInfo.getDamagePlayerReceived(), ACCURACY);
 		
 		EasyMock.verify(mockDamager);
 		
@@ -316,8 +322,8 @@ public class TestMonitorListener
 		EasyMock.expect(mockArrow.getShooter()).andReturn(mockDamager);
 		EasyMock.replay(mockArrow);
 		
-		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
+		Player mockPlayer = EasyMock.createMock(MockPlayer.class);
+		EasyMock.expect(mockPlayer.getUniqueId()).andReturn(PLAYER_1_ID);
         EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         EasyMock.expect(mockPlayer.getNoDamageTicks()).andReturn(1);
         EasyMock.expect(mockPlayer.getMaximumNoDamageTicks()).andReturn(5);
@@ -328,7 +334,7 @@ public class TestMonitorListener
 		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
 		playerDataManager.clearPlayerData();
 		
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		MonitorListener monitor = new MonitorListener();
@@ -339,7 +345,7 @@ public class TestMonitorListener
 		
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(2, zombieInfo.getDamagePlayerReceived());
+		assertEquals(2, zombieInfo.getDamagePlayerReceived(), ACCURACY);
 		
 		EasyMock.verify(mockArrow);
 		
@@ -363,7 +369,7 @@ public class TestMonitorListener
 		EasyMock.replay(mockDamaged);
 		
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
+		EasyMock.expect(mockPlayer.getUniqueId()).andReturn(PLAYER_1_ID);
         EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         
         EasyMock.replay(mockPlayer);
@@ -372,7 +378,7 @@ public class TestMonitorListener
 		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
 		playerDataManager.clearPlayerData();
 		
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		MonitorListener monitor = new MonitorListener();
@@ -383,7 +389,7 @@ public class TestMonitorListener
 		
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(2, zombieInfo.getDamagePlayerGave());
+		assertEquals(2, zombieInfo.getDamagePlayerGave(), ACCURACY);
 		
 		EasyMock.verify(mockDamaged);
 		
@@ -413,7 +419,7 @@ public class TestMonitorListener
 		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
 		playerDataManager.clearPlayerData();
 		
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		MonitorListener monitor = new MonitorListener();
@@ -424,7 +430,7 @@ public class TestMonitorListener
 		
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(0, zombieInfo.getDamagePlayerGave());
+		assertEquals(0, zombieInfo.getDamagePlayerGave(), ACCURACY);
 		
 		EasyMock.verify(mockDamaged);
 		
@@ -441,7 +447,7 @@ public class TestMonitorListener
 	public void testOnEntityDamageByEntityEventOutcome6()
 	{
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer");
+		EasyMock.expect(mockPlayer.getUniqueId()).andReturn(PLAYER_1_ID);
         EasyMock.expect(mockPlayer.getGameMode()).andReturn(GameMode.SURVIVAL);
         EasyMock.replay(mockPlayer);
         
@@ -460,7 +466,7 @@ public class TestMonitorListener
 		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
 		playerDataManager.clearPlayerData();
 		
-		PlayerInfo playerInfo = new PlayerInfo("testPlayer");
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		MonitorListener monitor = new MonitorListener();
@@ -471,7 +477,7 @@ public class TestMonitorListener
 		
 		MobInfo zombieInfo = playerInfo.getMobInfo(MobType.ZOMBIE);
 
-		assertEquals(2, zombieInfo.getDamagePlayerGave());
+		assertEquals(2, zombieInfo.getDamagePlayerGave(), ACCURACY);
 		
 		EasyMock.verify(mockArrow);
 		

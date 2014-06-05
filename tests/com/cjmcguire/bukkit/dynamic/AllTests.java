@@ -5,7 +5,10 @@ import org.junit.runners.Suite;
 
 import com.cjmcguire.bukkit.dynamic.analyzer.TestAnalyzerTask;
 import com.cjmcguire.bukkit.dynamic.commands.*;
-import com.cjmcguire.bukkit.dynamic.controller.TestControllerListener;
+import com.cjmcguire.bukkit.dynamic.commands.core.*;
+import com.cjmcguire.bukkit.dynamic.commands.scale.*;
+import com.cjmcguire.bukkit.dynamic.controller.TestLootControllerListener;
+import com.cjmcguire.bukkit.dynamic.controller.TestMobControllerListener;
 import com.cjmcguire.bukkit.dynamic.filehandlers.TestPlayerFileHandler;
 import com.cjmcguire.bukkit.dynamic.monitor.TestMonitorListener;
 import com.cjmcguire.bukkit.dynamic.playerdata.*;
@@ -19,22 +22,36 @@ import com.cjmcguire.bukkit.dynamic.playerdata.*;
 	
 	// com.cjmcguire.bukkit.dynamic
 	
-	// com.cjmcguire,bukkit.dynamic.analyzer
+	// com.cjmcguire.bukkit.dynamic.analyzer
 	TestAnalyzerTask.class,
 
-	// com.cjmcguire,bukkit.dynamic.commands
+	// com.cjmcguire.bukkit.dynamic.commands
 	TestAbstractDDCommand.class,
+	TestAbstractPlayerTargetableCommand.class,
+	TestDynamicCommandExecutor.class,
+
+	// com.cjmcguire.bukkit.dynamic.commands.core
 	TestChangeLevelCommand.class,
 	TestChangeSettingCommand.class,
-	TestDynamicCommand.class,
-	TestDynamicCommandExecutor.class,
+	TestHelpCommand.class,
 	TestInfoCommand.class,
-	TestPlayerTargetableCommand.class,
-	
-	// com.cjmcguire,bukkit.dynamic.controller
-	TestControllerListener.class,
+	TestSetMaxIncrementCommand.class,
 
-	// com.cjmcguire,bukkit.dynamic.filehandlers
+	// com.cjmcguire.bukkit.dynamic.commands.scale
+	TestBooleanSetting.class,
+	TestScaleAttackCommand.class,
+	TestScaleDefenseCommand.class,
+	TestScaleFollowDistanceCommand.class,
+	TestScaleKnockbackCommand.class,
+	TestScaleLootCommand.class,
+	TestScaleSpeedCommand.class,
+	TestScaleXPCommand.class,
+
+	// com.cjmcguire.bukkit.dynamic.controller
+	TestLootControllerListener.class,
+	TestMobControllerListener.class,
+
+	// com.cjmcguire.bukkit.dynamic.filehandlers
 //	TestConfigFileHandler.class,
 	TestPlayerFileHandler.class,
 	

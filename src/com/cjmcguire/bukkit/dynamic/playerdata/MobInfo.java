@@ -4,18 +4,13 @@ import java.util.ArrayList;
 
 /**
  * Holds all of the dynamic difficulty information for a given mob 
- * such as the difficulty setting, auto performance level and manual 
- * performance level.
+ * such as the setting, auto performance level, manual performance 
+ * level.
  * @author CJ McGuire
  */
 public class MobInfo 
 {
-	/**
-	 * The maximum number of units that a player's auto performance 
-	 * level can change in a single update. (10 units)
-	 */
-	public static int MAX_INCREMENT = 10;
-	
+	// Globals.
 	/**
 	 * The maximum performance level that a player can have. (200 units)
 	 */
@@ -27,49 +22,62 @@ public class MobInfo
 	public final static int MIN_PERFORMANCE_LEVEL = 50;
 	
 	private final static double MAX_PLAYER_HEALTH = 20.0;
+	private final static int MINIMUM_MAX_INCREMENT = 1;
 	
+	private final static int MINIMUM_MOBS_TO_INTERACT_WITH = 3;
+	
+	// Key variables.
 	private final MobType mobType;
-	private Setting setting;
 	
+	// Setting control variables.
+	private Setting setting;
+	private int maxIncrement;
 	private double estimatedPerformanceLevel;
 	private double autoPerformanceLevel;
 	private double manualPerformanceLevel;
 	
+	// Scale variables.
+	private boolean scaleAttack;
+	private boolean scaleDefense;
+	private boolean scaleSpeed;
+	private boolean scaleKnockBackResistance;
+	private boolean scaleMaxFollowDistance;
+	private boolean scaleXP;
+	private boolean scaleLoot;
+	
+	// Variables used to calculate performance level.
 	private int damagePlayerGave;
 	private int damagePlayerReceived;
-	
 	private ArrayList<Integer> interactedWithIDs;
 	
 	/**
 	 * Initializes this MobInfo with the given MobType. By default, 
 	 * the setting is set to auto and all performance levels are set 
-	 * to 100.
+	 * to 100. All scale values are set to true.
 	 * @param mobType the type of mob for this MobInfo
 	 */
 	public MobInfo(MobType mobType)
 	{
 		this.mobType = mobType;
+		
 		this.setting = Setting.AUTO;
+		this.maxIncrement = 10;
 		
 		estimatedPerformanceLevel = 100;
 		autoPerformanceLevel = 100;
 		manualPerformanceLevel = 100;
 		
+		this.scaleAttack = true;
+		this.scaleDefense = true;
+		this.scaleSpeed = true;
+		this.scaleKnockBackResistance = true;
+		this.scaleMaxFollowDistance = true;
+		this.scaleXP = true;
+		this.scaleLoot = true;
+		
 		damagePlayerGave = 0;
 		damagePlayerReceived = 0;
-		
 		interactedWithIDs = new ArrayList<Integer>();
-	}
-	
-	/**
-	 * Sets MAX_INCREMENT (the amount of units that a player's auto 
-	 * performance level can chance by in a single update) equal to 
-	 * maxIncrement.
-	 * @param maxIncrement the value to set MAX_INCREMENT to
-	 */
-	public static void setMaxIncrement(int maxIncrement)
-	{
-		MAX_INCREMENT = maxIncrement;
 	}
 	
 	/**
@@ -97,6 +105,165 @@ public class MobInfo
 		this.setting = setting;
 	}
 	
+	/**
+	 * @return the maximum amount of units that a player's auto 
+	 * performance level can chance by in a single update.
+	 */
+	public int getMaxIncrement() 
+	{
+		return maxIncrement;
+	}
+
+	/**
+	 * Sets the max increment, that is amount of units that a 
+	 * player's auto performance level can change by in a single 
+	 * update, equal to maxIncrement. If maxIncrement is less than
+	 * 1, then the max increment will be set equal to 1.
+	 * @param maxIncrement the value to set the max increment to
+	 */
+	public void setMaxIncrement(int maxIncrement)
+	{
+		if(maxIncrement < MINIMUM_MAX_INCREMENT)
+		{
+			this.maxIncrement = MINIMUM_MAX_INCREMENT;
+		}
+		else
+		{
+			this.maxIncrement = maxIncrement;
+		}
+	}
+	
+	/**
+	 * @return true if the mob's attack stat should be scaled. false
+	 * if not.
+	 */
+	public boolean shouldScaleAttack() 
+	{
+		return scaleAttack;
+	}
+
+	/**
+	 * Sets whether or not the mob's attack stat should be scaled.
+	 * @param scaleAttack true to scale attack. false to not scale it
+	 */
+	public void setScaleAttack(boolean scaleAttack) 
+	{
+		this.scaleAttack = scaleAttack;
+	}
+
+	/**
+	 * @return true if the mob's defense stat should be scaled. false
+	 * if not.
+	 */
+	public boolean shouldScaleDefense() 
+	{
+		return scaleDefense;
+	}
+
+	/**
+	 * Sets whether or not the mob's defense stat should be scaled.
+	 * @param scaleDefense true to scale defense. false to not scale 
+	 * it
+	 */
+	public void setScaleDefense(boolean scaleDefense) 
+	{
+		this.scaleDefense = scaleDefense;
+	}
+
+	/**
+	 * @return true if the mob's speed stat should be scaled. false
+	 * if not.
+	 */
+	public boolean shouldScaleSpeed() 
+	{
+		return scaleSpeed;
+	}
+
+	/**
+	 * Sets whether or not the mob's speed stat should be scaled.
+	 * @param scaleSpeed true to scale speed. false to not scale it
+	 */
+	public void setScaleSpeed(boolean scaleSpeed) 
+	{
+		this.scaleSpeed = scaleSpeed;
+	}
+
+	/**
+	 * @return true if the mob's knockback resistance should be 
+	 * scaled. false if not.
+	 */
+	public boolean shouldScaleKnockbackResistance() 
+	{
+		return scaleKnockBackResistance;
+	}
+
+	/**
+	 * Sets whether or not the mob's knockback resistance stat should 
+	 * be scaled.
+	 * @param scaleKnockBackResistance true to scale attack damage. 
+	 * false to not scale it
+	 */
+	public void setScaleKnockbackResistance(boolean scaleKnockBackResistance) 
+	{
+		this.scaleKnockBackResistance = scaleKnockBackResistance;
+	}
+
+	/**
+	 * @return true if the mob's max follow distance should be scaled.
+	 * false if not.
+	 */
+	public boolean shouldScaleMaxFollowDistance() 
+	{
+		return scaleMaxFollowDistance;
+	}
+
+	/**
+	 * Sets whether or not the mob's max follow distance stat should 
+	 * be scaled.
+	 * @param scaleMaxFollowDistance true to scale attack damage. 
+	 * false to not scale it
+	 */
+	public void setScaleMaxFollowDistance(boolean scaleMaxFollowDistance) 
+	{
+		this.scaleMaxFollowDistance = scaleMaxFollowDistance;
+	}
+	
+	/**
+	 * @return true if the xp the mob drops should be scaled. false
+	 * if not.
+	 */
+	public boolean shouldScaleXP() 
+	{
+		return scaleXP;
+	}
+
+	/**
+	 * Sets whether or not the xp the mob drops should be scaled.
+	 * @param scaleXP true to scale xp. false to not scale it
+	 */
+	public void setScaleXP(boolean scaleXP) 
+	{
+		this.scaleXP = scaleXP;
+	}
+	
+	/**
+	 * @return true if the loot the mob drops should be scaled. false
+	 * if not.
+	 */
+	public boolean shouldScaleLoot() 
+	{
+		return scaleLoot;
+	}
+
+	/**
+	 * Sets whether or not the loot the mob drops should be scaled.
+	 * @param scaleLoot true to scale loot. false to not scale it
+	 */
+	public void setScaleLoot(boolean scaleLoot) 
+	{
+		this.scaleLoot = scaleLoot;
+	}
+
 	/**
 	 * @return the estimated performance level for this Mob
 	 */
@@ -145,7 +312,7 @@ public class MobInfo
 	 */
 	public double updateEstimatedPerformanceLevel()
 	{
-		if(interactedWithIDs.size() >= 3)
+		if(interactedWithIDs.size() >= MINIMUM_MOBS_TO_INTERACT_WITH)
 		{			
 			double interactedWith = interactedWithIDs.size();
 			double damageGiven = this.getDamagePlayerGave();
@@ -197,19 +364,20 @@ public class MobInfo
 	public void updateAutoPerformanceLevel()
 	{
 		//estimated vastly greater than auto
-		if(estimatedPerformanceLevel > autoPerformanceLevel + MAX_INCREMENT)
+		if(estimatedPerformanceLevel > autoPerformanceLevel + maxIncrement)
 		{
-			this.setAutoPerformanceLevel(autoPerformanceLevel + MAX_INCREMENT);
+			this.setAutoPerformanceLevel(autoPerformanceLevel + maxIncrement);
 		}
 		//estimated close to auto
-		else if(estimatedPerformanceLevel <= autoPerformanceLevel + MAX_INCREMENT && estimatedPerformanceLevel >= autoPerformanceLevel - MAX_INCREMENT)
+		else if(estimatedPerformanceLevel <= autoPerformanceLevel + maxIncrement && 
+				estimatedPerformanceLevel >= autoPerformanceLevel - maxIncrement)
 		{
 			this.setAutoPerformanceLevel(estimatedPerformanceLevel);
 		}
 		//estimated vastly less than auto
-		else if(estimatedPerformanceLevel < autoPerformanceLevel - MAX_INCREMENT)
+		else if(estimatedPerformanceLevel < autoPerformanceLevel - maxIncrement)
 		{
-			this.setAutoPerformanceLevel(autoPerformanceLevel - MAX_INCREMENT);
+			this.setAutoPerformanceLevel(autoPerformanceLevel - maxIncrement);
 		}
 	}
 

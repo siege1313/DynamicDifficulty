@@ -1,16 +1,16 @@
 package com.cjmcguire.bukkit.dynamic.playerdata;
 
 /**
- * The Setting Enum is used to represent three user settings in the
- * DynamicDifficulty plugin - AUTO, MANUAL, and DISABLED. It provides 
- * a String to represent the setting as well.
+ * The Setting Enum is used to represent the group of difficulty 
+ * settings for dynamic difficulty. It provides a String to represent 
+ * each setting as well.
  * @author CJ McGuire
  */
 public enum Setting 
 {
 	/**
-	 * Setting for Auto. Auto is used when the plugin
-	 * should automatically scale the difficulty for the player. 
+	 * Setting for Auto. Auto is used when the plugin should 
+	 * automatically scale the difficulty for the player. 
 	 */
 	AUTO("auto"),
 	
@@ -21,8 +21,9 @@ public enum Setting
 	MANUAL("manual"),
 	
 	/**
-	 * Setting for Off. Off is used when no dynamic difficulty
-	 * should take place. Mob difficulty will behave as normal.
+	 * Setting for Disabled. Disabled is used when no dynamic 
+	 * difficulty should take place. Mob difficulty will behave as 
+	 * normal.
 	 */
 	DISABLED("disabled");
 	

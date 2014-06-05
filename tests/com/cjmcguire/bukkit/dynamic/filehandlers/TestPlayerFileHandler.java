@@ -2,6 +2,8 @@ package com.cjmcguire.bukkit.dynamic.filehandlers;
 
 import static org.junit.Assert.*;
 
+import java.util.UUID;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -22,7 +24,10 @@ import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
  */
 public class TestPlayerFileHandler 
 {
-	
+	private static final UUID PLAYER_1_ID = UUID.fromString("12345678-1234-1234-1234-123456789001");
+	private static final UUID PLAYER_2_ID = UUID.fromString("12345678-1234-1234-1234-123456789002");
+	private static final UUID PLAYER_4_ID = UUID.fromString("12345678-1234-1234-1234-123456789004");
+
 	/**
 	 * Tests that the defaultPlayerConfiguration gets loaded in correctly.
 	 */
@@ -58,26 +63,49 @@ public class TestPlayerFileHandler
 		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		playerDataManager.setPlayerFileHandler(fileHandler);
 		
-		String playerName = "testPlayer1";
-		fileHandler.loadPlayerData(playerName);
+		fileHandler.loadPlayerData(PLAYER_1_ID);
 		
-		PlayerInfo playerInfo = playerDataManager.getPlayerInfo(playerName);
+		PlayerInfo playerInfo = playerDataManager.getPlayerInfo(PLAYER_1_ID);
 		
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		assertEquals(Setting.AUTO, blazeInfo.getSetting());
 		assertEquals(100, blazeInfo.getManualPerformanceLevel(), .001);
 		assertEquals(100, blazeInfo.getAutoPerformanceLevel(), .001);
+		assertEquals(10, blazeInfo.getMaxIncrement());
+		assertTrue(blazeInfo.shouldScaleAttack());
+		assertTrue(blazeInfo.shouldScaleDefense());
+		assertTrue(blazeInfo.shouldScaleSpeed());
+		assertTrue(blazeInfo.shouldScaleKnockbackResistance());
+		assertTrue(blazeInfo.shouldScaleMaxFollowDistance());
+		assertTrue(blazeInfo.shouldScaleXP());
+		assertTrue(blazeInfo.shouldScaleLoot());
 		
 		MobInfo caveSpiderInfo = playerInfo.getMobInfo(MobType.CAVE_SPIDER);
 		assertEquals(Setting.DISABLED, caveSpiderInfo.getSetting());
 		assertEquals(100, caveSpiderInfo.getManualPerformanceLevel(), .001);
 		assertEquals(100, caveSpiderInfo.getAutoPerformanceLevel(), .001);
+		assertEquals(20, caveSpiderInfo.getMaxIncrement());
+		assertFalse(caveSpiderInfo.shouldScaleAttack());
+		assertTrue(caveSpiderInfo.shouldScaleDefense());
+		assertTrue(caveSpiderInfo.shouldScaleSpeed());
+		assertTrue(caveSpiderInfo.shouldScaleKnockbackResistance());
+		assertTrue(caveSpiderInfo.shouldScaleMaxFollowDistance());
+		assertTrue(caveSpiderInfo.shouldScaleXP());
+		assertTrue(caveSpiderInfo.shouldScaleLoot());
 
 		MobInfo creeperInfo = playerInfo.getMobInfo(MobType.CREEPER);
 		assertEquals(Setting.MANUAL, creeperInfo.getSetting());
 		assertEquals(200, creeperInfo.getManualPerformanceLevel(), .001);
 		assertEquals(100, creeperInfo.getAutoPerformanceLevel(), .001);
+		assertEquals(30, creeperInfo.getMaxIncrement());
+		assertTrue(creeperInfo.shouldScaleAttack());
+		assertFalse(creeperInfo.shouldScaleDefense());
+		assertTrue(creeperInfo.shouldScaleSpeed());
+		assertTrue(creeperInfo.shouldScaleKnockbackResistance());
+		assertTrue(creeperInfo.shouldScaleMaxFollowDistance());
+		assertTrue(creeperInfo.shouldScaleXP());
+		assertTrue(creeperInfo.shouldScaleLoot());
 
 		MobInfo enderManInfo = playerInfo.getMobInfo(MobType.ENDERMAN);
 		assertEquals(Setting.AUTO, enderManInfo.getSetting());
@@ -99,14 +127,13 @@ public class TestPlayerFileHandler
 	{
 		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		
-		String playerName = "testPlayer4";
-		fileHandler.loadPlayerData(playerName);
+		fileHandler.loadPlayerData(PLAYER_4_ID);
 
 		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
 		playerDataManager.clearPlayerData();
 		playerDataManager.setPlayerFileHandler(fileHandler);
 		
-		PlayerInfo playerInfo = playerDataManager.getPlayerInfo(playerName);
+		PlayerInfo playerInfo = playerDataManager.getPlayerInfo(PLAYER_4_ID);
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		assertEquals(Setting.AUTO, blazeInfo.getSetting());
@@ -122,8 +149,7 @@ public class TestPlayerFileHandler
 	public void testSavePlayerDataToFile()
 	{
 		// make the playerInfo
-		String playerName = "testPlayer2";
-		PlayerInfo playerInfo = new PlayerInfo(playerName);
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_2_ID);
 		
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
@@ -145,12 +171,12 @@ public class TestPlayerFileHandler
 		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		playerDataManager.setPlayerFileHandler(fileHandler);
 		
-		fileHandler.savePlayerData(playerName);
-		playerDataManager.removePlayerInfo(playerName);
+		fileHandler.savePlayerData(PLAYER_2_ID);
+		playerDataManager.removePlayerInfo(PLAYER_2_ID);
 		
 		
-		fileHandler.loadPlayerData(playerName);
-		playerInfo = playerDataManager.getPlayerInfo(playerName);
+		fileHandler.loadPlayerData(PLAYER_2_ID);
+		playerInfo = playerDataManager.getPlayerInfo(PLAYER_2_ID);
 		
 		
 		blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
@@ -220,8 +246,7 @@ public class TestPlayerFileHandler
 	{
 		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		
-		String playerName = "testPlayer1";
-		FileConfiguration playerYmlFileConfig = fileHandler.getPlayerConfig(playerName);
+		FileConfiguration playerYmlFileConfig = fileHandler.getPlayerConfig(PLAYER_1_ID);
 
 		assertEquals("auto", playerYmlFileConfig.getString("blaze.setting"));
 		assertEquals(100, playerYmlFileConfig.getInt("blaze.manualPerformanceLevel"));
@@ -251,19 +276,18 @@ public class TestPlayerFileHandler
 	public void testOnPlayerLogin()
 	{
 		Player mockPlayer = EasyMock.createMockBuilder(MockPlayer.class).createMock();
-		EasyMock.expect(mockPlayer.getName()).andReturn("testPlayer1");
+		EasyMock.expect(mockPlayer.getUniqueId()).andReturn(PLAYER_1_ID);
         EasyMock.replay(mockPlayer);
         
-
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+        
 		PlayerFileHandler fileHandler = new PlayerFileHandler(null);
 		
 		PlayerJoinEvent event = new PlayerJoinEvent(mockPlayer, "");
 		fileHandler.onPlayerJoin(event);
 		
-
-		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
-		playerDataManager.clearPlayerData();
-		assertEquals("testPlayer1", playerDataManager.getPlayerInfo("testPlayer1").getPlayerName());
+		assertEquals(PLAYER_1_ID, playerDataManager.getPlayerInfo(PLAYER_1_ID).getPlayerID());
 		EasyMock.verify(mockPlayer);
 	}
 }

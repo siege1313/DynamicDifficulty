@@ -1,0 +1,182 @@
+blaze:
+  setting: manual
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+cavespider:
+  setting: auto
+  manualPerformanceLevel: 130
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+creeper:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 70
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+enderman:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+ghast:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+magmacube:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+pigzombie:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+silverfish:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+skeleton:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+slime:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+spider:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+witch:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+witherskeleton:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+zombie:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true

@@ -1,6 +1,7 @@
 package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.cjmcguire.bukkit.dynamic.filehandlers.PlayerFileHandler;
@@ -13,13 +14,13 @@ public class PlayerDataManager
 {
 	private static PlayerDataManager singleton = new PlayerDataManager();
 	
-	private ConcurrentHashMap<String, PlayerInfo> playerData;
+	private ConcurrentHashMap<UUID, PlayerInfo> playerData;
 	
 	private PlayerFileHandler playerFileHandler;
 	
 	private PlayerDataManager()
 	{
-		playerData = new ConcurrentHashMap<String, PlayerInfo>();
+		playerData = new ConcurrentHashMap<UUID, PlayerInfo>();
 		playerFileHandler = null;
 	}
 	
@@ -50,47 +51,49 @@ public class PlayerDataManager
 	}
 	
 	/**
-	 * Adds the given player info to this plugin.
+	 * Adds the given PlayerInfo to this plugin.
 	 * @param playerInfo the PlayerInfo you want to add to this 
-	 * plugin's player data
-	 * @return the previous value associated with playerName, or null 
-	 * if there was no mapping for key. (A null return can also 
-	 * indicate that the map previously associated null with key.)
+	 * PlayerDataManager's player data
+	 * @return the previous value associated with playerInfo's 
+	 * playerID, or null if there was no mapping for the playerID. 
+	 * (A null return can also indicate that the map previously 
+	 * associated null with the playerID.)
 	 */
 	public PlayerInfo addPlayerInfo(PlayerInfo playerInfo) 
 	{
-		return playerData.put(playerInfo.getPlayerName(), playerInfo);
+		return playerData.put(playerInfo.getPlayerID(), playerInfo);
 	}
 	
 	/**
-	 * Removes a player's player info.
-	 * @param playerName the name of the player whose PlayerInfo
-	 * you want to remove
-	 * @return the previous value associated with playerName, or null 
-	 * if there was no mapping for key. (A null return can also 
-	 * indicate that the map previously associated null with key.)
+	 * Removes a player's PlayerInfo.
+	 * @param playerID the UUID of the player whose PlayerInfo you 
+	 * want to remove
+	 * @return the previous value associated with playerID, or null 
+	 * if there was no mapping for the playerID. (A null return can 
+	 * also indicate that the map previously associated null with 
+	 * the playerID.)
 	 */
-	public PlayerInfo removePlayerInfo(String playerName) 
+	public PlayerInfo removePlayerInfo(UUID playerID) 
 	{
-		return playerData.remove(playerName);
+		return playerData.remove(playerID);
 	}
 	
 	/**
 	 * Gets a player's PlayerInfo. If no PlayerInfo currently exists 
 	 * for the player when this method is called, then it will 
 	 * generate new PlayerInfo for the player before returning it.
-	 * @param playerName the name of the player whose PlayerInfo you 
+	 * @param playerID the UUID of the player whose PlayerInfo you 
 	 * want to get
-	 * @return the PlayerInfo of the player with the given player name.
+	 * @return the PlayerInfo of the player with the given UUID.
 	 */
-	public PlayerInfo getPlayerInfo(String playerName) 
+	public PlayerInfo getPlayerInfo(UUID playerID) 
 	{
-		if(!playerData.containsKey(playerName) && playerFileHandler != null)
+		if(!playerData.containsKey(playerID) && playerFileHandler != null)
 		{
-			playerFileHandler.loadPlayerData(playerName);
+			playerFileHandler.loadPlayerData(playerID);
 		}
 		
-		return playerData.get(playerName);
+		return playerData.get(playerID);
 	}
 	
 	/**
@@ -102,33 +105,31 @@ public class PlayerDataManager
 	}
 	
 	/**
-	 * @param playerName the name of the player whose PlayerInfo you 
+	 * @param playerID the UUID of the player whose PlayerInfo you 
 	 * want to know exists or not
-	 * @return true if PlayerInfo for the given playerName exists in 
-	 * the player data
+	 * @return true if PlayerInfo for the given UUID exists in the 
+	 * player data
 	 */
-	public boolean playerInfoExists(String playerName)
+	public boolean playerInfoExists(UUID playerID)
 	{
-		return playerData.containsKey(playerName);
+		return playerData.containsKey(playerID);
 	}
 
 	/**
-	 * Gets a player's MobInfo for a particular player and mob
-	 * @param playerName the name of the player whose MobInfo you want 
-	 * the get
+	 * Gets a player's MobInfo for a particular player and mob.
+	 * @param playerID the UUID of the player whose MobInfo you want 
+	 * to get
 	 * @param mobType the MobType of the MobInfo that you want the get
-	 * @return the MobInfo for the given MobType and playerName
+	 * @return the MobInfo for the given MobType and playerID
 	 */
-	public MobInfo getPlayersMobInfo(String playerName, MobType mobType)
+	public MobInfo getPlayersMobInfo(UUID playerID, MobType mobType)
 	{
-		// get the player's PlayerInfo
-		PlayerInfo playerInfo = this.getPlayerInfo(playerName);
-		// get the PlayerInfo's MobData
+		PlayerInfo playerInfo = this.getPlayerInfo(playerID);
+		
 		MobInfo mobInfo = playerInfo.getMobInfo(mobType);
 		
 		return mobInfo;
 	}
-	
 	
 	/**
 	 * Saves all of the PlayerData contained in the DynamicDifficulty 
@@ -145,13 +146,13 @@ public class PlayerDataManager
 			// translate playerData into a Collection because you can't loop through a HashMap
 			Collection<PlayerInfo> playerCollection = playerData.values();
 			
-			// for each playerInfo
+			// For each playerInfo
 			for(PlayerInfo playerInfo: playerCollection)
 			{
-				String playerName = playerInfo.getPlayerName();
+				UUID playerID = playerInfo.getPlayerID();
 				
-				// save key variables from PlayerInfo to the player.yml file
-				playerFileHandler.savePlayerData(playerName);
+				// Save key variables from PlayerInfo to the player yml file
+				playerFileHandler.savePlayerData(playerID);
 			}
 		}
 	}

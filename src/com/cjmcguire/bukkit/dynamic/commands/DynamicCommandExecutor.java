@@ -1,44 +1,56 @@
 package com.cjmcguire.bukkit.dynamic.commands;
 
+import java.util.HashMap;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
+import com.cjmcguire.bukkit.dynamic.commands.core.*;
+import com.cjmcguire.bukkit.dynamic.commands.scale.*;
 
 /**
- * This class is the command executor for the DynamicDifficulty plugin.
- * It is used with the /dynamic command and all of its child commands.
- * It is responsible for figuring out which DynamicDifficulty command
+ * This class is the command executor for the DynamicDifficulty 
+ * plugin. It is used with the "/dynamic" command and all of its 
+ * child commands. It is responsible for figuring out which command
  * was called.
  * @author CJ McGuire
  */
 public class DynamicCommandExecutor implements CommandExecutor
 {
 	/**
-	 * The name of the core command. ("dynamic")
+	 * The name of the Command Executor's core command. ("dynamic")
 	 */
 	public static final String NAME = "dynamic";
 	
-	private final DynamicCommand dynamicCommand;
-	private final InfoCommand infoCommand;
-	private final ChangeLevelCommand changeLevelCommand;
-	private final ChangeSettingCommand changeSettingCommand;
+	private HashMap<String, AbstractDDCommand> commands;
 	
 	/**
-	 * Initializes this DynamicCommandExecutor.
-	 * @param plugin a reference to the DynamicDifficulty plugin
+	 * Initializes the DynamicCommandExecutor.
 	 */
-	public DynamicCommandExecutor(DynamicDifficulty plugin)
+	public DynamicCommandExecutor()
 	{
-		dynamicCommand = new DynamicCommand(plugin);
-		infoCommand = new InfoCommand(plugin);
-		changeLevelCommand = new ChangeLevelCommand(plugin);
-		changeSettingCommand = new ChangeSettingCommand(plugin);
+		commands = new HashMap<String, AbstractDDCommand>();
+		
+		// core
+		commands.put(HelpCommand.NAME, new HelpCommand());
+		commands.put(InfoCommand.NAME, new InfoCommand());
+		commands.put(ChangeLevelCommand.NAME, new ChangeLevelCommand());
+		commands.put(ChangeSettingCommand.NAME, new ChangeSettingCommand());
+		commands.put(SetMaxIncrementCommand.NAME, new SetMaxIncrementCommand());
+		
+		// scale
+		commands.put(ScaleAttackCommand.NAME, new ScaleAttackCommand());
+		commands.put(ScaleDefenseCommand.NAME, new ScaleDefenseCommand());
+		commands.put(ScaleFollowDistanceCommand.NAME, new ScaleFollowDistanceCommand());
+		commands.put(ScaleKnockbackCommand.NAME, new ScaleKnockbackCommand());
+		commands.put(ScaleSpeedCommand.NAME, new ScaleSpeedCommand());
+		commands.put(ScaleXPCommand.NAME, new ScaleXPCommand());
+		commands.put(ScaleLootCommand.NAME, new ScaleLootCommand());
 	}
 	
 	/** 
-	 * This method gets called in response to the /dynamic command.
+	 * This method gets called in response to the "/dynamic" command.
 	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, 
 	 * org.bukkit.command.Command, java.lang.String, java.lang.String[])
 	 */
@@ -47,27 +59,26 @@ public class DynamicCommandExecutor implements CommandExecutor
 	{
 		boolean validCommand = true;
 		
-		// /dynmaic command
-		if(args.length == 0)
+		String commandName;
+		
+		// Player enters no args indicating he wants the "/dynamic" command.
+		if(args.length == 0)	
 		{
-			dynamicCommand.executeCommand(sender, args);
+			commandName = HelpCommand.NAME;
 		}
-		// /dynamic info
-		else if(args[0].equalsIgnoreCase(InfoCommand.NAME))
+		else // The player entered some args.
 		{
-			infoCommand.executeCommand(sender, args);
+			commandName = args[0];
 		}
-		// /dynamic changelevel
-		else if(args[0].equalsIgnoreCase(ChangeLevelCommand.NAME))
+		
+		AbstractDDCommand ddCommand = commands.get(commandName);
+		
+		// If the ddCommand exists in the HashMap.
+		if(ddCommand != null)
 		{
-			changeLevelCommand.executeCommand(sender, args);
+			ddCommand.executeCommand(sender, args);	
 		}
-		// /dynamic changesetting
-		else if(args[0].equalsIgnoreCase(ChangeSettingCommand.NAME))
-		{
-			changeSettingCommand.executeCommand(sender, args);
-		}
-		else
+		else // The command is not valid.
 		{
 			validCommand = false;
 		}

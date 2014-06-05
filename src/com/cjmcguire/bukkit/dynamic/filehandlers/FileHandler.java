@@ -4,43 +4,43 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
+import org.bukkit.plugin.Plugin;
 
 /**
  * An abstract class for a FileHandler. A FileHandler's job is to 
  * handle all of the interactions associated with a particular type 
- * of config yml file.
+ * of yml file.
  * @author CJ McGuire
  */
 public abstract class FileHandler 
 {
-	// The name of the .yml file
+	// The name of the yml file.
 	private final String configFileName;
 	
-	// The actual .yml file
+	// The actual yml file.
 	protected File configFile;
 	
-	// The File Configuration object obtained from the .yml file
+	// The Configuration object obtained from the yml file.
 	protected FileConfiguration config;
 	
-	protected DynamicDifficulty plugin;
+	protected Plugin plugin;
 	
 	private boolean runningWithHead;
 
 	/**
 	 * Initializes this FileHandler.
-	 * @param plugin a reference to the DynamicDifficulty plugin that 
-	 * uses this FileHandler. If null is passed in, then this 
-	 * FileHandler is running without its head.
-	 * @param configFileName the name of the config yml file that this
+	 * @param plugin a reference to the plugin that uses this 
+	 * FileHandler. If null is passed in, then this FileHandler is 
+	 * running without its head.
+	 * @param configFileName the name of the yml file that this
 	 * FileHandler is supposed to handle.
 	 */
-	public FileHandler(DynamicDifficulty plugin, String configFileName)
+	public FileHandler(Plugin plugin, String configFileName)
 	{
 		this.plugin = plugin;
 		this.configFileName = configFileName;
@@ -55,7 +55,7 @@ public abstract class FileHandler
 		}
 		
 		this.initializeConfigFile();
-		this.createConfigFile();
+		this.setUpConfigFile();
 		this.initializeConfig();
 	}
 	
@@ -71,7 +71,7 @@ public abstract class FileHandler
 		}
 	}
 	
-	private void createConfigFile()
+	private void setUpConfigFile()
 	{
 		if(!configFile.exists() && this.isRunningWithHead())
 		{
@@ -107,20 +107,21 @@ public abstract class FileHandler
 		
 		if(this.isRunningWithHead())
 		{
-			
-			// fix dataDefaultFile if it has garbage data.
+			// Fix dataDefaultFile if it has garbage data.
 			InputStream in = plugin.getResource(configFileName);
-			FileConfiguration tempConfig = YamlConfiguration.loadConfiguration(in);
+			InputStreamReader inReader = new InputStreamReader(in);
+			
+			FileConfiguration tempConfig = YamlConfiguration.loadConfiguration(inReader);
 			config.setDefaults(tempConfig);
 			
 			try 
 			{
-				in.close();
+				inReader.close();
 			}
 			catch (IOException e) 
 			{
 				plugin.getLogger().info("Could not close input stream to " + configFileName + 
-									 " in DynamicDifficulty.jar");
+									    " in DynamicDifficulty.jar");
 			}
 		}
 	}

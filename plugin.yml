@@ -1,31 +1,72 @@
 name: DynamicDifficulty
 main: com.cjmcguire.bukkit.dynamic.DynamicDifficulty
-version: 1.2.3
+version: 1.3.0
 author: siege1313
 commands:
   dynamic:
-    description: The DynamicDifficulty base command
-    usage: Use the command like this "/<command>"
+    description: The base command
+    usage: /<command>
+  dynamic help:
+    description: The help command
+    usage: /<command>
   dynamic info:
-    description: Lists a player's difficulty info
+    description: Lists a player's info
     usage: /<command>
   dynamic changesetting:
     description: Changes a player's setting
-    usage: /<command> 
+    usage: /<command>
   dynamic changelevel:
     description: Changes a player's performance level
+    usage: /<command>
+  dynamic setmaxincrement:
+    description: Changes a player's max increment
+    usage: /<command>
+  dynamic scaleattack:
+    description: Sets whether or not to scale a mob's attack
+    usage: /<command>
+  dynamic scaledefense:
+    description: Sets whether or not to scale a mob's defense
+    usage: /<command>
+  dynamic scalespeed:
+    description: Sets whether or not to scale a mob's speed
+    usage: /<command>
+  dynamic scaleknockback:
+    description: Sets whether or not to scale a mob's knockback resistance
+    usage: /<command>
+  dynamic scalefollowdistance:
+    description: Sets whether or not to scale a mob's max follow distance
+    usage: /<command>
+  dynamic scalexp:
+    description: Sets whether or not to scale a mob's xp drops
+    usage: /<command>
+  dynamic scaleloot:
+    description: Sets whether or not to scale a mob's loot drops
     usage: /<command>
 permissions:
   dynamic.*:
     description: Gives access to all of the DynamicDifficulty commands
     children:
-      dynamic.dynamic: true
+      dynamic.help: true
       dynamic.info.self: true
       dynamic.info.other: true
       dynamic.changelevel.self: true
       dynamic.changelevel.other: true
       dynamic.changesetting.self: true
       dynamic.changesetting.other: true
+      dynamic.scaleattack.self: true
+      dynamic.scaleattack.other: true
+      dynamic.scaledefense.self: true
+      dynamic.scaledefense.other: true
+      dynamic.scalespeed.self: true
+      dynamic.scalespeed.other: true
+      dynamic.scaleknockback.self: true
+      dynamic.scaleknockback.other: true
+      dynamic.scalefollowdistance.self: true
+      dynamic.scalefollowdistance.other: true
+      dynamic.scalexp.self: true
+      dynamic.scalexp.other: true
+      dynamic.scaleloot.self: true
+      dynamic.scaleloot.other: true
   dynamic.info.*:
     description: Gives access to the entire /dynamic info command
     children:
@@ -41,8 +82,48 @@ permissions:
     children:
       dynamic.changesetting.self: true
       dynamic.changesetting.other: true
-  dynamic.dynamic:
-    description: Allows you to use the /dynamic command
+  dynamic.setmaxincrement.*:
+    description: Gives access to the entire /dynamic setmaxincrement command
+    children:
+      dynamic.setmaxincrement.self: true
+      dynamic.setmaxincrement.other: true
+  dynamic.scaleattack.*:
+    description: Gives access to the entire /dynamic scaleattack command
+    children:
+      dynamic.scaleattack.self: true
+      dynamic.scaleattack.other: true
+  dynamic.scaledefense.*:
+    description: Gives access to the entire /dynamic scaledefense command
+    children:
+      dynamic.scaledefense.self: true
+      dynamic.scaledefense.other: true
+  dynamic.scalespeed.*:
+    description: Gives access to the entire /dynamic scalespeed command
+    children:
+      dynamic.scalespeed.self: true
+      dynamic.scalespeed.other: true
+  dynamic.scaleknockback.*:
+    description: Gives access to the entire /dynamic scaleknockback command
+    children:
+      dynamic.scaleknockback.self: true
+      dynamic.scaleknockback.other: true
+  dynamic.scalefollowdistance.*:
+    description: Gives access to the entire /dynamic scalefollowdistance command
+    children:
+      dynamic.scalefollowdistance.self: true
+      dynamic.scalefollowdistance.other: true
+  dynamic.scalexp.*:
+    description: Gives access to the entire /dynamic scalexp command
+    children:
+      dynamic.scalexp.self: true
+      dynamic.scalexp.other: true
+  dynamic.scaleloot.*:
+    description: Gives access to the entire /dynamic scaleloot command
+    children:
+      dynamic.scaleloot.self: true
+      dynamic.scaleloot.other: true
+  dynamic.help:
+    description: Allows you to use the DynamicDifficulty help command
     default: true
   dynamic.info.self:
     description: Allows you to display your difficulty settings and performance levels
@@ -61,4 +142,52 @@ permissions:
     default: true
   dynamic.changesetting.other:
     description: Allows you to change other players' difficulty settings
+    default: false
+  dynamic.setmaxincrement.self:
+    description: Allows you to change your max increments
+    default: true
+  dynamic.setmaxincrement.other:
+    description: Allows you to change other players' max increments
+    default: false
+  dynamic.scaleattack.self:
+    description: Allows you to set whether or not a mob's attack should be scaled for yourself
+    default: true
+  dynamic.scaleattack.other:
+    description: Allows you to set whether or not a mob's attack should be scaled for others
+    default: false
+  dynamic.scaledefense.self:
+    description: Allows you to set whether or not a mob's defense should be scaled for yourself
+    default: true
+  dynamic.scaledefense.other:
+    description: Allows you to set whether or not a mob's defense should be scaled for others
+    default: false
+  dynamic.scalespeed.self:
+    description: Allows you to set whether or not a mob's speed should be scaled for yourself
+    default: true
+  dynamic.scalespeed.other:
+    description: Allows you to set whether or not a mob's speed should be scaled for others
+    default: false
+  dynamic.scaleknockback.self:
+    description: Allows you to set whether or not a mob's knockback should be scaled for yourself
+    default: true
+  dynamic.scaleknockback.other:
+    description: Allows you to set whether or not a mob's knockback should be scaled for others
+    default: false
+  dynamic.scalefollowdistance.self:
+    description: Allows you to set whether or not a mob's max follow distance should be scaled for yourself
+    default: true
+  dynamic.scalefollowdistance.other:
+    description: Allows you to set whether or not a mob's max follow distance should be scaled for others
+    default: false
+  dynamic.scalexp.self:
+    description: Allows you to set whether or not the xp a mob drops should be scaled for yourself
+    default: true
+  dynamic.scalexp.other:
+    description: Allows you to set whether or not the xp a mob drops should be scaled for others
+    default: false
+  dynamic.scaleloot.self:
+    description: Allows you to set whether or not the loot a mob drops should be scaled for yourself
+    default: true
+  dynamic.scaleloot.other:
+    description: Allows you to set whether or not the loot a mob drops should be scaled for others
     default: false

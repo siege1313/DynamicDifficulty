@@ -16,23 +16,6 @@ public class TestMobInfo
 {
 	
 	/**
-	 * Tests the MAX_INCREMENT variable and the methods that goes with
-	 * it.
-	 */
-	@Test
-	public void testMaxIncrement()
-	{
-		assertEquals(10, MobInfo.MAX_INCREMENT);
-		
-		MobInfo.setMaxIncrement(1);
-		assertEquals(1, MobInfo.MAX_INCREMENT);
-		
-		MobInfo.setMaxIncrement(9);
-		assertEquals(9, MobInfo.MAX_INCREMENT);
-		
-	}
-	
-	/**
 	 * Tests the getMobType() method.
 	 */
 	@Test
@@ -43,7 +26,7 @@ public class TestMobInfo
 	}
 	
 	/**
-	 * Tests the getSetting() and setSetting() methods.
+	 * Tests that the setting variable can be set correctly.
 	 */
 	@Test
 	public void testSetting() 
@@ -53,6 +36,130 @@ public class TestMobInfo
 		
 		zombieInfo.setSetting(Setting.DISABLED);
 		assertEquals(Setting.DISABLED, zombieInfo.getSetting());
+	}
+	
+	/**
+	 * Tests that the maxIntrement variable can be set correctly.
+	 */
+	@Test
+	public void testMaxIncrement()
+	{
+		MobInfo blazeInfo = new MobInfo(MobType.BLAZE);
+		
+		assertEquals(10, blazeInfo.getMaxIncrement());
+		
+		blazeInfo.setMaxIncrement(-10);
+		assertEquals(1, blazeInfo.getMaxIncrement());
+		
+		blazeInfo.setMaxIncrement(9);
+		assertEquals(9, blazeInfo.getMaxIncrement());
+	}
+	
+	/**
+	 * Tests that the scaleAttack variable gets set correctly.
+	 */
+	@Test
+	public void testScaleAttack()
+	{
+		MobInfo blazeInfo = new MobInfo(MobType.BLAZE);
+		
+		assertTrue(blazeInfo.shouldScaleAttack());
+		
+		blazeInfo.setScaleAttack(false);
+		
+		assertFalse(blazeInfo.shouldScaleAttack());
+	}
+	
+	/**
+	 * Tests that the scaleDefense variable gets set correctly.
+	 */
+	@Test
+	public void testScaleDefense()
+	{
+		MobInfo blazeInfo = new MobInfo(MobType.BLAZE);
+		
+		assertTrue(blazeInfo.shouldScaleDefense());
+		
+		blazeInfo.setScaleDefense(false);
+		
+		assertFalse(blazeInfo.shouldScaleDefense());
+	}
+	
+	/**
+	 * Tests that the scaleSpeed variable gets set correctly.
+	 */
+	@Test
+	public void testScaleSpeed()
+	{
+		MobInfo blazeInfo = new MobInfo(MobType.BLAZE);
+		
+		assertTrue(blazeInfo.shouldScaleSpeed());
+		
+		blazeInfo.setScaleSpeed(false);
+		
+		assertFalse(blazeInfo.shouldScaleSpeed());
+	}
+	
+	/**
+	 * Tests that the scaleKnockBackResistance variable gets set 
+	 * correctly.
+	 */
+	@Test
+	public void testScaleKnockBackResistance()
+	{
+		MobInfo blazeInfo = new MobInfo(MobType.BLAZE);
+		
+		assertTrue(blazeInfo.shouldScaleKnockbackResistance());
+		
+		blazeInfo.setScaleKnockbackResistance(false);
+		
+		assertFalse(blazeInfo.shouldScaleKnockbackResistance());
+	}
+	
+	/**
+	 * Tests that the scaleMaxFollowDistance variable gets set 
+	 * correctly.
+	 */
+	@Test
+	public void testScaleMaxFollowDistance()
+	{
+		MobInfo blazeInfo = new MobInfo(MobType.BLAZE);
+		
+		assertTrue(blazeInfo.shouldScaleMaxFollowDistance());
+		
+		blazeInfo.setScaleMaxFollowDistance(false);
+		
+		assertFalse(blazeInfo.shouldScaleMaxFollowDistance());
+	}
+	
+	/**
+	 * Tests that the scaleXP variable gets set correctly.
+	 */
+	@Test
+	public void testScaleXP()
+	{
+		MobInfo blazeInfo = new MobInfo(MobType.BLAZE);
+		
+		assertTrue(blazeInfo.shouldScaleXP());
+		
+		blazeInfo.setScaleXP(false);
+		
+		assertFalse(blazeInfo.shouldScaleXP());
+	}
+	
+	/**
+	 * Tests that the scaleLoot variable gets set correctly.
+	 */
+	@Test
+	public void testScaleLoot()
+	{
+		MobInfo blazeInfo = new MobInfo(MobType.BLAZE);
+		
+		assertTrue(blazeInfo.shouldScaleLoot());
+		
+		blazeInfo.setScaleLoot(false);
+		
+		assertFalse(blazeInfo.shouldScaleLoot());
 	}
 	
 	/**
@@ -202,7 +309,7 @@ public class TestMobInfo
 		// update by max amount upward
 		zombieInfo.setEstimatedPerformanceLevel(200);
 		zombieInfo.updateAutoPerformanceLevel();
-		assertEquals(100+MobInfo.MAX_INCREMENT, zombieInfo.getAutoPerformanceLevel(), .0001);
+		assertEquals(100+zombieInfo.getMaxIncrement(), zombieInfo.getAutoPerformanceLevel(), .0001);
 		
 		// update by less than max amount upward
 		zombieInfo.setAutoPerformanceLevel(100);
@@ -220,7 +327,7 @@ public class TestMobInfo
 		zombieInfo.setAutoPerformanceLevel(100);
 		zombieInfo.setEstimatedPerformanceLevel(50);
 		zombieInfo.updateAutoPerformanceLevel();
-		assertEquals(100-MobInfo.MAX_INCREMENT, zombieInfo.getAutoPerformanceLevel(), .0001);
+		assertEquals(100-zombieInfo.getMaxIncrement(), zombieInfo.getAutoPerformanceLevel(), .0001);
 	}
 	
 	/**

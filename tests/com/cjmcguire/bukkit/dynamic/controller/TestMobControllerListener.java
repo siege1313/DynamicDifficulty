@@ -2,9 +2,11 @@ package com.cjmcguire.bukkit.dynamic.controller;
 
 import static org.junit.Assert.*;
 
-import net.minecraft.server.v1_7_R2.AttributeInstance;
-import net.minecraft.server.v1_7_R2.EntityInsentient;
-import net.minecraft.server.v1_7_R2.GenericAttributes;
+import java.util.UUID;
+
+import net.minecraft.server.v1_7_R3.AttributeInstance;
+import net.minecraft.server.v1_7_R3.EntityInsentient;
+import net.minecraft.server.v1_7_R3.GenericAttributes;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -16,92 +18,218 @@ import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
 import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
- * Tests the ControllerListener class.
+ * Tests the MobControllerListener class.
  * @author CJ McGuire
  */
-public class TestControllerListener 
+public class TestMobControllerListener 
 {
+	private static final UUID PLAYER_1_ID = UUID.fromString("12345678-1234-1234-1234-123456789001");
 
 	/**
-	 * Tests the manipulateDamagePlayerReceived() method for when
-	 * the player's setting is on AUTO.
+	 * Tests the manipulateDamagePlayerReceived() method under the 
+	 * following conditions:
+	 *   1. The player's setting is on AUTO.
+	 *   2. The attack should be scaled.
 	 */
 	@Test
 	public void testManipulateDamageAuto() 
 	{
-		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
-		playerDataManager.clearPlayerData();
-		
-		String playerName = "testPlayer";
-		PlayerInfo playerInfo = new PlayerInfo(playerName);
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		blazeInfo.setAutoPerformanceLevel(200);
 		
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		playerDataManager.addPlayerInfo(playerInfo);
 		
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 		
-        int damage = controller.manipulateDamagePlayerReceived(playerName, MobType.BLAZE, 2);
-        assertEquals(4, damage);
+        double damage = controller.manipulateDamagePlayerReceived(PLAYER_1_ID, MobType.BLAZE, 2);
+        assertEquals(4, damage, .0001);
 	}
 	
 	/**
-	 * Tests the manipulateDamagePlayerReceived() method for when
-	 * the player's setting is on MANUAL.
+	 * Tests the manipulateDamagePlayerReceived() method under the 
+	 * following conditions:
+	 *   1. The player's setting is on AUTO.
+	 *   2. The attack should not be scaled.
+	 */
+	@Test
+	public void testManipulateDamageAutoNotScaled() 
+	{
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
+		
+		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
+		blazeInfo.setAutoPerformanceLevel(200);
+		blazeInfo.setScaleAttack(false);
+		
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
+		
+		MobControllerListener controller = new MobControllerListener();
+		
+        double damage = controller.manipulateDamagePlayerReceived(PLAYER_1_ID, MobType.BLAZE, 2);
+        assertEquals(2, damage, .0001);
+	}
+	
+	/**
+	 * Tests the manipulateDamagePlayerReceived() method under the 
+	 * following conditions:
+	 *   1. The player's setting is on MANUAL.
+	 *   2. The attack should be scaled.
 	 */
 	@Test
 	public void testManipulateDamageManual() 
 	{
-		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
-		playerDataManager.clearPlayerData();
-		
-		String playerName = "testPlayer";
-		PlayerInfo playerInfo = new PlayerInfo(playerName);
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		blazeInfo.setManualPerformanceLevel(200);
 		blazeInfo.setSetting(Setting.MANUAL);
 		
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		playerDataManager.addPlayerInfo(playerInfo);
 		
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 		
-        int damage = controller.manipulateDamagePlayerReceived(playerName, MobType.BLAZE, 2);
-        assertEquals(4, damage);
+        double damage = controller.manipulateDamagePlayerReceived(PLAYER_1_ID, MobType.BLAZE, 2);
+        assertEquals(4, damage, .0001);
 	}
 	
 	/**
-	 * Tests the manipulateDamagePlayerReceived() method for when
-	 * the player's setting is to DISABLED.
+	 * Tests the manipulateDamagePlayerReceived() method under the 
+	 * following conditions:
+	 *   1. The player's setting is on DISABLED.
+	 *   2. The attack should be scaled.
 	 */
 	@Test
 	public void testManipulateDamageDisabled() 
 	{
-		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
-		playerDataManager.clearPlayerData();
-		
-		String playerName = "testPlayer";
-		PlayerInfo playerInfo = new PlayerInfo(playerName);
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
 		
 		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
 		blazeInfo.setAutoPerformanceLevel(2);
 		blazeInfo.setManualPerformanceLevel(2);
 		blazeInfo.setSetting(Setting.DISABLED);
 		
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
 		playerDataManager.addPlayerInfo(playerInfo);
 		
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 		
-        int damage = controller.manipulateDamagePlayerReceived(playerName, MobType.BLAZE, 2);
-        assertEquals(2, damage);
+		double damage = controller.manipulateDamagePlayerReceived(PLAYER_1_ID, MobType.BLAZE, 2);
+        assertEquals(2, damage, .0001);
 	}
 	
 	/**
-	 * Tests the makeMoveSpeedDynamic() method.
+	 * Tests the manipulateDamageMobReceived() method under the 
+	 * following conditions:
+	 *   1. The player's setting is on AUTO.
+	 *   2. The defense should be scaled.
 	 */
 	@Test
-	public void testMakeMoveSpeedDynamic()
+	public void testManipulateMobDamageAuto() 
+	{
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
+		
+		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
+		blazeInfo.setAutoPerformanceLevel(200);
+		
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
+		
+		MobControllerListener controller = new MobControllerListener();
+		
+        double damage = controller.manipulateDamageMobReceived(PLAYER_1_ID, MobType.BLAZE, 4);
+        assertEquals(2, damage, .0001);
+	}
+	
+	/**
+	 * Tests the manipulateDamageMobReceived() method under the 
+	 * following conditions:
+	 *   1. The player's setting is on AUTO.
+	 *   2. The defense should not be scaled.
+	 */
+	@Test
+	public void testManipulateMobDamageAutoNotScaled() 
+	{
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
+		
+		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
+		blazeInfo.setAutoPerformanceLevel(200);
+		blazeInfo.setScaleDefense(false);
+		
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
+		
+		MobControllerListener controller = new MobControllerListener();
+		
+        double damage = controller.manipulateDamageMobReceived(PLAYER_1_ID, MobType.BLAZE, 4);
+        assertEquals(4, damage, .0001);
+	}
+	
+	/**
+	 * Tests the manipulateDamageMobReceived() method under the 
+	 * following conditions:
+	 *   1. The player's setting is on MANUAL.
+	 *   2. The defense should be scaled.
+	 */
+	@Test
+	public void testManipulateMobDamageManual() 
+	{
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
+		
+		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
+		blazeInfo.setManualPerformanceLevel(200);
+		blazeInfo.setSetting(Setting.MANUAL);
+		
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
+		
+		MobControllerListener controller = new MobControllerListener();
+		
+        double damage = controller.manipulateDamageMobReceived(PLAYER_1_ID, MobType.BLAZE, 4);
+        assertEquals(2, damage, .0001);
+	}
+	
+	/**
+	 * Tests the manipulateDamageMobReceived() method under the 
+	 * following conditions:
+	 *   1. The player's setting is on DISABLED.
+	 *   2. The attack should be scaled.
+	 */
+	@Test
+	public void testManipulateMobDamageDisabled() 
+	{
+		PlayerInfo playerInfo = new PlayerInfo(PLAYER_1_ID);
+		
+		MobInfo blazeInfo = playerInfo.getMobInfo(MobType.BLAZE);
+		blazeInfo.setAutoPerformanceLevel(200);
+		blazeInfo.setManualPerformanceLevel(200);
+		blazeInfo.setSetting(Setting.DISABLED);
+		
+		PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
+		playerDataManager.clearPlayerData();
+		playerDataManager.addPlayerInfo(playerInfo);
+		
+		MobControllerListener controller = new MobControllerListener();
+		
+		double damage = controller.manipulateDamagePlayerReceived(PLAYER_1_ID, MobType.BLAZE, 4);
+        assertEquals(4, damage, .0001);
+	}
+	
+	/**
+	 * Tests the makeSpeedDynamic() method.
+	 */
+	@Test
+	public void testMakeSpeedDynamic()
 	{
 		AttributeInstance mockAttributes = EasyMock.createNiceMock(AttributeInstance.class);
 		EasyMock.expect(mockAttributes.getValue()).andReturn(.32+.32/2);
@@ -113,12 +241,12 @@ public class TestControllerListener
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(2.0);
 		
-		controller.makeMobSpeedDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
+		controller.makeSpeedDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.d);
 		
@@ -130,10 +258,10 @@ public class TestControllerListener
 	}
 	
 	/**
-	 * Tests the resetMoveSpeed() method.
+	 * Tests the resetSpeed() method.
 	 */
 	@Test
-	public void testResetMoveSpeed()
+	public void testResetSpeed()
 	{
 		AttributeInstance mockAttributes = EasyMock.createNiceMock(AttributeInstance.class);
 		EasyMock.expect(mockAttributes.getValue()).andReturn(.4);
@@ -146,14 +274,14 @@ public class TestControllerListener
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(2.0);
 		
 		assertEquals(.4, mockAttributes.getValue(),.0001);
 				
-		controller.resetMobSpeed(mockIns);
+		controller.resetSpeed(mockIns);
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.d);
 		
@@ -180,12 +308,12 @@ public class TestControllerListener
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(200);
 		
-		controller.makeMobKnockbackDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
+		controller.makeKnockbackDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.c);
 		
@@ -211,12 +339,12 @@ public class TestControllerListener
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(60);
 
-		controller.makeMobKnockbackDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
+		controller.makeKnockbackDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.c);
 		
@@ -227,10 +355,10 @@ public class TestControllerListener
 	}
 	
 	/**
-	 * Tests the resetMobKnockback() method.
+	 * Tests the resetKnockback() method.
 	 */
 	@Test
-	public void testResetMobKnockback()
+	public void testResetKnockback()
 	{
 		AttributeInstance mockAttributes = EasyMock.createNiceMock(AttributeInstance.class);
 		EasyMock.expect(mockAttributes.getValue()).andReturn(1.0);
@@ -243,14 +371,14 @@ public class TestControllerListener
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(2.0);
 		
 		assertEquals(1, mockAttributes.getValue(),.0001);
 				
-		controller.resetMobKnockback(mockIns);
+		controller.resetKnockback(mockIns);
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.c);
 		
@@ -260,7 +388,6 @@ public class TestControllerListener
 		EasyMock.verify(mockIns);
 		EasyMock.verify(mockAttributes);
 	}
-	
 	
 	/**
 	 * Tests the makeFollowDistanceDynamic() method.
@@ -279,12 +406,12 @@ public class TestControllerListener
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(200);
 		
-		controller.makeMobFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getAutoPerformanceLevel());
+		controller.makeFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.b);
 		
@@ -311,12 +438,12 @@ public class TestControllerListener
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(.75);
 
-		controller.makeMobFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getAutoPerformanceLevel());
+		controller.makeFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getAutoPerformanceLevel());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.b);
 		
@@ -327,10 +454,10 @@ public class TestControllerListener
 	}
 	
 	/**
-	 * Tests the resetMobFollwDistance() method.
+	 * Tests the resetFollwDistance() method.
 	 */
 	@Test
-	public void testResetMobFollowDistance()
+	public void testResetFollowDistance()
 	{
 		AttributeInstance mockAttributes = EasyMock.createNiceMock(AttributeInstance.class);
 		EasyMock.expect(mockAttributes.b()).andReturn(32.0);
@@ -343,14 +470,14 @@ public class TestControllerListener
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
-		ControllerListener controller = new ControllerListener();
+		MobControllerListener controller = new MobControllerListener();
 
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(2.0);
 		
 		assertEquals(32, mockAttributes.b(),.0001);
 				
-		controller.resetMobFollowDistance(mockIns, mobInfo.getMobType());
+		controller.resetFollowDistance(mockIns, mobInfo.getMobType());
 		
 		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.b);
 		

@@ -1,41 +1,43 @@
 package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
- * The Player Info class holds the name of a player and all of the 
- * player's MobInfo for each type of hostile mob in the game.
+ * The PlayerInfo class holds the name of a player and the player's 
+ * MobInfo for each type of hostile mob in the game.
  * @author CJ McGuire
  */
 public class PlayerInfo 
 {
-	private final String playerName;
+	private final UUID playerID;
 	
 	private final HashMap<MobType, MobInfo> mobData;
 	
 	/**
 	 * Initializes this PlayerInfo
-	 * @param playerName the name of the player associated with this 
+	 * @param playerID the UUID of the player associated with this 
 	 * PlayerInfo
 	 */
-	public PlayerInfo(String playerName)
+	public PlayerInfo(UUID playerID)
 	{
-		this.playerName = playerName;
+		this.playerID = playerID;
 		
 		mobData = new HashMap<MobType, MobInfo>();
 		
-		for(MobType mobType: MobType.values())
+		MobType[] mobTypes = MobType.values();
+		for(MobType mobType: mobTypes)
 		{
 			mobData.put(mobType, new MobInfo(mobType));
 		}
 	}
 
 	/**
-	 * @return the player's name
+	 * @return the player's UUID
 	 */
-	public String getPlayerName() 
+	public UUID getPlayerID() 
 	{
-		return playerName;
+		return playerID;
 	}
 	
 	/**

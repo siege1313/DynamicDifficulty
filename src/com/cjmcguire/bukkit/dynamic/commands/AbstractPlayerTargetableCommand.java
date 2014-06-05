@@ -1,17 +1,17 @@
 package com.cjmcguire.bukkit.dynamic.commands;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
-
 /**
- * This abstract command sets a outline for commands that can 
- * optionally target another player.
+ * This abstract command lays out the basic setup for commands that 
+ * can optionally target another player.
  * @author CJ McGuire
  */
-public abstract class PlayerTargetableCommand extends AbstractDDCommand 
+public abstract class AbstractPlayerTargetableCommand extends AbstractDDCommand 
 {
 	private int selfArgsLength;
 	private int otherArgsLength;
@@ -27,8 +27,7 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 	private String incorrectArgsMessage;
 	
 	/**
-	 * Initializes this DynamicDifficulty Command.
-	 * @param plugin a reference to the DynamicDifficulty plugin
+	 * Initializes this Command.
 	 * @param selfArgsLength the number of arguments for when the 
 	 * command targets the sender.
 	 * @param otherArgsLength the number of arguments for when the 
@@ -44,7 +43,7 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 	 * @param incorrectArgsMessage the message to send when the 
 	 * arguments have an incorrect length.
 	 */
-	public PlayerTargetableCommand(DynamicDifficulty plugin,
+	public AbstractPlayerTargetableCommand(
 			int selfArgsLength,
 			int otherArgsLength,
 			String selfPermission,
@@ -54,7 +53,7 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 			String selfDenyConsoleMessage,
 			String incorrectArgsMessage)
 	{
-		super(plugin);
+		super();
 		
 		this.selfArgsLength = selfArgsLength;
 		this.otherArgsLength = otherArgsLength;
@@ -113,18 +112,17 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 	{
 		boolean workedAsIntended = false;
 		
-		// if no player-name is given
+		// If no player-name is given
 		if(args.length == selfArgsLength)
 		{
-			// if the sender is a player
+			// If the sender is a player
 			if(sender instanceof Player)
 			{
 				workedAsIntended = this.playerAskForSelf((Player)sender, args);
 			}
-			// if the sender is not a player
-			else
+			else // the sender is not a player
 			{
-				this.safeSendMessage(sender, selfDenyConsoleMessage);
+				sender.sendMessage(selfDenyConsoleMessage);
 			}
 		}
 		// if a player-name is given
@@ -142,22 +140,19 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 				{
 					workedAsIntended = this.askForOther(sender, args);
 				}
-				// if the player does not have permission
-				else
+				else // the player does not have permission
 				{
-					this.safeSendMessage(sender, otherDenyPermissionMessage);
+					sender.sendMessage(otherDenyPermissionMessage);
 				}
 			}
-			// if the sender is not a player
-			else
+			else // the sender is not a player
 			{
 				workedAsIntended = this.askForOther(sender, args);
 			}
 		}
-		// if the number of arguments is wrong
-		else
+		else // the number of arguments is wrong
 		{
-			this.safeSendMessage(sender, incorrectArgsMessage);
+			sender.sendMessage(incorrectArgsMessage);
 		}
 		
 		return workedAsIntended;
@@ -170,14 +165,14 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 		// if the player has permission
 		if(player.hasPermission(selfPermission))
 		{
-			String playerName = player.getName();
-			workedAsIntended = this.commandAction(player, playerName, args);
+			UUID playerID = player.getUniqueId();
+			workedAsIntended = this.commandAction(player, playerID, args);
 		}
-		// if the player does not have permission
-		else
+		else // if the player does not have permission
 		{
-			this.safeSendMessage(player, selfDenyPermissionMessage);
+			player.sendMessage(selfDenyPermissionMessage);
 		}
+		
 		return workedAsIntended;
 	}
 	
@@ -186,23 +181,26 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 		boolean workedAsIntended = false;
 		
 		String otherPlayerName = args[otherArgsLength-1];
-		if(this.playerDataManager.playerInfoExists(otherPlayerName))
+		
+		UUID playerID = this.getUUIDFromPlayerName(otherPlayerName);
+		
+		if(playerID != null && this.playerDataManager.playerInfoExists(playerID))
 		{
-			workedAsIntended = this.commandAction(sender, otherPlayerName, args);
+			workedAsIntended = this.commandAction(sender, playerID, args);
 		}
 		else
 		{
-			this.safeSendMessage(sender, ChatColor.GOLD + otherPlayerName + ChatColor.WHITE + " is not a logged in player");
+			sender.sendMessage(ChatColor.GOLD + otherPlayerName + ChatColor.RESET + " is not a logged in player");
 		}
 		
 		return workedAsIntended;
-		
 	}
 	
 	private boolean isAskingForSelf(Player player, String [] args)
 	{
 		String otherPlayerName = args[otherArgsLength-1];
-		if(player.getName().equals(otherPlayerName))
+		String playerName = player.getName();
+		if(playerName.equals(otherPlayerName))
 		{
 			return true;
 		}
@@ -213,22 +211,34 @@ public abstract class PlayerTargetableCommand extends AbstractDDCommand
 	}
 	
 	/**
+	 * This checks whether the Player with the given playerName is
+	 * the CommandSender. If this command is running headless, then 
+	 * the player is assumed to be the sender.
 	 * @param sender the sender of the command
-	 * @param playerName the name of a player
-	 * @return true if the sender is the player. false otherwise
+	 * @param playerID the UUID of the player
+	 * @return true if the sender is the player or if the command is
+	 * running headless. false otherwise
 	 */
-	protected boolean senderIsThePlayer(CommandSender sender, String playerName)
+	protected boolean senderIsThePlayer(CommandSender sender, UUID playerID)
 	{
-		Player player = this.plugin.getServer().getPlayer(playerName);
+		boolean senderIsThePlayer = false;
+		
+		Player player = this.server.getPlayer(playerID);
 		if(player == sender)
 		{
-			return true;
+			senderIsThePlayer = true;
 		}
-		else
-		{
-			return false;
-		}
+		
+		return senderIsThePlayer;
 	}
 	
-	protected abstract boolean commandAction(CommandSender sender, String playerName, String[] args);
+	/**
+	 * 
+	 * @param sender the sender of the command
+	 * @param playerID the UUID of the player to target
+	 * @param args the command arguments
+	 * @return true if the command worked as intended. false if it
+	 * did not.
+	 */
+	public abstract boolean commandAction(CommandSender sender, UUID playerID, String[] args);
 }

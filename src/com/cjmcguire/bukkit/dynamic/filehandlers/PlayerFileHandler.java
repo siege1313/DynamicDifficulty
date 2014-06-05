@@ -2,6 +2,7 @@ package com.cjmcguire.bukkit.dynamic.filehandlers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,8 +12,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 
-import com.cjmcguire.bukkit.dynamic.DynamicDifficulty;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
 import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
@@ -21,9 +22,9 @@ import com.cjmcguire.bukkit.dynamic.playerdata.Setting;
 
 /**
  * The PlayerFileHandler is responsible for handling all of the i/o 
- * that goes on with the <player name>.yml files. It handles the 
- * conversion from a "player name" to "player file" to "player config" 
- * to "player data".
+ * that goes on with the player yml files. It handles the conversion 
+ * from a "player name" and UUID to a "player file" to a "player 
+ * config" to "player data".
  * @author CJ McGuire
  */
 public class PlayerFileHandler extends FileHandler implements Listener
@@ -35,10 +36,10 @@ public class PlayerFileHandler extends FileHandler implements Listener
 	
 	/**
 	 * Initializes the PlayerFileHandler.
-	 * @param plugin a reference to the DynamicDifficulty plugin that 
-	 * uses this PlayerFileHandler
+	 * @param plugin a reference to the plugin that uses this 
+	 * PlayerFileHandler
 	 */
-	public PlayerFileHandler(DynamicDifficulty plugin)
+	public PlayerFileHandler(Plugin plugin)
 	{
 		super(plugin, DEFAULT_PLAYER_FILE_NAME);
 		
@@ -76,11 +77,11 @@ public class PlayerFileHandler extends FileHandler implements Listener
 			
 			for(Player player: players)
 			{
-				String playerName = player.getName();
-	
-				// load the playerData contained in the 
-				// FileConfiguration into the plugin
-				this.loadPlayerData(playerName);
+				UUID playerID = player.getUniqueId();
+				
+				// Load the playerData contained in the 
+				// FileConfiguration into the plugin.
+				this.loadPlayerData(playerID);
 			}
 		}
 	}
@@ -89,35 +90,33 @@ public class PlayerFileHandler extends FileHandler implements Listener
 	 * This method triggers whenever a player logs onto a Minecraft 
 	 * Bukkit Server. If no player data exists for the player that 
 	 * just logged in, this method initializes player data for that 
-	 * player. If player data does exist, this method will load in the 
-	 * player data from the player's config.yml file.
+	 * player. If player data does exist, this method will load in 
+	 * the player data from the player's config.yml file.
 	 * @param event the PlayerLoginEvent that just occurred.
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
-		// get the player
 		Player player = event.getPlayer();
-		// get the player's name
-		String playerName = player.getName();
-		// load the playerData contained in the FileConfiguration 
-		// into the plugin
-		this.loadPlayerData(playerName);
+		
+		UUID playerID = player.getUniqueId();
+		
+		this.loadPlayerData(playerID);
 	}
 	
 	/**
 	 * Loads the info from the <player name>.yml file to the plugin's 
 	 * player data.
-	 * @param playerName the name of the player whose player info you 
+	 * @param playerID the UUID of the player whose player info you 
 	 * want to load into the plugin's memory
 	 */
-	public void loadPlayerData(String playerName)
+	public void loadPlayerData(UUID playerID)
 	{
 		// create the FileConfiguration object based on the playerFile.yml
-		FileConfiguration playerConfig = this.getPlayerConfig(playerName);
+		FileConfiguration playerConfig = this.getPlayerConfig(playerID);
 		
 		// create the PlayerInfo
-		PlayerInfo playerInfo = new PlayerInfo(playerName);
+		PlayerInfo playerInfo = new PlayerInfo(playerID);
 		
 		// loop through each MobType
 		for(MobType mobType: MobType.values())
@@ -137,27 +136,27 @@ public class PlayerFileHandler extends FileHandler implements Listener
 	 * player name.yml file does not exist, then this method will 
 	 * create a default playerName.yml, save it to disk, and return a 
 	 * FileConfiguration based on it.
-	 * @param playerName the name of the player whose playerName.yml 
-	 * file you want.
+	 * @param playerID the UUID of the player whose yml file you want.
 	 * @return a FileConfiguration based of the playerName.yml file.
 	 */
-	protected FileConfiguration getPlayerConfig(String playerName)
+	protected FileConfiguration getPlayerConfig(UUID playerID)
 	{
 		File playerFile;
 		FileConfiguration playerConfig = null;
 		
 		if(this.isRunningWithHead())
 		{
-			playerFile = new File(plugin.getDataFolder(), PLAYERS_FOLDER + File.separator  + playerName + ".yml");
+			playerFile = new File(plugin.getDataFolder(), PLAYERS_FOLDER + File.separator  + playerID + ".yml");
 		}
 		else
 		{
-			playerFile = new File(PLAYERS_FOLDER + File.separator  + playerName + ".yml");
+			playerFile = new File(PLAYERS_FOLDER + File.separator  + playerID + ".yml");
 		}
 		
-		if(this.isRunningWithHead()&& !playerFile.exists())
+		if(this.isRunningWithHead() && !playerFile.exists())
 		{
 			playerFile.getParentFile().mkdirs();
+			
 			try
 			{
 				playerConfig = YamlConfiguration.loadConfiguration(configFile);
@@ -165,7 +164,7 @@ public class PlayerFileHandler extends FileHandler implements Listener
 	        } 
 			catch (IOException e) 
 			{
-				plugin.getLogger().info("Could not save to " + playerName + ".yml");
+				plugin.getLogger().info("Could not save to " + playerID + ".yml");
 	        }
 		}
 		else
@@ -173,9 +172,9 @@ public class PlayerFileHandler extends FileHandler implements Listener
 			playerConfig = YamlConfiguration.loadConfiguration(playerFile);
 		}
 		
-		// we set the defaults to the defaultPlayerConfig so that if
+		// We set the defaults to the defaultPlayerConfig so that if
 		// the playerConfig contains garbage data, we can still load 
-		// the MobInfo
+		// the MobInfo.
 		playerConfig.setDefaults(config);
 
 		return playerConfig;
@@ -183,21 +182,48 @@ public class PlayerFileHandler extends FileHandler implements Listener
 	
 	private void loadMobInfoFromConfig(MobInfo mobInfo, FileConfiguration playerConfig)
 	{
-		// set the setting in mobInfo
-		String settingName = playerConfig.getString(mobInfo.getMobType().getName() + ".setting");
+		String mobName = mobInfo.getMobType().getName();
+		
+		// Set the setting in mobInfo.
+		String settingName = playerConfig.getString(mobName + ".setting");
 		Setting setting = Setting.getSetting(settingName);
 		mobInfo.setSetting(setting);
 		
-		// set the manualPerformanceLevel in the MobInfo
-		int manualPerformanceLevel = playerConfig.getInt(mobInfo.getMobType().getName() + ".manualPerformanceLevel");
+		// Set the manualPerformanceLevel in the MobInfo.
+		int manualPerformanceLevel = playerConfig.getInt(mobName + ".manualPerformanceLevel");
 		mobInfo.setManualPerformanceLevel(manualPerformanceLevel);
 	
-		// set the currentPerformanceLevel in the MobInfo
-		int autoPerformanceLevel = playerConfig.getInt(mobInfo.getMobType().getName() + ".autoPerformanceLevel");
+		// Set the currentPerformanceLevel in the MobInfo.
+		int autoPerformanceLevel = playerConfig.getInt(mobName + ".autoPerformanceLevel");
 		mobInfo.setAutoPerformanceLevel(autoPerformanceLevel);
-		// the estimated performance level should start off equal to 
-		// the current performance level
+		
+		// The estimated performance level should start off equal to 
+		// the current performance level.
 		mobInfo.setEstimatedPerformanceLevel(autoPerformanceLevel);
+		
+		int maxIncrement = playerConfig.getInt(mobName + ".maxIncrement");
+		mobInfo.setMaxIncrement(maxIncrement);
+		
+		boolean scaleAttack = playerConfig.getBoolean(mobName + ".scaleAttributes.attack");
+		mobInfo.setScaleAttack(scaleAttack);
+		
+		boolean scaleDefense = playerConfig.getBoolean(mobName + ".scaleAttributes.defense");
+		mobInfo.setScaleDefense(scaleDefense);
+		
+		boolean scaleSpeed = playerConfig.getBoolean(mobName + ".scaleAttributes.speed");
+		mobInfo.setScaleSpeed(scaleSpeed);
+		
+		boolean scaleKnockBackResistance = playerConfig.getBoolean(mobName + ".scaleAttributes.knockback");
+		mobInfo.setScaleKnockbackResistance(scaleKnockBackResistance);
+		
+		boolean scaleMaxFollowDistance = playerConfig.getBoolean(mobName + ".scaleAttributes.followDistance");
+		mobInfo.setScaleMaxFollowDistance(scaleMaxFollowDistance);
+		
+		boolean scaleXP = playerConfig.getBoolean(mobName + ".scaleAttributes.xp");
+		mobInfo.setScaleXP(scaleXP);
+		
+		boolean scaleLoot = playerConfig.getBoolean(mobName + ".scaleAttributes.loot");
+		mobInfo.setScaleLoot(scaleLoot);
 	}
 	
 	/**
@@ -209,37 +235,35 @@ public class PlayerFileHandler extends FileHandler implements Listener
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerLogout(PlayerQuitEvent event)
 	{
-		// get the player
 		Player player = event.getPlayer();
-		// get the player's name
-		String playerName = player.getName();
 		
-		// save key variables from PlayerInfo to the player.yml file
-		this.savePlayerData(playerName);
+		UUID playerID = player.getUniqueId();
+		
+		// Save key variables from PlayerInfo to the player.yml file.
+		this.savePlayerData(playerID);
 
-		// remove the PlayerInfo from the plugin
-		playerDataManager.removePlayerInfo(playerName);
+		// Remove the PlayerInfo from the plugin.
+		playerDataManager.removePlayerInfo(playerID);
 	}
 	
 	/**
-	 * Saves the info from the plugin's PlayerData to the 
-	 * <player name>.yml file. It does not delete it from the plugin's 
-	 * PlayerData.
-	 * @param playerName the name of the player whose player data you 
+	 * Saves the info from the plugin's PlayerData to the player yml
+	 * file. It does not delete it from the plugin's PlayerData.
+	 * @param playerID the UUID of the player whose player data you 
 	 * want to save to disk
 	 */
-	public void savePlayerData(String playerName)
+	public void savePlayerData(UUID playerID)
 	{
 		// create the FileConfiguration object based on the playerFile.yml
-		FileConfiguration playerConfig = this.getPlayerConfig(playerName);
+		FileConfiguration playerConfig = this.getPlayerConfig(playerID);
 		
 		// get the PlayerInfo
-		PlayerInfo playerInfo = playerDataManager.getPlayerInfo(playerName);
+		PlayerInfo playerInfo = playerDataManager.getPlayerInfo(playerID);
 		
 		// loop through each MobType
-		for(MobType mobType: MobType.values())
+		MobType [] mobTypes = MobType.values();
+		for(MobType mobType: mobTypes)
 		{
-			// get the MobInfo
 			MobInfo mobInfo = playerInfo.getMobInfo(mobType);
 			this.saveMobInfoToConfig(mobInfo, playerConfig);
 		}
@@ -247,11 +271,11 @@ public class PlayerFileHandler extends FileHandler implements Listener
 		File playerFile;
 		if(this.isRunningWithHead())
 		{
-			playerFile = new File(plugin.getDataFolder(), PLAYERS_FOLDER + File.separator + playerName + ".yml");
+			playerFile = new File(plugin.getDataFolder(), PLAYERS_FOLDER + File.separator + playerID + ".yml");
 		}
 		else
 		{
-			playerFile = new File(PLAYERS_FOLDER + File.separator + playerName + ".yml");
+			playerFile = new File(PLAYERS_FOLDER + File.separator + playerID + ".yml");
 		}
 			
 		try 
@@ -267,17 +291,43 @@ public class PlayerFileHandler extends FileHandler implements Listener
 	
 	private void saveMobInfoToConfig(MobInfo mobInfo, FileConfiguration playerConfig)
 	{
+		String mobName = mobInfo.getMobType().getName();
+		
 		// save the setting for the MobType in the player.yml file
 		Setting setting = mobInfo.getSetting();
 		String settingName = setting.getName();
-		playerConfig.set(mobInfo.getMobType().getName() + ".setting", settingName);
+		playerConfig.set(mobName + ".setting", settingName);
 		
 		// save the manualPerformanceLevel for the MobType in the player.yml file
 		int manualPerformanceLevel = (int) (mobInfo.getManualPerformanceLevel());
-		playerConfig.set(mobInfo.getMobType().getName() + ".manualPerformanceLevel", manualPerformanceLevel);
+		playerConfig.set(mobName + ".manualPerformanceLevel", manualPerformanceLevel);
 
 		// save the autoPerformanceLevel for the MobType in the player.yml file
 		int autoPerformanceLevel = (int) (mobInfo.getAutoPerformanceLevel()+.5);
-		playerConfig.set(mobInfo.getMobType().getName() + ".autoPerformanceLevel", autoPerformanceLevel);
+		playerConfig.set(mobName + ".autoPerformanceLevel", autoPerformanceLevel);
+		
+		int maxIncrement = mobInfo.getMaxIncrement();
+		playerConfig.set(mobName + ".maxIncrement", maxIncrement);
+		
+		boolean scaleAttack = mobInfo.shouldScaleAttack();
+		playerConfig.set(mobName + ".scaleAttributes.attack", scaleAttack);
+		
+		boolean scaleDefense = mobInfo.shouldScaleDefense();
+		playerConfig.set(mobName + ".scaleAttributes.defense", scaleDefense);
+		
+		boolean scaleSpeed = mobInfo.shouldScaleSpeed();
+		playerConfig.set(mobName + ".scaleAttributes.speed", scaleSpeed);
+		
+		boolean scaleKnockBackResistance = mobInfo.shouldScaleKnockbackResistance();
+		playerConfig.set(mobName + ".scaleAttributes.knockback", scaleKnockBackResistance);
+		
+		boolean scaleMaxFollowDistance = mobInfo.shouldScaleMaxFollowDistance();
+		playerConfig.set(mobName + ".scaleAttributes.followDistance", scaleMaxFollowDistance);
+		
+		boolean scaleXP = mobInfo.shouldScaleXP();
+		playerConfig.set(mobName + ".scaleAttributes.xp", scaleXP);
+		
+		boolean scaleLoot = mobInfo.shouldScaleLoot();
+		playerConfig.set(mobName + ".scaleAttributes.loot", scaleLoot);
 	}
 }
