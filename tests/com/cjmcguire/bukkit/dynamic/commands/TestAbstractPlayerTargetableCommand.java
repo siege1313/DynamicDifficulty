@@ -4,13 +4,13 @@ import static org.junit.Assert.*;
 
 import java.util.UUID;
 
-import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
 import com.cjmcguire.bukkit.dynamic.MockPlayer;
+import com.cjmcguire.bukkit.dynamic.MockServer;
 import com.cjmcguire.bukkit.dynamic.commands.core.InfoCommand;
 import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
 import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
@@ -43,7 +43,7 @@ public class TestAbstractPlayerTargetableCommand
 		EasyMock.replay(mockPlayer);
 		
 		// Create the mock server.
-		Server mockServer = EasyMock.createMock(Server.class);
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.expect(mockServer.getPlayerExact(PLAYER_1_NAME)).andReturn(mockPlayer);
 		EasyMock.expect(mockServer.getPlayer(PLAYER_1_ID)).andReturn(mockPlayer);
 		EasyMock.expect(mockServer.getPlayer(PLAYER_1_ID)).andReturn(mockPlayer);
@@ -115,7 +115,7 @@ public class TestAbstractPlayerTargetableCommand
 		EasyMock.replay(mockPlayer2);
 		
 		// Create the mock server.
-		Server mockServer = EasyMock.createMock(Server.class);
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.expect(mockServer.getPlayerExact(PLAYER_2_NAME)).andReturn(mockPlayer2);
 		EasyMock.expect(mockServer.getPlayer(PLAYER_2_ID)).andReturn(mockPlayer2);
 		EasyMock.expect(mockServer.getPlayer(PLAYER_2_ID)).andReturn(mockPlayer2);
@@ -207,7 +207,7 @@ public class TestAbstractPlayerTargetableCommand
 		EasyMock.replay(mockPlayer2);
 		
 		// Create the mock server.
-		Server mockServer = EasyMock.createMock(Server.class);
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.replay(mockServer);
 		
 		// Create the mock sender.
@@ -255,7 +255,7 @@ public class TestAbstractPlayerTargetableCommand
 		EasyMock.replay(mockSender);
 
 		// Create the mock server.
-		Server mockServer = EasyMock.createMock(Server.class);
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.expect(mockServer.getPlayer(PLAYER_1_ID)).andReturn(mockSender);
 		EasyMock.replay(mockServer);
 		
@@ -296,7 +296,7 @@ public class TestAbstractPlayerTargetableCommand
 		EasyMock.replay(mockSender);
 
 		// Create the mock server.
-		Server mockServer = EasyMock.createMock(Server.class);
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.replay(mockServer);
 		
 		// Set up the PlayerInfo.
@@ -338,7 +338,7 @@ public class TestAbstractPlayerTargetableCommand
 		EasyMock.replay(mockSender);
 
 		// Create the mock server.
-		Server mockServer = EasyMock.createMock(Server.class);
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.expect(mockServer.getPlayer(PLAYER_1_ID)).andReturn(mockSender);
 		EasyMock.replay(mockServer);
 		
@@ -380,7 +380,7 @@ public class TestAbstractPlayerTargetableCommand
 		EasyMock.replay(mockSender);
 
 		// Create the mock server.
-		Server mockServer = EasyMock.createMock(Server.class);
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.replay(mockServer);
 		
 		// Set up the PlayerInfo.
@@ -419,7 +419,7 @@ public class TestAbstractPlayerTargetableCommand
 		EasyMock.replay(mockSender);
 
 		// Create the mock server.
-		Server mockServer = EasyMock.createMock(Server.class);
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.replay(mockServer);
 		
 		// Set up the PlayerInfo.
@@ -454,7 +454,7 @@ public class TestAbstractPlayerTargetableCommand
 	public void testWhenOtherDoesNotExist()
 	{
 		// Create the mock server.
-		Server mockServer = EasyMock.createMock(Server.class);
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.expect(mockServer.getPlayerExact(PLAYER_2_NAME)).andReturn(null);
 		EasyMock.replay(mockServer);
 		

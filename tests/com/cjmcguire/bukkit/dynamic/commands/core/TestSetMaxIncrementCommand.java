@@ -2,12 +2,12 @@ package com.cjmcguire.bukkit.dynamic.commands.core;
 
 import static org.junit.Assert.*;
 
-import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
 import com.cjmcguire.bukkit.dynamic.MockPlayer;
+import com.cjmcguire.bukkit.dynamic.MockServer;
 import com.cjmcguire.bukkit.dynamic.commands.core.SetMaxIncrementCommand;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
@@ -131,7 +131,7 @@ public class TestSetMaxIncrementCommand  extends TestAbstractChangeCommand
 		EasyMock.replay(mockPlayer);
 
 		// Create the mock server.
-		mockServer = EasyMock.createMock(Server.class);
+		mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.replay(mockServer);
 
 		// Create the mock sender.
@@ -160,7 +160,7 @@ public class TestSetMaxIncrementCommand  extends TestAbstractChangeCommand
 		EasyMock.replay(mockPlayer);
 
 		// Create the mock server.
-		mockServer = EasyMock.createMock(Server.class);
+		mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.replay(mockServer);
 
 		// Create the mock sender.

@@ -4,12 +4,12 @@ import static org.junit.Assert.*;
 
 import java.util.UUID;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
 import com.cjmcguire.bukkit.dynamic.MockPlayer;
+import com.cjmcguire.bukkit.dynamic.MockServer;
 import com.cjmcguire.bukkit.dynamic.commands.core.HelpCommand;
 
 /**
@@ -30,7 +30,7 @@ public class TestAbstractDDCommand
 		EasyMock.expect(mockPlayer.getUniqueId()).andReturn(PLAYER_1_ID);
 		EasyMock.replay(mockPlayer);
 		
-		Server mockServer = EasyMock.createNiceMock(Server.class);
+		MockServer mockServer = EasyMock.createNiceMock(MockServer.class);
 		EasyMock.expect(mockServer.getPlayerExact(PLAYER_1_NAME)).andReturn(mockPlayer);
 		EasyMock.replay(mockServer);
 		

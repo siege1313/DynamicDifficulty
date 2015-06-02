@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 /**
  * An abstract class for a Listener that listens to entity damage
@@ -24,7 +25,11 @@ public abstract class AbstractEntityDamageListener implements Listener
 		if(damager instanceof Projectile)
 		{
 			Projectile projectile = (Projectile) damager;
-			damager = projectile.getShooter();
+			ProjectileSource shooter = projectile.getShooter();
+			if(shooter instanceof LivingEntity)
+			{
+				damager = (LivingEntity)shooter;
+			}
 		}
 
 		// Get the entity that was damaged.

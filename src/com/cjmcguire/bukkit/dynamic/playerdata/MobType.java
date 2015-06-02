@@ -1,8 +1,8 @@
 package com.cjmcguire.bukkit.dynamic.playerdata;
 
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftSkeleton;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 
 /**
@@ -159,9 +159,9 @@ public enum MobType
 		// because bukkit does not have separate EntityTypes for it yet.
 		if(entityType == EntityType.SKELETON)
 		{
-			SkeletonType skeletonType = ((CraftSkeleton)mob).getSkeletonType();
+			Skeleton skeleton = (Skeleton) mob;
 			
-			if(skeletonType == SkeletonType.WITHER)
+			if(skeleton.getSkeletonType() == SkeletonType.WITHER)
 			{
 				mobName = "wither" + mobName;
 			}

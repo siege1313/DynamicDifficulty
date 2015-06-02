@@ -2,12 +2,13 @@ package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import static org.junit.Assert.*;
 
-import org.bukkit.craftbukkit.v1_7_R3.entity.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
+import com.cjmcguire.bukkit.dynamic.MockLivingEntity;
+import com.cjmcguire.bukkit.dynamic.MockSkeleton;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
 
 /**
@@ -125,15 +126,14 @@ public class TestMobType
 	@Test
 	public void testGetEntitysMobType()
 	{
-		CraftSkeleton mockSkeleton = EasyMock.createMock(CraftSkeleton.class);
+		MockSkeleton mockSkeleton = EasyMock.createMock(MockSkeleton.class);
         EasyMock.expect(mockSkeleton.getType()).andReturn(EntityType.SKELETON);
         EasyMock.expect(mockSkeleton.getSkeletonType()).andReturn(SkeletonType.NORMAL);
         EasyMock.replay(mockSkeleton);
 		assertEquals(MobType.SKELETON, MobType.getEntitysMobType(mockSkeleton));
 		EasyMock.verify(mockSkeleton);
 		
-		
-		CraftSkeleton mockWitherSkeleton = EasyMock.createMock(CraftSkeleton.class);
+		MockSkeleton mockWitherSkeleton = EasyMock.createMock(MockSkeleton.class);
         EasyMock.expect(mockWitherSkeleton.getType()).andReturn(EntityType.SKELETON);
         EasyMock.expect(mockWitherSkeleton.getSkeletonType()).andReturn(SkeletonType.WITHER);
         EasyMock.replay(mockWitherSkeleton);
@@ -141,7 +141,7 @@ public class TestMobType
 		EasyMock.verify(mockWitherSkeleton);
 		
 		
-		CraftZombie mockZombie = EasyMock.createMock(CraftZombie.class);
+		MockLivingEntity mockZombie = EasyMock.createMock(MockLivingEntity.class);
         EasyMock.expect(mockZombie.getType()).andReturn(EntityType.ZOMBIE);
         EasyMock.replay(mockZombie);
 		assertEquals(MobType.ZOMBIE, MobType.getEntitysMobType(mockZombie));

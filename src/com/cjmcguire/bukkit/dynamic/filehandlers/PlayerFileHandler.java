@@ -2,6 +2,7 @@ package com.cjmcguire.bukkit.dynamic.filehandlers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -73,7 +74,7 @@ public class PlayerFileHandler extends FileHandler implements Listener
 	{
 		if(this.isRunningWithHead())
 		{
-			Player [] players = plugin.getServer().getOnlinePlayers();
+			Collection<? extends Player> players = plugin.getServer().getOnlinePlayers();
 			
 			for(Player player: players)
 			{

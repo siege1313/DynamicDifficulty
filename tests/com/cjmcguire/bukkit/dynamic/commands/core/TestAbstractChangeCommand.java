@@ -2,13 +2,13 @@ package com.cjmcguire.bukkit.dynamic.commands.core;
 
 import java.util.UUID;
 
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.easymock.EasyMock;
 
 import com.cjmcguire.bukkit.dynamic.MockPlayer;
+import com.cjmcguire.bukkit.dynamic.MockServer;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
 import com.cjmcguire.bukkit.dynamic.playerdata.PlayerDataManager;
@@ -25,7 +25,7 @@ public abstract class TestAbstractChangeCommand
 	protected static final String PLAYER_1_NAME = "Player1";
 	
 	protected Player mockPlayer;
-	protected Server mockServer;
+	protected MockServer mockServer;
 	protected ConsoleCommandSender mockSender;
 	protected PlayerInfo playerInfo;
 	
@@ -37,7 +37,7 @@ public abstract class TestAbstractChangeCommand
 		EasyMock.replay(mockPlayer);
 		
 		// Create the mock server.
-		mockServer = EasyMock.createMock(Server.class);
+		mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.expect(mockServer.getPlayer(PLAYER_1_ID)).andReturn(mockPlayer);
 		EasyMock.expect(mockServer.getPlayer(PLAYER_1_ID)).andReturn(mockPlayer);
 		EasyMock.replay(mockServer);
@@ -54,7 +54,7 @@ public abstract class TestAbstractChangeCommand
 		EasyMock.replay(mockPlayer);
 		
 		// Create the mock server.
-		mockServer = EasyMock.createMock(Server.class);
+		mockServer = EasyMock.createMock(MockServer.class);
 		EasyMock.expect(mockServer.getPlayer(PLAYER_1_ID)).andReturn(mockPlayer);
 		EasyMock.replay(mockServer);
 	}

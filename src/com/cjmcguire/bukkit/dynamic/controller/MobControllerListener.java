@@ -2,12 +2,12 @@ package com.cjmcguire.bukkit.dynamic.controller;
 
 import java.util.UUID;
 
-import net.minecraft.server.v1_7_R3.EntityInsentient;
-import net.minecraft.server.v1_7_R3.AttributeInstance;
-import net.minecraft.server.v1_7_R3.AttributeModifier;
-import net.minecraft.server.v1_7_R3.GenericAttributes;
+import net.minecraft.server.v1_8_R3.EntityInsentient;
+import net.minecraft.server.v1_8_R3.AttributeInstance;
+import net.minecraft.server.v1_8_R3.AttributeModifier;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
 
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -251,17 +251,17 @@ public class MobControllerListener extends AbstractEntityDamageListener
 	protected void makeSpeedDynamic(EntityInsentient insEntity, double performanceLevel)
 	{
 		// get the mob speed attribute
-		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.d);
+		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
 
 		//performance level of 200 scales to -> 150% speed 
 		//performance level of 50 scales to -> 75% speed
 		double modifier = (performanceLevel/100.0-1)/2.0;
 		AttributeModifier attributeModifier = new AttributeModifier(movementSpeedUID, "DynamicDifficulty movement speed modifier", modifier, 1);
 
-		// remove the modifier if one was on it
+		// c() removes the modifier if one was on it
+		attribute.c(attributeModifier);
+		// b() adds the modifier to the attribute
 		attribute.b(attributeModifier);
-		// add the modifier we created
-		attribute.a(attributeModifier);
 	}
 	
 	/**
@@ -314,7 +314,7 @@ public class MobControllerListener extends AbstractEntityDamageListener
 		// loop of targeting and untargeting the player. 
 		if(performanceLevel > 100)
 		{
-			AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.b);
+			AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
 			double value = mobInfo.getMobType().getDefaultFollowDistance() * performanceLevel/100.0;
 			attribute.setValue(value);
 		}
@@ -347,10 +347,12 @@ public class MobControllerListener extends AbstractEntityDamageListener
 	 */
 	protected void resetSpeed(EntityInsentient insEntity)
 	{
-		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.d);
+		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
 		AttributeModifier modifier = new AttributeModifier(movementSpeedUID, "DynamicDifficulty movement speed reset", 0, 1);
+		// c() removes the modifier if one was on it
+		attribute.c(modifier);
+		// b() adds the modifier to the attribute
 		attribute.b(modifier);
-		attribute.a(modifier);
 	}
 
 	/**
@@ -374,7 +376,7 @@ public class MobControllerListener extends AbstractEntityDamageListener
 	 */
 	protected void resetFollowDistance(EntityInsentient insEntity, MobType mobType)
 	{
-		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.b);
+		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
 		attribute.setValue(mobType.getDefaultFollowDistance());
 	}
 }
