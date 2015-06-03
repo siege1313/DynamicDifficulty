@@ -1,5 +1,7 @@
 package com.cjmcguire.bukkit.dynamic.commands.scale;
 
+import org.bukkit.Server;
+
 import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
 
 /**
@@ -9,9 +11,9 @@ import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
 public class TestScaleKnockbackCommand extends TestAbstractScaleCommand
 {
 	@Override
-	protected AbstractScaleCommand getScaleCommand() 
+	protected AbstractScaleCommand getScaleCommand(Server mockServer) 
 	{
-		return new ScaleKnockbackCommand();
+		return new ScaleKnockbackCommand(mockServer);
 	}
 
 	@Override

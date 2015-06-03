@@ -1,6 +1,7 @@
 package com.cjmcguire.bukkit.dynamic.commands.scale;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 
 import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
 
@@ -45,10 +46,12 @@ public class ScaleDefenseCommand extends AbstractScaleCommand
 	
 	/**
 	 * Initializes this Command.
+	 * @param server - the server to get players from
 	 */
-	public ScaleDefenseCommand()
+	public ScaleDefenseCommand(Server server)
 	{
-		super(SELF_ARGS_LENGTH, OTHER_ARGS_LENGTH,
+		super(server,
+			  SELF_ARGS_LENGTH, OTHER_ARGS_LENGTH,
 			  SELF_PERMISSION, OTHER_PERMISSION,
 			  SELF_DENY_PERMISSION_MESSAGE, OTHER_DENY_PERMISSION_MESSAGE,
 			  SELF_DENY_CONSOLE_MESSAGE, INCORRECT_ARGS_MESSAGE,

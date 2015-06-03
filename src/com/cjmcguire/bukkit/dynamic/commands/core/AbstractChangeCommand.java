@@ -1,17 +1,20 @@
 package com.cjmcguire.bukkit.dynamic.commands.core;
 
-import com.cjmcguire.bukkit.dynamic.commands.AbstractPlayerTargetableCommand;
+import org.bukkit.Server;
+
+import com.cjmcguire.bukkit.dynamic.commands.PlayerTargetableCommand;
 
 /**
  * An abstract class for a command that is used to change the value
  * of an attribute.
  * @author CJ McGuire
  */
-public abstract class AbstractChangeCommand  extends AbstractPlayerTargetableCommand
+public abstract class AbstractChangeCommand  extends PlayerTargetableCommand
 {
 	
 	/**
 	 * Initializes this Command.
+	 * @param server - the server to get players from
 	 * @param selfArgsLength the number of arguments for when the 
 	 * command targets the sender.
 	 * @param otherArgsLength the number of arguments for when the 
@@ -27,13 +30,14 @@ public abstract class AbstractChangeCommand  extends AbstractPlayerTargetableCom
 	 * @param incorrectArgsMessage the message to send when the 
 	 * arguments have an incorrect length.
 	 */
-	public AbstractChangeCommand( 
+	public AbstractChangeCommand(Server server,
 			int selfArgsLength, int otherArgsLength, 
 			String selfPermission, String otherPermission,
 			String selfDenyPermissionMessage, String otherDenyPermissionMessage, 
 			String selfDenyConsoleMessage, String incorrectArgsMessage) 
 	{
-		super(selfArgsLength, otherArgsLength, 
+		super(server, 
+			  selfArgsLength, otherArgsLength, 
 			  selfPermission, otherPermission,
 			  selfDenyPermissionMessage, otherDenyPermissionMessage,
 			  selfDenyConsoleMessage, incorrectArgsMessage);

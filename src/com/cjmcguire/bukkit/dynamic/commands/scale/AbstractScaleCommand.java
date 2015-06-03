@@ -3,10 +3,11 @@ package com.cjmcguire.bukkit.dynamic.commands.scale;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.cjmcguire.bukkit.dynamic.commands.AbstractPlayerTargetableCommand;
+import com.cjmcguire.bukkit.dynamic.commands.PlayerTargetableCommand;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
 import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
@@ -17,12 +18,13 @@ import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
  * true and false.
  * @author CJ McGuire
  */
-public abstract class AbstractScaleCommand extends AbstractPlayerTargetableCommand
+public abstract class AbstractScaleCommand extends PlayerTargetableCommand
 {
 	private String attributeName;
 	
 	/**
 	 * Initializes this Command.
+	 * @param server - the server to get players from
 	 * @param selfArgsLength the number of arguments for when the 
 	 * command targets the sender.
 	 * @param otherArgsLength the number of arguments for when the 
@@ -39,14 +41,15 @@ public abstract class AbstractScaleCommand extends AbstractPlayerTargetableComma
 	 * arguments have an incorrect length.
 	 * @param attributeName the name of the atrribute to scale
 	 */
-	public AbstractScaleCommand( 
+	public AbstractScaleCommand(Server server,  
 			int selfArgsLength, int otherArgsLength, 
 			String selfPermission, String otherPermission,
 			String selfDenyPermissionMessage, String otherDenyPermissionMessage, 
 			String selfDenyConsoleMessage, String incorrectArgsMessage, 
 			String attributeName) 
 	{
-		super(selfArgsLength, otherArgsLength, 
+		super(server, 
+			  selfArgsLength, otherArgsLength, 
 			  selfPermission, otherPermission,
 			  selfDenyPermissionMessage, otherDenyPermissionMessage,
 			  selfDenyConsoleMessage, incorrectArgsMessage);

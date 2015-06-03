@@ -2,6 +2,7 @@ package com.cjmcguire.bukkit.dynamic.commands;
 
 import java.util.HashMap;
 
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,30 +24,31 @@ public class DynamicCommandExecutor implements CommandExecutor
 	 */
 	public static final String NAME = "dynamic";
 	
-	private HashMap<String, AbstractDDCommand> commands;
+	private HashMap<String, DDCommand> commands;
 	
 	/**
 	 * Initializes the DynamicCommandExecutor.
+	 * @param server - the server for this CommandExecutor
 	 */
-	public DynamicCommandExecutor()
+	public DynamicCommandExecutor(Server server)
 	{
-		commands = new HashMap<String, AbstractDDCommand>();
+		commands = new HashMap<String, DDCommand>();
 		
 		// core
 		commands.put(HelpCommand.NAME, new HelpCommand());
-		commands.put(InfoCommand.NAME, new InfoCommand());
-		commands.put(ChangeLevelCommand.NAME, new ChangeLevelCommand());
-		commands.put(ChangeSettingCommand.NAME, new ChangeSettingCommand());
-		commands.put(SetMaxIncrementCommand.NAME, new SetMaxIncrementCommand());
+		commands.put(InfoCommand.NAME, new InfoCommand(server));
+		commands.put(ChangeLevelCommand.NAME, new ChangeLevelCommand(server));
+		commands.put(ChangeSettingCommand.NAME, new ChangeSettingCommand(server));
+		commands.put(SetMaxIncrementCommand.NAME, new SetMaxIncrementCommand(server));
 		
 		// scale
-		commands.put(ScaleAttackCommand.NAME, new ScaleAttackCommand());
-		commands.put(ScaleDefenseCommand.NAME, new ScaleDefenseCommand());
-		commands.put(ScaleFollowDistanceCommand.NAME, new ScaleFollowDistanceCommand());
-		commands.put(ScaleKnockbackCommand.NAME, new ScaleKnockbackCommand());
-		commands.put(ScaleSpeedCommand.NAME, new ScaleSpeedCommand());
-		commands.put(ScaleXPCommand.NAME, new ScaleXPCommand());
-		commands.put(ScaleLootCommand.NAME, new ScaleLootCommand());
+		commands.put(ScaleAttackCommand.NAME, new ScaleAttackCommand(server));
+		commands.put(ScaleDefenseCommand.NAME, new ScaleDefenseCommand(server));
+		commands.put(ScaleFollowDistanceCommand.NAME, new ScaleFollowDistanceCommand(server));
+		commands.put(ScaleKnockbackCommand.NAME, new ScaleKnockbackCommand(server));
+		commands.put(ScaleSpeedCommand.NAME, new ScaleSpeedCommand(server));
+		commands.put(ScaleXPCommand.NAME, new ScaleXPCommand(server));
+		commands.put(ScaleLootCommand.NAME, new ScaleLootCommand(server));
 	}
 	
 	/** 
@@ -71,7 +73,7 @@ public class DynamicCommandExecutor implements CommandExecutor
 			commandName = args[0];
 		}
 		
-		AbstractDDCommand ddCommand = commands.get(commandName);
+		DDCommand ddCommand = commands.get(commandName);
 		
 		// If the ddCommand exists in the HashMap.
 		if(ddCommand != null)

@@ -19,13 +19,37 @@ import com.cjmcguire.bukkit.dynamic.playerdata.PlayerInfo;
  * Tests the PlayerTargetableCommand class.
  * @author CJ McGuire
  */
-public class TestAbstractPlayerTargetableCommand 
-{
+public class TestPlayerTargetableCommand 
+{	
 	private static final UUID PLAYER_1_ID = UUID.fromString("12345678-1234-1234-1234-123456789001");
 	private static final String PLAYER_1_NAME = "Player1";
 	
 	private static final UUID PLAYER_2_ID = UUID.fromString("12345678-1234-1234-1234-123456789002");
 	private static final String PLAYER_2_NAME = "Player2";
+	
+	/**
+	 * Tests the getUUIDFromPlayerName() method.
+	 */
+	@Test
+	public void testGetUUIDFromPlayerName()
+	{		
+		Player mockPlayer = EasyMock.createNiceMock(MockPlayer.class);
+		EasyMock.expect(mockPlayer.getUniqueId()).andReturn(PLAYER_1_ID);
+		EasyMock.replay(mockPlayer);
+		
+		MockServer mockServer = EasyMock.createNiceMock(MockServer.class);
+		EasyMock.expect(mockServer.getPlayerExact(PLAYER_1_NAME)).andReturn(mockPlayer);
+		EasyMock.replay(mockServer);
+		
+		PlayerTargetableCommand command = new InfoCommand(mockServer);
+		
+		UUID uuid = command.getUUIDFromPlayerName(PLAYER_1_NAME);
+		
+		assertEquals(PLAYER_1_ID, uuid);
+		
+		EasyMock.verify(mockServer);
+		EasyMock.verify(mockPlayer);
+	}
 	
 	/**
 	 * Tests the executeCommand() method under the following 
@@ -61,8 +85,7 @@ public class TestAbstractPlayerTargetableCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general", PLAYER_1_NAME};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -87,14 +110,19 @@ public class TestAbstractPlayerTargetableCommand
 		ConsoleCommandSender mockSender = EasyMock.createNiceMock(ConsoleCommandSender.class);
 		EasyMock.replay(mockSender);
 
+		// Create the mock server.
+		MockServer mockServer = EasyMock.createMock(MockServer.class);
+		EasyMock.replay(mockServer);
+		
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general"};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
 		assertFalse(valid);
 		
 		// Verify mocks.
+		EasyMock.verify(mockServer);
 		EasyMock.verify(mockSender);
 	}
 
@@ -135,8 +163,7 @@ public class TestAbstractPlayerTargetableCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general", PLAYER_2_NAME};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -224,8 +251,7 @@ public class TestAbstractPlayerTargetableCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general", PLAYER_2_NAME};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -267,8 +293,7 @@ public class TestAbstractPlayerTargetableCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general"};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -307,8 +332,7 @@ public class TestAbstractPlayerTargetableCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general"};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -350,8 +374,7 @@ public class TestAbstractPlayerTargetableCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general", PLAYER_1_NAME};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -391,8 +414,7 @@ public class TestAbstractPlayerTargetableCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general", PLAYER_1_NAME};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -430,8 +452,7 @@ public class TestAbstractPlayerTargetableCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general", "asdf", "as"};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		
@@ -469,8 +490,7 @@ public class TestAbstractPlayerTargetableCommand
 		playerDataManager.clearPlayerData();
 
 		// Perform the command.
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		String [] args = {"info", "general", PLAYER_2_NAME};
 		boolean valid = infoCommand.executeCommand(mockSender, args);
 		

@@ -23,7 +23,7 @@ public class TestChangeSettingCommand extends TestAbstractChangeCommand
 	@Override
 	protected AbstractChangeCommand getCommand()
 	{
-		return new ChangeSettingCommand();
+		return new ChangeSettingCommand(mockServer);
 	}
 	
 	@Override

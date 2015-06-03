@@ -97,7 +97,6 @@ public abstract class TestAbstractChangeCommand
 	protected boolean performCommand(CommandSender sender, String [] args)
 	{
 		AbstractChangeCommand abstractChangeCommand = this.getCommand();
-		abstractChangeCommand.setServer(mockServer);
 		
 		return abstractChangeCommand.commandAction(sender, PLAYER_1_ID, args);
 	}

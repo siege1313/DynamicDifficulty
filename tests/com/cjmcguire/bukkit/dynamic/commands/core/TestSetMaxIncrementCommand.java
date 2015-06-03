@@ -22,7 +22,7 @@ public class TestSetMaxIncrementCommand  extends TestAbstractChangeCommand
 	@Override
 	protected AbstractChangeCommand getCommand() 
 	{
-		return new SetMaxIncrementCommand();
+		return new SetMaxIncrementCommand(mockServer);
 	}
 	
 	@Override

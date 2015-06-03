@@ -3,10 +3,11 @@ package com.cjmcguire.bukkit.dynamic.commands.core;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.cjmcguire.bukkit.dynamic.commands.AbstractPlayerTargetableCommand;
+import com.cjmcguire.bukkit.dynamic.commands.PlayerTargetableCommand;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
 
@@ -17,7 +18,7 @@ import com.cjmcguire.bukkit.dynamic.playerdata.MobType;
  * sender has permission to use this command.
  * @author CJ McGuire
  */
-public class InfoCommand extends AbstractPlayerTargetableCommand
+public class InfoCommand extends PlayerTargetableCommand
 {
 	private static final String GENERAL_INFO = "general";
 	
@@ -51,10 +52,12 @@ public class InfoCommand extends AbstractPlayerTargetableCommand
 	
 	/**
 	 * Initializes this Command.
+	 * @param server - the server to get players from
 	 */
-	public InfoCommand()
+	public InfoCommand(Server server)
 	{
-		super(SELF_ARGS_LENGTH, OTHER_ARGS_LENGTH,
+		super(server, 
+			  SELF_ARGS_LENGTH, OTHER_ARGS_LENGTH,
 			  SELF_PERMISSION, OTHER_PERMISSION,
 			  SELF_DENY_PERMISSION_MESSAGE, OTHER_DENY_PERMISSION_MESSAGE,
 			  SELF_DENY_CONSOLE_MESSAGE, INCORRECT_ARGS_MESSAGE);

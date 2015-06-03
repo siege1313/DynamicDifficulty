@@ -78,7 +78,7 @@ public final class DynamicDifficulty extends JavaPlugin
 		pluginManager.registerEvents(new LootControllerListener(), this);
 		
 		// Register the Commands.
-		this.getCommand(DynamicCommandExecutor.NAME).setExecutor(new DynamicCommandExecutor());
+		this.getCommand(DynamicCommandExecutor.NAME).setExecutor(new DynamicCommandExecutor(this.getServer()));
 	}
 	
 	/**

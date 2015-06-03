@@ -3,6 +3,7 @@ package com.cjmcguire.bukkit.dynamic.commands.core;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -52,10 +53,12 @@ public class ChangeSettingCommand extends AbstractChangeCommand
 	
 	/**
 	 * Initializes this Command.
+	 * @param server - the server to get players from
 	 */
-	public ChangeSettingCommand()
+	public ChangeSettingCommand(Server server)
 	{
-		super(SELF_ARGS_LENGTH, OTHER_ARGS_LENGTH,
+		super(server, 
+			  SELF_ARGS_LENGTH, OTHER_ARGS_LENGTH,
 			  SELF_PERMISSION, OTHER_PERMISSION,
 			  SELF_DENY_PERMISSION_MESSAGE, OTHER_DENY_PERMISSION_MESSAGE,
 			  SELF_DENY_CONSOLE_MESSAGE, INCORRECT_ARGS_MESSAGE);

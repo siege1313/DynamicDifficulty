@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
 
+import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.easymock.EasyMock;
@@ -56,8 +57,7 @@ public abstract class TestAbstractScaleCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		AbstractScaleCommand changeSettingCommand = this.getScaleCommand();
-		changeSettingCommand.setServer(mockServer);
+		AbstractScaleCommand changeSettingCommand = this.getScaleCommand(mockServer);
 
 		String [] args = {this.getCommandName(), "zombie", "false"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, PLAYER_1_ID, args);
@@ -95,8 +95,7 @@ public abstract class TestAbstractScaleCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		AbstractScaleCommand changeSettingCommand = this.getScaleCommand();
-		changeSettingCommand.setServer(mockServer);
+		AbstractScaleCommand changeSettingCommand = this.getScaleCommand(mockServer);
 
 		String [] args = {this.getCommandName(), "zombie", "false"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockPlayer, PLAYER_1_ID, args);
@@ -138,8 +137,7 @@ public abstract class TestAbstractScaleCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		AbstractScaleCommand changeSettingCommand = this.getScaleCommand();
-		changeSettingCommand.setServer(mockServer);
+		AbstractScaleCommand changeSettingCommand = this.getScaleCommand(mockServer);
 
 		String [] args = {this.getCommandName(), "all", "false"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, PLAYER_1_ID, args);
@@ -180,8 +178,7 @@ public abstract class TestAbstractScaleCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		AbstractScaleCommand changeSettingCommand = this.getScaleCommand();
-		changeSettingCommand.setServer(mockServer);
+		AbstractScaleCommand changeSettingCommand = this.getScaleCommand(mockServer);
 	
 		String [] args = {this.getCommandName(), "all", "false"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockPlayer, PLAYER_1_ID, args);
@@ -223,8 +220,7 @@ public abstract class TestAbstractScaleCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		AbstractScaleCommand changeSettingCommand = this.getScaleCommand();
-		changeSettingCommand.setServer(mockServer);
+		AbstractScaleCommand changeSettingCommand = this.getScaleCommand(mockServer);
 
 		String [] args = {this.getCommandName(), "zole", "false"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, PLAYER_1_ID, args);
@@ -260,8 +256,7 @@ public abstract class TestAbstractScaleCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		AbstractScaleCommand changeSettingCommand = this.getScaleCommand();
-		changeSettingCommand.setServer(mockServer);
+		AbstractScaleCommand changeSettingCommand = this.getScaleCommand(mockServer);
 
 		String [] args = {this.getCommandName(), "zombie", "asdfasdf"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, PLAYER_1_ID, args);
@@ -298,8 +293,7 @@ public abstract class TestAbstractScaleCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 		
 		// perform the command
-		ScaleAttackCommand changeSettingCommand = new ScaleAttackCommand();
-		changeSettingCommand.setServer(mockServer);
+		ScaleAttackCommand changeSettingCommand = new ScaleAttackCommand(mockServer);
 
 		String [] args = {this.getCommandName(), "zole", "asdfasdf"};
 		boolean settingChanged = changeSettingCommand.commandAction(mockSender, PLAYER_1_ID, args);
@@ -311,7 +305,7 @@ public abstract class TestAbstractScaleCommand
 		EasyMock.verify(mockPlayer);
 	}
 	
-	protected abstract AbstractScaleCommand getScaleCommand();
+	protected abstract AbstractScaleCommand getScaleCommand(Server server);
 	
 	protected abstract String getCommandName();
 	

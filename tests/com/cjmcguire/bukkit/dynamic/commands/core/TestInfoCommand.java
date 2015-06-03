@@ -57,8 +57,7 @@ public class TestInfoCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		
 		String [] args = {"info", "general"};
 		boolean valid = infoCommand.commandAction(mockSender, PLAYER_1_ID, args);
@@ -103,8 +102,7 @@ public class TestInfoCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		
 		String [] args = {"info", "zombie"};
 		boolean valid = infoCommand.commandAction(mockSender, PLAYER_1_ID, args);
@@ -143,8 +141,7 @@ public class TestInfoCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		
 		String [] args = {"info", "zombie"};
 		boolean valid = infoCommand.commandAction(mockPlayer, PLAYER_1_ID, args);
@@ -185,8 +182,7 @@ public class TestInfoCommand
 		playerDataManager.addPlayerInfo(playerInfo);
 
 		// perform the command
-		InfoCommand infoCommand = new InfoCommand();
-		infoCommand.setServer(mockServer);
+		InfoCommand infoCommand = new InfoCommand(mockServer);
 		
 		String [] args = {"info", "zoie"};
 		boolean valid = infoCommand.commandAction(mockSender, PLAYER_1_ID, args);

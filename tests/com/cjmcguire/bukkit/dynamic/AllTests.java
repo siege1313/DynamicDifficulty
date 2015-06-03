@@ -26,8 +26,7 @@ import com.cjmcguire.bukkit.dynamic.playerdata.*;
 	TestAnalyzerTask.class,
 
 	// com.cjmcguire.bukkit.dynamic.commands
-	TestAbstractDDCommand.class,
-	TestAbstractPlayerTargetableCommand.class,
+	TestPlayerTargetableCommand.class,
 	TestDynamicCommandExecutor.class,
 
 	// com.cjmcguire.bukkit.dynamic.commands.core

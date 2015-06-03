@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.cjmcguire.bukkit.dynamic.commands.AbstractDDCommand;
+import com.cjmcguire.bukkit.dynamic.commands.DDCommand;
 
 /**
  * This class falls under the "/dynamic" command. The "/dynamic help" 
@@ -12,7 +12,7 @@ import com.cjmcguire.bukkit.dynamic.commands.AbstractDDCommand;
  * plugin and its commands do.
  * @author CJ McGuire
  */
-public class HelpCommand extends AbstractDDCommand
+public class HelpCommand implements DDCommand
 {
 	/**
 	 * The name of this command. ("help")
@@ -130,7 +130,7 @@ public class HelpCommand extends AbstractDDCommand
 	 * false if the sender did not.
 	 */
 	@Override
-	protected boolean executeCommand(CommandSender sender, String[] args) 
+	public boolean executeCommand(CommandSender sender, String[] args) 
 	{
 		boolean workedAsIntended = true;
 		
