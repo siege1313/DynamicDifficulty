@@ -53,7 +53,7 @@ public class LootControllerListener implements Listener
 		Player player = killedEntity.getKiller();
 		
 		// If the player exists and the mob had a valid MobType
-		if(player != null && mobType != null && player.getGameMode() != GameMode.CREATIVE)
+		if(player != null && mobType != null && player.getGameMode() != GameMode.CREATIVE && MobType.potentiallyHostile(killedEntity))
 		{
 			UUID playerID = player.getUniqueId();
 			

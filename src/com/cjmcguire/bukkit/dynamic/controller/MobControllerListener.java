@@ -186,7 +186,7 @@ public class MobControllerListener extends AbstractEntityDamageListener
 
 		// If targeter was a LivingEntity (Ideally, the targeter should 
 		// be a mob but there is no way to know that at this point)
-		if(targeter instanceof LivingEntity)
+		if(targeter instanceof LivingEntity && MobType.potentiallyHostile((LivingEntity) targeter))
 		{
 			if(target instanceof Player)
 			{

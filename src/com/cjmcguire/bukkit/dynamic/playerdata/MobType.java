@@ -2,7 +2,10 @@ package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Skeleton.SkeletonType;
 
 /**
@@ -168,5 +171,32 @@ public enum MobType
 		}
 		
 		return getMobType(mobName);
+	}
+	
+	/**
+	 * Checks if the LivingEntity is Hostile. This is to handle the
+	 * cases where a mob may or may not be hostile to a player.
+	 * Such mobs include: Rabbits, Wolves.
+	 * @param mob - the mob to check.
+	 * @return true if the mob is hostile 
+	 */
+	public static boolean potentiallyHostile(LivingEntity mob)
+	{
+		boolean potentiallyHostile = true;
+		if(mob instanceof Rabbit)
+		{
+			Rabbit rabbit = (Rabbit) mob;
+			if(rabbit.getRabbitType() != Rabbit.Type.THE_KILLER_BUNNY)
+			{
+				potentiallyHostile = false;
+			} 
+		}
+		else if(mob instanceof Wolf)
+		{
+			Wolf wolf = (Wolf) mob;
+			potentiallyHostile = wolf.isAngry();
+		}
+		
+		return potentiallyHostile;
 	}
 }
