@@ -2,6 +2,7 @@ package com.cjmcguire.bukkit.dynamic.playerdata;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Guardian;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Skeleton;
@@ -32,14 +33,34 @@ public enum MobType
 	CREEPER(EntityType.CREEPER.getEntityClass().getSimpleName(), 20, 16),
 	
 	/**
+	 * Guardian Mob. Name: "elderguardian". Health: 80. Default Follow Distance: 16
+	 */
+	ELDER_GUARDIAN("elder" + EntityType.GUARDIAN.getEntityClass().getSimpleName(), 80, 16),
+	
+	/**
 	 * Enderman Mob. Name: "enderman". Health: 40. Default Follow Distance: 16
 	 */
 	ENDERMAN(EntityType.ENDERMAN.getEntityClass().getSimpleName(), 40, 16),
 	
 	/**
+	 * Endermite Mob. Name: "endermite". Health: 8. Default Follow Distance: 16
+	 */
+	ENDERMITE(EntityType.ENDERMITE.getEntityClass().getSimpleName(), 8, 16),
+	
+	/**
 	 * Ghast Mob. Name: "ghast". Health: 10. Default Follow Distance: 100
 	 */
 	GHAST(EntityType.GHAST.getEntityClass().getSimpleName(), 10, 100),
+	
+	/**
+	 * Guardian Mob. Name: "guardian". Health: 30. Default Follow Distance: 16
+	 */
+	GUARDIAN(EntityType.GUARDIAN.getEntityClass().getSimpleName(), 30, 16),
+	
+	/**
+	 * Killer Rabbit Mob. Name: "killerrabbit". Health: 10. Default Follow Distance: 16
+	 */
+	KILLER_RABBIT("killer" + EntityType.RABBIT.getEntityClass().getSimpleName(), 10, 16),
 	
 	/**
 	 * Magma cube Mob. Name: "magmacube". Health: 4. Default Follow Distance: 16
@@ -80,7 +101,12 @@ public enum MobType
 	 * Wither Skeleton Mob. Name: "witherskeleton". Health: 20. Default Follow Distance: 16
 	 */
 	WITHER_SKELETON("wither" + EntityType.SKELETON.getEntityClass().getSimpleName(), 20, 16),
-
+	
+	/**
+	 * Killer Rabbit Mob. Name: "wolf". Health: 8. Default Follow Distance: 16
+	 */
+	WOLF(EntityType.WOLF.getEntityClass().getSimpleName(), 8, 16),
+	
 	/**
 	 * Zombie Mob. Name: "zombie". Health: 20. Default Follow Distance: 40
 	 */
@@ -167,6 +193,24 @@ public enum MobType
 			if(skeleton.getSkeletonType() == SkeletonType.WITHER)
 			{
 				mobName = "wither" + mobName;
+			}
+		}
+		else if(entityType == EntityType.GUARDIAN)
+		{
+			Guardian guardian = (Guardian) mob;
+			
+			if(guardian.isElder())
+			{
+				mobName = "elder" + mobName;
+			}
+		}
+		else if(entityType == EntityType.RABBIT)
+		{
+			Rabbit rabbit = (Rabbit) mob;
+			
+			if(rabbit.getRabbitType() == Rabbit.Type.THE_KILLER_BUNNY)
+			{
+				mobName = "killer" + mobName;
 			}
 		}
 		

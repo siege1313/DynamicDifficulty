@@ -180,3 +180,68 @@ zombie:
     followDistance: true
     xp: true
     loot: true
+elderguardian:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+endermite:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+guardian:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+killerrabbit:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+wolf:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
