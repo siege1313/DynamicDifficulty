@@ -1,14 +1,20 @@
 package com.cjmcguire.bukkit.dynamic.monitor;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.UUID;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.ThrownPotion;
+import org.bukkit.entity.Witch;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 import com.cjmcguire.bukkit.dynamic.AbstractEntityDamageListener;
 import com.cjmcguire.bukkit.dynamic.playerdata.MobInfo;
@@ -135,6 +141,40 @@ public class MonitorListener extends AbstractEntityDamageListener
 			{
 				mobInfo.addIDToInteractedWithIDs(damaged.getEntityId());
 				mobInfo.addToDamagePlayerGave(damage);
+			}
+		}
+	}
+	
+	/**
+	 * This method triggers whenever a potion splashes in Minecraft. 
+	 * This method will update a player's player data whenever the 
+	 * player is hit by a witch's splash potion. 
+	 * @param event - the PotionSplashEvent that just occurred
+	 */
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPotionSplashEvent(PotionSplashEvent event)
+	{
+		ThrownPotion potion = event.getPotion();
+		ProjectileSource shooter = potion.getShooter();
+		if(shooter instanceof Witch)
+		{
+			Witch witch = (Witch) shooter;
+			Collection<LivingEntity> affectedEntities = event.getAffectedEntities();
+			Iterator<LivingEntity> iterator = affectedEntities.iterator();
+			
+			while(iterator.hasNext())
+			{
+				// Get the entity that was damaged.
+				LivingEntity damaged = iterator.next();
+				
+				// If the entity that got damaged was the player and the 
+				// entity doing the damage was a witch
+				if(this.playerDamagedByLivingEntity(damaged, witch))
+				{
+					// Get the original damage.
+					int originalDamage = 6;
+					this.playerDamagedAction((Player)damaged, witch, originalDamage);
+				}
 			}
 		}
 	}
