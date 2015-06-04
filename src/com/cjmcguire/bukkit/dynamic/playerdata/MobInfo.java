@@ -10,7 +10,25 @@ import java.util.ArrayList;
  */
 public class MobInfo 
 {
-	// Globals.
+	// DEFAULTS.
+	/**
+	 * The default setting.
+	 */
+	public final static String DEFAULT_SETTING = "auto";
+	/**
+	 * The default auto and manual performance level.
+	 */
+	public final static int DEFAULT_PERFORMANCE_LEVEL = 100;
+	/**
+	 * The default max increment.
+	 */
+	public final static int DEFAULT_MAX_INCREMENT = 10;
+	/**
+	 * The default scale.
+	 */
+	public final static boolean DEFAULT_SCALE = true;
+	
+	// OTHER GLOBALS.
 	/**
 	 * The maximum performance level that a player can have. (200 units)
 	 */

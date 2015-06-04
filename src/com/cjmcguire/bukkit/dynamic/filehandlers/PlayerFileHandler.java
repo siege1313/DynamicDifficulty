@@ -186,44 +186,44 @@ public class PlayerFileHandler extends FileHandler implements Listener
 		String mobName = mobInfo.getMobType().getName();
 		
 		// Set the setting in mobInfo.
-		String settingName = playerConfig.getString(mobName + ".setting");
+		String settingName = playerConfig.getString(mobName + ".setting", MobInfo.DEFAULT_SETTING);
 		Setting setting = Setting.getSetting(settingName);
 		mobInfo.setSetting(setting);
 		
 		// Set the manualPerformanceLevel in the MobInfo.
-		int manualPerformanceLevel = playerConfig.getInt(mobName + ".manualPerformanceLevel");
+		int manualPerformanceLevel = playerConfig.getInt(mobName + ".manualPerformanceLevel", MobInfo.DEFAULT_PERFORMANCE_LEVEL);
 		mobInfo.setManualPerformanceLevel(manualPerformanceLevel);
 	
 		// Set the currentPerformanceLevel in the MobInfo.
-		int autoPerformanceLevel = playerConfig.getInt(mobName + ".autoPerformanceLevel");
+		int autoPerformanceLevel = playerConfig.getInt(mobName + ".autoPerformanceLevel", MobInfo.DEFAULT_PERFORMANCE_LEVEL);
 		mobInfo.setAutoPerformanceLevel(autoPerformanceLevel);
 		
 		// The estimated performance level should start off equal to 
 		// the current performance level.
 		mobInfo.setEstimatedPerformanceLevel(autoPerformanceLevel);
 		
-		int maxIncrement = playerConfig.getInt(mobName + ".maxIncrement");
+		int maxIncrement = playerConfig.getInt(mobName + ".maxIncrement", MobInfo.DEFAULT_MAX_INCREMENT);
 		mobInfo.setMaxIncrement(maxIncrement);
 		
-		boolean scaleAttack = playerConfig.getBoolean(mobName + ".scaleAttributes.attack");
+		boolean scaleAttack = playerConfig.getBoolean(mobName + ".scaleAttributes.attack", MobInfo.DEFAULT_SCALE);
 		mobInfo.setScaleAttack(scaleAttack);
 		
-		boolean scaleDefense = playerConfig.getBoolean(mobName + ".scaleAttributes.defense");
+		boolean scaleDefense = playerConfig.getBoolean(mobName + ".scaleAttributes.defense", MobInfo.DEFAULT_SCALE);
 		mobInfo.setScaleDefense(scaleDefense);
 		
-		boolean scaleSpeed = playerConfig.getBoolean(mobName + ".scaleAttributes.speed");
+		boolean scaleSpeed = playerConfig.getBoolean(mobName + ".scaleAttributes.speed", MobInfo.DEFAULT_SCALE);
 		mobInfo.setScaleSpeed(scaleSpeed);
 		
-		boolean scaleKnockBackResistance = playerConfig.getBoolean(mobName + ".scaleAttributes.knockback");
+		boolean scaleKnockBackResistance = playerConfig.getBoolean(mobName + ".scaleAttributes.knockback", MobInfo.DEFAULT_SCALE);
 		mobInfo.setScaleKnockbackResistance(scaleKnockBackResistance);
 		
-		boolean scaleMaxFollowDistance = playerConfig.getBoolean(mobName + ".scaleAttributes.followDistance");
+		boolean scaleMaxFollowDistance = playerConfig.getBoolean(mobName + ".scaleAttributes.followDistance", MobInfo.DEFAULT_SCALE);
 		mobInfo.setScaleMaxFollowDistance(scaleMaxFollowDistance);
 		
-		boolean scaleXP = playerConfig.getBoolean(mobName + ".scaleAttributes.xp");
+		boolean scaleXP = playerConfig.getBoolean(mobName + ".scaleAttributes.xp", MobInfo.DEFAULT_SCALE);
 		mobInfo.setScaleXP(scaleXP);
 		
-		boolean scaleLoot = playerConfig.getBoolean(mobName + ".scaleAttributes.loot");
+		boolean scaleLoot = playerConfig.getBoolean(mobName + ".scaleAttributes.loot", MobInfo.DEFAULT_SCALE);
 		mobInfo.setScaleLoot(scaleLoot);
 	}
 	
