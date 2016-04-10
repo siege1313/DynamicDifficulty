@@ -1,3 +1,4 @@
+lastKnownName: default_name
 blaze:
   setting: auto
   manualPerformanceLevel: 100
@@ -40,7 +41,7 @@ creeper:
 elderguardian:
   setting: auto
   manualPerformanceLevel: 100
-  autoPerformanceLevel: 103
+  autoPerformanceLevel: 100
   maxIncrement: 10
   scaleAttributes:
     attack: true
@@ -66,7 +67,7 @@ enderman:
 endermite:
   setting: auto
   manualPerformanceLevel: 100
-  autoPerformanceLevel: 197
+  autoPerformanceLevel: 100
   maxIncrement: 10
   scaleAttributes:
     attack: true
@@ -92,7 +93,7 @@ ghast:
 guardian:
   setting: auto
   manualPerformanceLevel: 100
-  autoPerformanceLevel: 125
+  autoPerformanceLevel: 100
   maxIncrement: 10
   scaleAttributes:
     attack: true
@@ -105,7 +106,7 @@ guardian:
 killerrabbit:
   setting: auto
   manualPerformanceLevel: 100
-  autoPerformanceLevel: 50
+  autoPerformanceLevel: 100
   maxIncrement: 10
   scaleAttributes:
     attack: true
@@ -129,6 +130,19 @@ magmacube:
     xp: true
     loot: true
 pigzombie:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
+shulker:
   setting: auto
   manualPerformanceLevel: 100
   autoPerformanceLevel: 100
@@ -222,7 +236,7 @@ witherskeleton:
 wolf:
   setting: auto
   manualPerformanceLevel: 100
-  autoPerformanceLevel: 96
+  autoPerformanceLevel: 100
   maxIncrement: 10
   scaleAttributes:
     attack: true

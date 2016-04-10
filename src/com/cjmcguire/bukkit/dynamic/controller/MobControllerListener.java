@@ -2,12 +2,9 @@ package com.cjmcguire.bukkit.dynamic.controller;
 
 import java.util.UUID;
 
-import net.minecraft.server.v1_8_R3.EntityInsentient;
-import net.minecraft.server.v1_8_R3.AttributeInstance;
-import net.minecraft.server.v1_8_R3.AttributeModifier;
-import net.minecraft.server.v1_8_R3.GenericAttributes;
-
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -221,22 +218,19 @@ public class MobControllerListener extends AbstractEntityDamageListener
 
 			double performanceLevel = mobInfo.getPerformanceLevelInUse();
 
-			CraftLivingEntity livingEntity = (CraftLivingEntity) targeter;
-			EntityInsentient insEntity = (EntityInsentient) livingEntity.getHandle();
-
 			if(mobInfo.shouldScaleSpeed())
 			{
-				this.makeSpeedDynamic(insEntity, performanceLevel);
+				this.makeSpeedDynamic(targeter, performanceLevel);
 			}
 			
 			if(mobInfo.shouldScaleKnockbackResistance())
 			{
-				this.makeKnockbackDynamic(insEntity, performanceLevel);
+				this.makeKnockbackDynamic(targeter, performanceLevel);
 			}
 			
 			if(mobInfo.shouldScaleMaxFollowDistance())
 			{
-				this.makeFollowDistanceDynamic(insEntity, mobInfo, performanceLevel);
+				this.makeFollowDistanceDynamic(targeter, mobInfo, performanceLevel);
 			}
 		}
 	}
@@ -245,23 +239,24 @@ public class MobControllerListener extends AbstractEntityDamageListener
 	 * Changes the mob speed of the given EntityInsentient based on 
 	 * the given MobInfo. Will change the mob speed by adding 
 	 * (performanceLevel/100.0-1)/2 to the mobs base speed.
-	 * @param insEntity the EntityInsentient whose speed you want to change
+	 * @param entity the entity whose speed you want to change
 	 * @param performanceLevel the performance level of the player
 	 */
-	protected void makeSpeedDynamic(EntityInsentient insEntity, double performanceLevel)
+	protected void makeSpeedDynamic(LivingEntity entity, double performanceLevel)
 	{
 		// get the mob speed attribute
-		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
+		AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
 
 		//performance level of 200 scales to -> 150% speed 
 		//performance level of 50 scales to -> 75% speed
 		double modifier = (performanceLevel/100.0-1)/2.0;
-		AttributeModifier attributeModifier = new AttributeModifier(movementSpeedUID, "DynamicDifficulty movement speed modifier", modifier, 1);
+		AttributeModifier attributeModifier = new AttributeModifier(movementSpeedUID, "DynamicDifficulty movement speed modifier", 
+				modifier, AttributeModifier.Operation.ADD_SCALAR);
 
 		// c() removes the modifier if one was on it
-		attribute.c(attributeModifier);
+		attribute.removeModifier(attributeModifier);
 		// b() adds the modifier to the attribute
-		attribute.b(attributeModifier);
+		attribute.addModifier(attributeModifier);
 	}
 	
 	/**
@@ -271,11 +266,11 @@ public class MobControllerListener extends AbstractEntityDamageListener
 	 * to the mob's base knockback resistance. Note that Knockback 
 	 * resistance cannot go below 0, so if a player's performance 
 	 * percent is below 100, knockback resistance cannot be reduced. 
-	 * @param insEntity the EntityInsentient whose speed you want to 
+	 * @param entity the entity whose speed you want to 
 	 * change
 	 * @param performanceLevel the performance level of the player
 	 */
-	protected void makeKnockbackDynamic(EntityInsentient insEntity, double performanceLevel)
+	protected void makeKnockbackDynamic(LivingEntity entity, double performanceLevel)
 	{
 		// The player's performance level must be greater than 100 because if it is less 
 		// than 100, we are trying to reduce knockback resistance but Bukkit does not allow
@@ -287,9 +282,9 @@ public class MobControllerListener extends AbstractEntityDamageListener
 			double changeAmount = (performanceLevel/100.0-1.0)/2.0;
 
 			// get the mob knockback resistance attribute
-			AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.c);
+			AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
 			//set it to the change amount
-			attribute.setValue(changeAmount);
+			attribute.setBaseValue(changeAmount);
 		}
 	}
 	
@@ -299,13 +294,13 @@ public class MobControllerListener extends AbstractEntityDamageListener
 	 * by setting it to "normal follow distance" performanceLevel/100.0. 
 	 * Note that this method will only change the follow distance if 
 	 * the performance level is greater than 100.
-	 * @param insEntity the EntityInsentient whose follow distance you 
+	 * @param entity the entity whose follow distance you 
 	 * want to change.
 	 * @param mobInfo the MobInfo which contains the necessary 
 	 * information for how much to change the follow distance.
 	 * @param performanceLevel the performance level of the player.
 	 */
-	protected void makeFollowDistanceDynamic(EntityInsentient insEntity, MobInfo mobInfo, double performanceLevel)
+	protected void makeFollowDistanceDynamic(LivingEntity entity, MobInfo mobInfo, double performanceLevel)
 	{
 		// The player's performance level must be greater than 100 because if it is less 
 		// than 100 and we try to decrease the mob's view distance, the mob will just 
@@ -314,9 +309,9 @@ public class MobControllerListener extends AbstractEntityDamageListener
 		// loop of targeting and untargeting the player. 
 		if(performanceLevel > 100)
 		{
-			AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
+			AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
 			double value = mobInfo.getMobType().getDefaultFollowDistance() * performanceLevel/100.0;
-			attribute.setValue(value);
+			attribute.setBaseValue(value);
 		}
 	}
 
@@ -330,53 +325,51 @@ public class MobControllerListener extends AbstractEntityDamageListener
 
 		if(mobType != null)
 		{
-			CraftLivingEntity livingEntity = (CraftLivingEntity) targeter;
-			EntityInsentient insEntity = (EntityInsentient) livingEntity.getHandle();
-
-			this.resetSpeed(insEntity);
-			this.resetKnockback(insEntity);
-			this.resetFollowDistance(insEntity, mobType);
+			this.resetSpeed(targeter);
+			this.resetKnockback(targeter);
+			this.resetFollowDistance(targeter, mobType);
 		}
 	}
 
 	/**
 	 * Resets the speed of the given EntityInsentient back to its 
 	 * default move speed.
-	 * @param insEntity the EntityInsentient whose speed you want to 
+	 * @param entity the entity whose speed you want to 
 	 * reset.
 	 */
-	protected void resetSpeed(EntityInsentient insEntity)
+	protected void resetSpeed(LivingEntity entity)
 	{
-		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
-		AttributeModifier modifier = new AttributeModifier(movementSpeedUID, "DynamicDifficulty movement speed reset", 0, 1);
+		AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+		AttributeModifier modifier = new AttributeModifier(movementSpeedUID, "DynamicDifficulty movement speed reset", 
+				0, AttributeModifier.Operation.ADD_SCALAR);
 		// c() removes the modifier if one was on it
-		attribute.c(modifier);
+		attribute.removeModifier(modifier);
 		// b() adds the modifier to the attribute
-		attribute.b(modifier);
+		attribute.addModifier(modifier);
 	}
 
 	/**
 	 * Resets the knockback resistance of the given EntityInsentient 
 	 * back to its default move knockback resistance.
-	 * @param insEntity the EntityInsentient whose knockback 
+	 * @param entity the entity whose knockback 
 	 * resistance you want to reset.
 	 */
-	protected void resetKnockback(EntityInsentient insEntity)
+	protected void resetKnockback(LivingEntity entity)
 	{
-		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.c);
-		attribute.setValue(0);
+		AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+		attribute.setBaseValue(0);
 	}
 
 	/**
 	 * Resets the follow distance of the given EntityInsentient back 
 	 * to its default follow distance.
-	 * @param insEntity the EntityInsentient whose follow distance you 
+	 * @param entity the entity whose follow distance you 
 	 * want to reset.
-	 * @param mobType the mob type of the entity insentient
+	 * @param mobType the mob type of the entity
 	 */
-	protected void resetFollowDistance(EntityInsentient insEntity, MobType mobType)
+	protected void resetFollowDistance(LivingEntity entity, MobType mobType)
 	{
-		AttributeInstance attribute = insEntity.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
-		attribute.setValue(mobType.getDefaultFollowDistance());
+		AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
+		attribute.setBaseValue(mobType.getDefaultFollowDistance());
 	}
 }

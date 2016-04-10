@@ -1,6 +1,6 @@
 name: DynamicDifficulty
 main: com.cjmcguire.bukkit.dynamic.DynamicDifficulty
-version: 1.4.0
+version: 1.5.0
 author: siege1313
 commands:
   dynamic:

@@ -177,6 +177,19 @@ public class PlayerFileHandler extends FileHandler implements Listener
 		// the playerConfig contains garbage data, we can still load 
 		// the MobInfo.
 		playerConfig.setDefaults(config);
+		if(this.isRunningWithHead())
+		{
+			playerConfig.set("lastKnownName", this.plugin.getServer().getPlayer(playerID).getName());
+			try 
+			{
+				playerConfig.save(playerFile);
+			}
+			catch (IOException e)
+			{
+				plugin.getLogger().info("Could not save player data to " + PLAYERS_FOLDER + playerFile);
+				e.printStackTrace();
+			}
+		}
 
 		return playerConfig;
 	}

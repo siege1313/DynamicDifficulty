@@ -73,6 +73,11 @@ public enum MobType
 	PIG_ZOMBIE(EntityType.PIG_ZOMBIE.getEntityClass().getSimpleName(), 20, 40),
 	
 	/**
+	 * Shulker Mob. Name: Shulker. Health: 30. Default Follow Distance: 16
+	 */
+	SHULKER(EntityType.SHULKER.getEntityClass().getSimpleName(), 30, 16),
+	
+	/**
 	 * Silverfish Mob. Name: "silverfish". Health: 8. Default Follow Distance: 16
 	 */
 	SILVERFISH(EntityType.SILVERFISH.getEntityClass().getSimpleName(), 8, 16),

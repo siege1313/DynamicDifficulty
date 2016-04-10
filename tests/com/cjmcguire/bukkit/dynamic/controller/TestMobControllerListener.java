@@ -4,10 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.UUID;
 
-import net.minecraft.server.v1_8_R3.AttributeInstance;
-import net.minecraft.server.v1_8_R3.EntityInsentient;
-import net.minecraft.server.v1_8_R3.GenericAttributes;
-
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.LivingEntity;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -235,9 +234,9 @@ public class TestMobControllerListener
 		EasyMock.expect(mockAttributes.getValue()).andReturn(.32+.32/2);
 		EasyMock.replay(mockAttributes);
 		
-		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED)).andReturn(mockAttributes);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED)).andReturn(mockAttributes);
+		LivingEntity mockIns = EasyMock.createNiceMock(LivingEntity.class);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).andReturn(mockAttributes);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
@@ -248,7 +247,7 @@ public class TestMobControllerListener
 		
 		controller.makeSpeedDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
-		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
+		AttributeInstance attributes = mockIns.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
 		
 		assertEquals(.32+.32/2, attributes.getValue(), .0001);
 		
@@ -268,9 +267,9 @@ public class TestMobControllerListener
 		EasyMock.expect(mockAttributes.getValue()).andReturn(.32);
 		EasyMock.replay(mockAttributes);
 		
-		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED)).andReturn(mockAttributes);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED)).andReturn(mockAttributes);
+		LivingEntity mockIns = EasyMock.createNiceMock(LivingEntity.class);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).andReturn(mockAttributes);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
@@ -283,7 +282,7 @@ public class TestMobControllerListener
 				
 		controller.resetSpeed(mockIns);
 		
-		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
+		AttributeInstance attributes = mockIns.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
 		
 		assertEquals(.32, attributes.getValue(), .0001);
 		
@@ -302,9 +301,9 @@ public class TestMobControllerListener
 		EasyMock.expect(mockAttributes.getValue()).andReturn(.5);
 		EasyMock.replay(mockAttributes);
 		
-		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.c)).andReturn(mockAttributes);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.c)).andReturn(mockAttributes);
+		LivingEntity mockIns = EasyMock.createNiceMock(LivingEntity.class);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE)).andReturn(mockAttributes);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
@@ -315,7 +314,7 @@ public class TestMobControllerListener
 		
 		controller.makeKnockbackDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
-		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.c);
+		AttributeInstance attributes = mockIns.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
 		
 		assertEquals(.5, attributes.getValue(), .0001);
 		
@@ -334,8 +333,8 @@ public class TestMobControllerListener
 		EasyMock.expect(mockAttributes.getValue()).andReturn(0.0);
 		EasyMock.replay(mockAttributes);
 		
-		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.c)).andReturn(mockAttributes);
+		LivingEntity mockIns = EasyMock.createNiceMock(LivingEntity.class);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
@@ -346,7 +345,7 @@ public class TestMobControllerListener
 
 		controller.makeKnockbackDynamic(mockIns, mobInfo.getAutoPerformanceLevel());
 		
-		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.c);
+		AttributeInstance attributes = mockIns.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
 		
 		assertEquals(0.0, attributes.getValue(), .001);
 		
@@ -365,9 +364,9 @@ public class TestMobControllerListener
 		EasyMock.expect(mockAttributes.getValue()).andReturn(0.0);
 		EasyMock.replay(mockAttributes);
 		
-		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.c)).andReturn(mockAttributes);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.c)).andReturn(mockAttributes);
+		LivingEntity mockIns = EasyMock.createNiceMock(LivingEntity.class);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE)).andReturn(mockAttributes);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
@@ -380,7 +379,7 @@ public class TestMobControllerListener
 				
 		controller.resetKnockback(mockIns);
 		
-		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.c);
+		AttributeInstance attributes = mockIns.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
 		
 		assertEquals(0, attributes.getValue(), .0001);
 		
@@ -396,13 +395,13 @@ public class TestMobControllerListener
 	public void testMakeFollowDistanceDynamic()
 	{
 		AttributeInstance mockAttributes = EasyMock.createNiceMock(AttributeInstance.class);
-		EasyMock.expect(mockAttributes.b()).andReturn(32.0);
+		EasyMock.expect(mockAttributes.getBaseValue()).andReturn(32.0);
 		EasyMock.replay(mockAttributes);
 		
 		
-		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.FOLLOW_RANGE)).andReturn(mockAttributes);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.FOLLOW_RANGE)).andReturn(mockAttributes);
+		LivingEntity mockIns = EasyMock.createNiceMock(LivingEntity.class);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_FOLLOW_RANGE)).andReturn(mockAttributes);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_FOLLOW_RANGE)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
@@ -413,9 +412,9 @@ public class TestMobControllerListener
 		
 		controller.makeFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getAutoPerformanceLevel());
 		
-		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
+		AttributeInstance attributes = mockIns.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
 		
-		assertEquals(32.0, attributes.b(), .0001);
+		assertEquals(32.0, attributes.getBaseValue(), .0001);
 		
 		
 		EasyMock.verify(mockIns);
@@ -430,11 +429,11 @@ public class TestMobControllerListener
 	public void testMakeFollowDistanceDynamicWhenPerformanceLow()
 	{
 		AttributeInstance mockAttributes = EasyMock.createNiceMock(AttributeInstance.class);
-		EasyMock.expect(mockAttributes.b()).andReturn(16.0);
+		EasyMock.expect(mockAttributes.getBaseValue()).andReturn(16.0);
 		EasyMock.replay(mockAttributes);
 
-		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.FOLLOW_RANGE)).andReturn(mockAttributes);
+		LivingEntity mockIns = EasyMock.createNiceMock(LivingEntity.class);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_FOLLOW_RANGE)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
@@ -445,9 +444,9 @@ public class TestMobControllerListener
 
 		controller.makeFollowDistanceDynamic(mockIns, mobInfo, mobInfo.getAutoPerformanceLevel());
 		
-		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
+		AttributeInstance attributes = mockIns.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
 		
-		assertEquals(16.0, attributes.b(), .0001);
+		assertEquals(16.0, attributes.getBaseValue(), .0001);
 		
 		EasyMock.verify(mockIns);
 		EasyMock.verify(mockAttributes);
@@ -460,13 +459,13 @@ public class TestMobControllerListener
 	public void testResetFollowDistance()
 	{
 		AttributeInstance mockAttributes = EasyMock.createNiceMock(AttributeInstance.class);
-		EasyMock.expect(mockAttributes.b()).andReturn(32.0);
-		EasyMock.expect(mockAttributes.b()).andReturn(16.0);
+		EasyMock.expect(mockAttributes.getBaseValue()).andReturn(32.0);
+		EasyMock.expect(mockAttributes.getBaseValue()).andReturn(16.0);
 		EasyMock.replay(mockAttributes);
 		
-		EntityInsentient mockIns = EasyMock.createNiceMock(EntityInsentient.class);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.FOLLOW_RANGE)).andReturn(mockAttributes);
-		EasyMock.expect(mockIns.getAttributeInstance(GenericAttributes.FOLLOW_RANGE)).andReturn(mockAttributes);
+		LivingEntity mockIns = EasyMock.createNiceMock(LivingEntity.class);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_FOLLOW_RANGE)).andReturn(mockAttributes);
+		EasyMock.expect(mockIns.getAttribute(Attribute.GENERIC_FOLLOW_RANGE)).andReturn(mockAttributes);
 		EasyMock.replay(mockIns);
 
 		// Run the actual test.
@@ -475,13 +474,13 @@ public class TestMobControllerListener
 		MobInfo mobInfo = new MobInfo(MobType.ZOMBIE);
 		mobInfo.setAutoPerformanceLevel(2.0);
 		
-		assertEquals(32, mockAttributes.b(),.0001);
+		assertEquals(32, mockAttributes.getBaseValue(),.0001);
 				
 		controller.resetFollowDistance(mockIns, mobInfo.getMobType());
 		
-		AttributeInstance attributes = mockIns.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
+		AttributeInstance attributes = mockIns.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
 		
-		assertEquals(16, attributes.b(), .0001);
+		assertEquals(16, attributes.getBaseValue(), .0001);
 		
 		
 		EasyMock.verify(mockIns);

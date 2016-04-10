@@ -245,3 +245,16 @@ wolf:
     followDistance: true
     xp: true
     loot: true
+shulker:
+  setting: auto
+  manualPerformanceLevel: 100
+  autoPerformanceLevel: 100
+  maxIncrement: 10
+  scaleAttributes:
+    attack: true
+    defense: true
+    speed: true
+    knockback: true
+    followDistance: true
+    xp: true
+    loot: true
